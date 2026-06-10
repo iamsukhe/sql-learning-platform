@@ -9,6 +9,7 @@ interface ResultsPanelProps {
   activeTab: 'input' | 'output' | 'tests';
   setActiveTab: (tab: 'input' | 'output' | 'tests') => void;
   isLoading: boolean;
+  explanation?: string;
 }
 
 function SqlTable({ result }: { result: QueryResult }) {
@@ -77,7 +78,8 @@ export default function ResultsPanel({
   submissionResult,
   activeTab,
   setActiveTab,
-  isLoading
+  isLoading,
+  explanation
 }: ResultsPanelProps) {
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
@@ -186,6 +188,16 @@ export default function ResultsPanel({
                     </>
                   )}
                 </div>
+
+                {submissionResult.success && explanation && (
+                  <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-lg text-xs leading-relaxed font-sans">
+                    <h4 className="font-semibold text-cyan-400 mb-1.5 flex items-center gap-1.5 font-sans">
+                      <CheckCircle2 size={14} className="text-cyan-400 font-semibold" />
+                      Explanation
+                    </h4>
+                    <p className="text-slate-300 font-serif text-[13px] leading-relaxed mt-1">{explanation}</p>
+                  </div>
+                )}
 
                 {/* Test Cases Accordion/List */}
                 <div className="flex flex-col gap-2.5">

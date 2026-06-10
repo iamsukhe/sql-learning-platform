@@ -1,17 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Outfit:wght@300..900&display=swap');
 @import "tailwindcss";
 
-/* Premium Custom Scrollbars */
+@theme {
+  --font-serif: "Lora", Georgia, serif;
+  --font-sans: "Outfit", "Inter", system-ui, sans-serif;
+
+  /* Overriding Slate shades in Tailwind with Cozy Sepia Colors */
+  --color-slate-50: var(--slate-50);
+  --color-slate-100: var(--slate-100);
+  --color-slate-200: var(--slate-200);
+  --color-slate-300: var(--slate-300);
+  --color-slate-400: var(--slate-400);
+  --color-slate-500: var(--slate-500);
+  --color-slate-600: var(--slate-600);
+  --color-slate-700: var(--slate-700);
+  --color-slate-800: var(--slate-800);
+  --color-slate-900: var(--slate-900);
+  --color-slate-950: var(--slate-950);
+
+  /* Overriding Cyan shades in Tailwind with Terracotta/Leather Colors */
+  --color-cyan-50: var(--cyan-50);
+  --color-cyan-100: var(--cyan-100);
+  --color-cyan-200: var(--cyan-200);
+  --color-cyan-300: var(--cyan-300);
+  --color-cyan-400: var(--cyan-400);
+  --color-cyan-500: var(--cyan-500);
+  --color-cyan-600: var(--cyan-600);
+  --color-cyan-700: var(--cyan-700);
+  --color-cyan-800: var(--cyan-800);
+  --color-cyan-900: var(--cyan-900);
+  --color-cyan-950: var(--cyan-950);
+
+  /* Overriding Blue shades in Tailwind with Cozy Leather partners for gradients */
+  --color-blue-50: var(--blue-50);
+  --color-blue-100: var(--blue-100);
+  --color-blue-200: var(--blue-200);
+  --color-blue-300: var(--blue-300);
+  --color-blue-400: var(--color-blue-400);
+  --color-blue-500: var(--blue-500);
+  --color-blue-600: var(--blue-600);
+  --color-blue-700: var(--blue-700);
+  --color-blue-800: var(--blue-800);
+  --color-blue-900: var(--blue-900);
+  --color-blue-950: var(--blue-950);
+}
+
+:root, [data-theme='light'] {
+  /* Warm Sepia Light Book Theme */
+  --slate-950: #f6efe2; /* Book page base bg */
+  --slate-900: #ede4d0; /* Muted card background */
+  --slate-800: #decfae; /* Book page borders */
+  --slate-700: #ccbfa0; /* Accent borders / hover state */
+  --slate-600: #a89a80; /* Muted utility icons */
+  --slate-500: #887a60; /* Muted texts / secondary icons */
+  --slate-400: #554937; /* Body texts */
+  --slate-300: #3b3224; /* Main headers / sidebar items */
+  --slate-200: #221c13; /* Bold headings */
+  --slate-100: #120e0a; /* Deepest black titles */
+  --slate-50: #0d0a08;
+
+  /* Terracotta Leather Accents for Cyan */
+  --cyan-50: #fdf5f0;
+  --cyan-100: #fbe6d8;
+  --cyan-200: #f8ccb0;
+  --cyan-300: #f3aa7c;
+  --cyan-400: #e07438; /* Warm orange leather */
+  --cyan-500: #c95d24; /* Rich terracotta */
+  --cyan-600: #ab4716;
+  --cyan-700: #8a330f;
+  --cyan-800: #6d260c;
+  --cyan-900: #571e0b;
+  --cyan-950: #2e0c03;
+
+  /* Leather Brown Accents for Blue (to blend in gradients) */
+  --blue-50: #fbf5f2;
+  --blue-100: #f6e6dc;
+  --blue-200: #edcebe;
+  --blue-300: #e0ac93;
+  --blue-400: #cd7f5d;
+  --blue-500: #b85e3c; /* Book leather brown */
+  --blue-600: #9b482a;
+  --blue-700: #80371e;
+  --blue-800: #662a17;
+  --blue-900: #522112;
+  --blue-950: #2b0e06;
+}
+
+[data-theme='dark'] {
+  /* Cozy Dark Book Theme (Night Reading) */
+  --slate-950: #161310; /* Cozy dark sepia background */
+  --slate-900: #221d18; /* Cozy dark panel background */
+  --slate-800: #332b24; /* Soft dark borders */
+  --slate-700: #42382f; /* Highlight / Hover border */
+  --slate-600: #5e5145;
+  --slate-500: #827263; /* Secondary text */
+  --slate-400: #ad9e90; /* Body texts */
+  --slate-300: #d6cabf; /* Main headings / descriptions */
+  --slate-200: #ebdcd0; /* Highlight headers */
+  --slate-100: #fcf6f0; /* Brightest cream headings */
+  --slate-50: #fffdfa;
+
+  /* Radiant Amber Gold Accents for Dark Cyan */
+  --cyan-50: #fff9f2;
+  --cyan-100: #ffeccc;
+  --cyan-200: #ffd699;
+  --cyan-300: #ffbd66;
+  --cyan-400: #e69138; /* Soft golden book accent */
+  --cyan-500: #c97824;
+  --cyan-600: #a85f16;
+  --cyan-700: #85470d;
+  --cyan-800: #663307;
+  --cyan-900: #4a2103;
+  --cyan-950: #2b1000;
+
+  /* Warm Gold / Terracotta Partner for Dark Blue */
+  --blue-50: #fffbf7;
+  --blue-100: #fef0e3;
+  --blue-200: #fddcbd;
+  --blue-300: #fbc28d;
+  --blue-400: #f4a259;
+  --blue-500: #d48855; /* Soft terracotta brown */
+  --blue-600: #b36b3f;
+  --blue-700: #91512f;
+  --blue-800: #733c21;
+  --blue-900: #5c2c16;
+  --blue-950: #331508;
+}
+
+/* Scrollbar customization */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #030712;
+  background: var(--slate-950);
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: var(--slate-800);
   border-radius: 9999px;
+  border: 2px solid var(--slate-950);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: var(--slate-700);
 }

@@ -1,0 +1,1053 @@
+[
+  {
+    "id": "ch1-basics",
+    "title": "Chapter 1: SQL Basics & DDL Coding",
+    "lessons": [
+      {
+        "id": "l35-literal-select",
+        "title": "L35: Selecting Literal Values",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "In SQL, the `SELECT` statement is used to retrieve data. You can select literal constants (numbers or text strings) directly without referencing any database table.\nTo give a custom column header to the output, we use the `AS` keyword to define an alias.\nFor example:\n`SELECT 123 AS number;` OR `SELECT 'Hello' AS greeting;`\n\n**Your Task:**\nWrite a SQL query that selects the text `'Welcome to SQL!'` and names the column `greeting`.",
+        "schema": [],
+        "seedSql": "",
+        "expectedQuery": "SELECT 'Welcome to SQL!' AS greeting;",
+        "defaultCode": "-- Write your SELECT query below\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Default Test",
+            "seedSql": ""
+          }
+        ],
+        "explanation": "Selecting literal values directly returns a single-row result table with your values under the alias column name. The FROM clause is not required for queries that evaluate literal expressions."
+      },
+      {
+        "id": "l36-select-single",
+        "title": "L36: Retrieving a Single Column",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "To fetch columns of data from an actual table, use the basic syntax:\n`SELECT column_name FROM table_name;`\n\n**Your Task:**\nQuery the `Users` table and retrieve only the `name` column for all records.",
+        "schema": [
+          {
+            "name": "Users",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "email",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "age",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), age INT);\nINSERT INTO Users VALUES (1, 'Alice', 'alice@gmail.com', 22);\nINSERT INTO Users VALUES (2, 'Bob', 'bob@yahoo.com', 28);\nINSERT INTO Users VALUES (3, 'Charlie', 'charlie@outlook.com', 19);",
+        "expectedQuery": "SELECT name FROM Users;",
+        "defaultCode": "-- Retrieve only the name column\nSELECT \nFROM Users;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Verify Column",
+            "seedSql": "CREATE TABLE Users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), age INT);\nINSERT INTO Users VALUES (1, 'David', 'david@gmail.com', 30);"
+          }
+        ],
+        "explanation": "The SELECT statement extracts specific columns, and the FROM clause tells the engine which table to search. Only the requested column data is returned."
+      },
+      {
+        "id": "l37-select-multi",
+        "title": "L37: Retrieving Multiple Columns",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "To retrieve multiple columns from a table, list their names separated by a comma in the `SELECT` clause:\n`SELECT col1, col2 FROM table_name;`\n\nTo retrieve all columns, you can use the asterisk wildcard (*), although listing specific columns is generally preferred for performance.\n\n**Your Task:**\nRetrieve the `name` and `email` columns of all users in the `Users` table.",
+        "schema": [
+          {
+            "name": "Users",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "email",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "age",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), age INT);\nINSERT INTO Users VALUES (1, 'Alice', 'alice@gmail.com', 22);\nINSERT INTO Users VALUES (2, 'Bob', 'bob@yahoo.com', 28);",
+        "expectedQuery": "SELECT name, email FROM Users;",
+        "defaultCode": "-- Retrieve name and email columns\nSELECT \nFROM Users;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Check Multiple Users",
+            "seedSql": "CREATE TABLE Users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), age INT);\nINSERT INTO Users VALUES (10, 'Eve', 'eve@gmail.com', 25);"
+          }
+        ],
+        "explanation": "Separating column names with a comma tells the query parser to project multiple columns in the final output dataset."
+      },
+      {
+        "id": "l38-dual-tables",
+        "title": "L38: Querying Without FROM (DUAL)",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "In some RDBMS systems (like Oracle), you must specify a `FROM` clause even for literal calculations. This is handled using the `DUAL` table\u2014a dummy table with one column and one row. In SQLite and MySQL, you can run SELECT directly without a FROM clause, but you can also execute arithmetic equations.\n\n**Your Task:**\nWrite a SQL query that calculates the sum of `55 + 11` and names the result column `total`.",
+        "schema": [],
+        "seedSql": "",
+        "expectedQuery": "SELECT 55 + 11 AS total;",
+        "defaultCode": "-- Calculate 55 + 11\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Evaluate Calculation",
+            "seedSql": ""
+          }
+        ],
+        "explanation": "According to Lecture 9, calculations like arithmetic operations, functions (`now()`, `ucase()`), and static text expressions can be executed in database engines using SELECT. The DUAL table is traditionally used in databases that strictly require a FROM clause."
+      }
+    ]
+  },
+  {
+    "id": "ch2-querying",
+    "title": "Chapter 2: SQL Querying (Filters & Wildcards)",
+    "lessons": [
+      {
+        "id": "l39-where-filter",
+        "title": "L39: Filtering with WHERE",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "To filter records based on a condition, we append the `WHERE` clause:\n`SELECT * FROM table_name WHERE condition;`\nCommon operators include `=`, `>`, `<`, `>=`, `<=`, and `<>` (not equal).\n\n**Your Task:**\nSelect all columns from the `Customers` table for customers whose `age` is strictly greater than 18.",
+        "schema": [
+          {
+            "name": "Customers",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "age",
+                "type": "INT"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(255)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255), age INT, city VARCHAR(255));\nINSERT INTO Customers VALUES (1, 'John', 17, 'Delhi');\nINSERT INTO Customers VALUES (2, 'Emily', 24, 'Mumbai');\nINSERT INTO Customers VALUES (3, 'Michael', 19, 'Bangalore');",
+        "expectedQuery": "SELECT * FROM Customers WHERE age > 18;",
+        "defaultCode": "-- Select customers with age > 18\nSELECT \nFROM Customers\nWHERE ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Check Filter",
+            "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255), age INT, city VARCHAR(255));\nINSERT INTO Customers VALUES (5, 'Sophia', 15, 'Pune');\nINSERT INTO Customers VALUES (6, 'Liam', 22, 'Delhi');"
+          }
+        ],
+        "explanation": "The WHERE clause acts as a row filter. It inspects each row's values against the boolean expression, only keeping rows that evaluate to true."
+      },
+      {
+        "id": "l40-between-range",
+        "title": "L40: Range Queries with BETWEEN",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "The `BETWEEN` operator selects values within a given range. The values can be numbers, text, or dates. The endpoints (start and end values) are **inclusive**:\n`SELECT * FROM Customers WHERE age BETWEEN 20 AND 30;`\n\n**Your Task:**\nSelect all columns from the `Customers` table for customers whose `age` is between 18 and 25 (inclusive).",
+        "schema": [
+          {
+            "name": "Customers",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "age",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255), age INT);\nINSERT INTO Customers VALUES (1, 'Alice', 17);\nINSERT INTO Customers VALUES (2, 'Bob', 22);\nINSERT INTO Customers VALUES (3, 'Charlie', 25);\nINSERT INTO Customers VALUES (4, 'David', 31);",
+        "expectedQuery": "SELECT * FROM Customers WHERE age BETWEEN 18 AND 25;",
+        "defaultCode": "-- Filter using BETWEEN\nSELECT \nFROM Customers\nWHERE ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Check Inclusive Range",
+            "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255), age INT);\nINSERT INTO Customers VALUES (1, 'Rex', 18);\nINSERT INTO Customers VALUES (2, 'Sam', 26);"
+          }
+        ],
+        "explanation": "The BETWEEN operator checks if a column value falls within the lower and upper bounds, including both boundary values. It is a shorthand for `col >= lower AND col <= upper`."
+      },
+      {
+        "id": "l41-in-list",
+        "title": "L41: Multi-value Checks with IN",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "The `IN` operator allows you to specify multiple values in a `WHERE` clause, acting as a shorthand for multiple `OR` conditions:\n`SELECT * FROM Customers WHERE city IN ('Mumbai', 'Delhi');`\n\n**Your Task:**\nRetrieve all columns from the `Customers` table where the `city` is either `'Delhi'` or `'Mumbai'`.",
+        "schema": [
+          {
+            "name": "Customers",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(255)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255), city VARCHAR(255));\nINSERT INTO Customers VALUES (1, 'Amit', 'Delhi');\nINSERT INTO Customers VALUES (2, 'Sneha', 'Mumbai');\nINSERT INTO Customers VALUES (3, 'Vikram', 'Bangalore');",
+        "expectedQuery": "SELECT * FROM Customers WHERE city IN ('Delhi', 'Mumbai');",
+        "defaultCode": "-- Retrieve customers in Delhi or Mumbai\nSELECT \nFROM Customers\nWHERE ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Test Locations List",
+            "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255), city VARCHAR(255));\nINSERT INTO Customers VALUES (4, 'John', 'Chennai');\nINSERT INTO Customers VALUES (5, 'Karan', 'Delhi');"
+          }
+        ],
+        "explanation": "The IN operator checks if a column's value matches any element in the specified list of values, allowing clean and readable query writing."
+      },
+      {
+        "id": "l42-like-wildcard",
+        "title": "L42: Pattern Matching with LIKE",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "The `LIKE` operator is used to search for a specified pattern in a column. Wildcards used:\n- `%`: Represents zero, one, or multiple characters.\n- `_`: Represents a single character.\nFor example, `WHERE name LIKE 'A%'` finds names starting with 'A'.\n`WHERE name LIKE '%p_'` finds names containing 'p' as the second to last character.\n\n**Your Task:**\nRetrieve all columns from the `Customers` table for customers whose `name` ends with the character `'y'`.",
+        "schema": [
+          {
+            "name": "Customers",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255));\nINSERT INTO Customers VALUES (1, 'Emily');\nINSERT INTO Customers VALUES (2, 'John');\nINSERT INTO Customers VALUES (3, 'Amy');\nINSERT INTO Customers VALUES (4, 'Jack');",
+        "expectedQuery": "SELECT * FROM Customers WHERE name LIKE '%y';",
+        "defaultCode": "-- Find names ending with 'y'\nSELECT \nFROM Customers\nWHERE name LIKE ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Pattern Check",
+            "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255));\nINSERT INTO Customers VALUES (10, 'Andy');\nINSERT INTO Customers VALUES (11, 'Billy');"
+          }
+        ],
+        "explanation": "The % wildcard matches any text string of any length. Using '%y' forces the engine to filter for string values that terminate with the letter 'y'."
+      },
+      {
+        "id": "l43-order-by",
+        "title": "L43: Sorting Results with ORDER BY",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "To sort the query output, we use the `ORDER BY` clause. By default, it sorts in ascending order. To sort in descending order, use the `DESC` keyword:\n`SELECT * FROM Customers ORDER BY name DESC;`\n\n**Your Task:**\nSelect all columns from the `Customers` table and sort the results by `age` in descending order.",
+        "schema": [
+          {
+            "name": "Customers",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "age",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255), age INT);\nINSERT INTO Customers VALUES (1, 'John', 19);\nINSERT INTO Customers VALUES (2, 'Emily', 24);\nINSERT INTO Customers VALUES (3, 'Sam', 22);",
+        "expectedQuery": "SELECT * FROM Customers ORDER BY age DESC;",
+        "defaultCode": "-- Sort customers by age DESC\nSELECT \nFROM Customers\nORDER BY ",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Verify Sort Order",
+            "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255), age INT);\nINSERT INTO Customers VALUES (4, 'Sophia', 30);\nINSERT INTO Customers VALUES (5, 'Liam', 18);"
+          }
+        ],
+        "explanation": "ORDER BY processes the resulting rows and sorts them lexicographically or numerically based on the key columns provided. Setting ordered=true forces validation to check sort sequence correctness."
+      }
+    ]
+  },
+  {
+    "id": "ch3-aggregations",
+    "title": "Chapter 3: SQL Aggregations & Grouping",
+    "lessons": [
+      {
+        "id": "l44-aggregate-functions",
+        "title": "L44: SQL Aggregate Functions",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Aggregate functions perform a calculation on a set of values and return a single value:\n- `COUNT(column)`: Returns the number of rows.\n- `SUM(column)`: Returns the sum of numeric values.\n- `AVG(column)`: Returns the average value.\n- `MIN(column)`: Returns the smallest value.\n- `MAX(column)`: Returns the largest value.\n\n**Your Task:**\nCalculate the total count of rows in the `Employees` table as `total_count` and the sum of `salary` as `total_salary`.",
+        "schema": [
+          {
+            "name": "Employees",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "salary",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), salary INT);\nINSERT INTO Employees VALUES (1, 'Amit', 50000);\nINSERT INTO Employees VALUES (2, 'Rohan', 60000);\nINSERT INTO Employees VALUES (3, 'Karan', 45000);",
+        "expectedQuery": "SELECT COUNT(*) AS total_count, SUM(salary) AS total_salary FROM Employees;",
+        "defaultCode": "-- Aggregate count and salary sum\nSELECT \nFROM Employees;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Verify Summary Calculations",
+            "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), salary INT);\nINSERT INTO Employees VALUES (4, 'Nikhil', 70000);"
+          }
+        ],
+        "explanation": "Aggregate functions process multiple column entries across all selected rows to calculate and return a single summary metric."
+      },
+      {
+        "id": "l45-group-by",
+        "title": "L45: Grouping Data with GROUP BY",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "The `GROUP BY` statement groups rows that have the same values in specified columns into summary rows (like finding the number of customers in each city).\n`SELECT city, COUNT(id) FROM Customers GROUP BY city;`\n\n**Your Task:**\nSelect the `department` and the count of employees in each department (named as `emp_count`) from the `Employees` table, grouped by `department`.",
+        "schema": [
+          {
+            "name": "Employees",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "department",
+                "type": "VARCHAR(255)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), department VARCHAR(255));\nINSERT INTO Employees VALUES (1, 'Alice', 'HR');\nINSERT INTO Employees VALUES (2, 'Bob', 'IT');\nINSERT INTO Employees VALUES (3, 'Charlie', 'IT');\nINSERT INTO Employees VALUES (4, 'David', 'HR');\nINSERT INTO Employees VALUES (5, 'Eve', 'Finance');",
+        "expectedQuery": "SELECT department, COUNT(*) AS emp_count FROM Employees GROUP BY department;",
+        "defaultCode": "-- Group employees by department\nSELECT department, \nFROM Employees\nGROUP BY ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Verify Groups",
+            "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), department VARCHAR(255));\nINSERT INTO Employees VALUES (6, 'Kunal', 'IT');\nINSERT INTO Employees VALUES (7, 'Ritu', 'Finance');"
+          }
+        ],
+        "explanation": "GROUP BY splits the rows into buckets based on the grouping key columns, applies the aggregate function (like COUNT) to each bucket, and outputs one row per group."
+      },
+      {
+        "id": "l46-having-clause",
+        "title": "L46: Filtering Groups with HAVING",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "The `HAVING` clause was added to SQL because the `WHERE` keyword cannot be used with aggregate functions. `WHERE` filters individual rows *before* grouping, while `HAVING` filters group summaries *after* grouping has occurred:\n`SELECT city, COUNT(id) FROM Customers GROUP BY city HAVING COUNT(id) > 5;`\n\n**Your Task:**\nRetrieve the `department` and count of employees (as `emp_count`) from the `Employees` table, grouped by `department`, but only include departments that have strictly more than 1 employee.",
+        "schema": [
+          {
+            "name": "Employees",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "department",
+                "type": "VARCHAR(255)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), department VARCHAR(255));\nINSERT INTO Employees VALUES (1, 'Alice', 'HR');\nINSERT INTO Employees VALUES (2, 'Bob', 'IT');\nINSERT INTO Employees VALUES (3, 'Charlie', 'IT');\nINSERT INTO Employees VALUES (4, 'David', 'HR');\nINSERT INTO Employees VALUES (5, 'Eve', 'Finance');",
+        "expectedQuery": "SELECT department, COUNT(*) AS emp_count FROM Employees GROUP BY department HAVING COUNT(*) > 1;",
+        "defaultCode": "-- Filter groups using HAVING\nSELECT department, COUNT(*) AS emp_count\nFROM Employees\nGROUP BY department\nHAVING ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Filter Group Count",
+            "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), department VARCHAR(255));\nINSERT INTO Employees VALUES (6, 'Neha', 'Finance');"
+          }
+        ],
+        "explanation": "HAVING acts as a filter on the aggregated groups. In this example, the HR and IT groups have count=2 (so they are output), while Finance (count=1) is discarded."
+      },
+      {
+        "id": "l47-distinct-rows",
+        "title": "L47: Getting Unique Values with DISTINCT",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "The `DISTINCT` keyword is used to return only unique, non-duplicate values in the query output:\n`SELECT DISTINCT city FROM Customers;`\n\n*Note*: According to Lecture 9, if you use `GROUP BY` on a column without any aggregate functions, the output is functionally identical to a `DISTINCT` query, as the database engine automatically realizes you want to group matching entries.\n\n**Your Task:**\nRetrieve the unique list of departments from the `Employees` table using the `DISTINCT` keyword.",
+        "schema": [
+          {
+            "name": "Employees",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "department",
+                "type": "VARCHAR(255)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), department VARCHAR(255));\nINSERT INTO Employees VALUES (1, 'Alice', 'HR');\nINSERT INTO Employees VALUES (2, 'Bob', 'IT');\nINSERT INTO Employees VALUES (3, 'Charlie', 'IT');\nINSERT INTO Employees VALUES (4, 'David', 'HR');",
+        "expectedQuery": "SELECT DISTINCT department FROM Employees;",
+        "defaultCode": "-- Retrieve unique departments\nSELECT \nFROM Employees;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Check Unique Departments",
+            "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), department VARCHAR(255));\nINSERT INTO Employees VALUES (5, 'Eve', 'Finance');\nINSERT INTO Employees VALUES (6, 'Kunal', 'IT');"
+          }
+        ],
+        "explanation": "DISTINCT filters out any duplicate records from the final projection, returning only the unique set of values found in the target columns."
+      }
+    ]
+  },
+  {
+    "id": "ch4-altering",
+    "title": "Chapter 4: SQL Constraints & Altering",
+    "lessons": [
+      {
+        "id": "l48-alter-table",
+        "title": "L48: Table Alter Operations",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "The `ALTER TABLE` statement is used to add, delete, or modify columns in an existing table structure. Syntax:\n- Add column: `ALTER TABLE table_name ADD column_name datatype;`\n- Drop column: `ALTER TABLE table_name DROP COLUMN column_name;` (In some RDBMS, like older SQLite, dropping is done by creating a new table, but modern systems support standard DDL syntax).\n\n**Your Task:**\nAlter the `Customers` table by adding a new column named `age` of type `INT`.",
+        "schema": [
+          {
+            "name": "Customers",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255));\nINSERT INTO Customers VALUES (1, 'Alice');",
+        "expectedQuery": "ALTER TABLE Customers ADD age INT;",
+        "defaultCode": "-- Add column age INT to Customers\nALTER TABLE ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Execute Schema Modification",
+            "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255));"
+          }
+        ],
+        "explanation": "The DDL ALTER TABLE statement directly modifies the table's catalog metadata, adding the column definition to the relation schema."
+      },
+      {
+        "id": "l49-table-constraints",
+        "title": "L49: Key Constraints DDL",
+        "type": "coding",
+        "difficulty": "Hard",
+        "description": "When creating a table, we can specify inline or out-of-line column constraints such as `PRIMARY KEY`, `NOT NULL`, `UNIQUE`, `DEFAULT`, and `CHECK`:\n`CREATE TABLE Accounts (id INT PRIMARY KEY, rate DOUBLE NOT NULL DEFAULT 4.25);`\n\n**Your Task:**\nCreate a table named `Users` with three columns:\n- `id` of type `INT` as the `PRIMARY KEY`\n- `email` of type `VARCHAR(255)` with a `UNIQUE` constraint\n- `age` of type `INT` with a `CHECK` constraint validating that `age > 18`.",
+        "schema": [],
+        "seedSql": "",
+        "expectedQuery": "CREATE TABLE Users (id INT PRIMARY KEY, email VARCHAR(255) UNIQUE, age INT CHECK (age > 18));",
+        "defaultCode": "-- Create the Users table with constraints\nCREATE TABLE Users (\n  \n);",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Check DDL Execution",
+            "seedSql": ""
+          }
+        ],
+        "explanation": "Declaring key constraints inside CREATE TABLE instructs the database engine to validate records against these rules during all future insertions and updates."
+      },
+      {
+        "id": "l50-update-rows",
+        "title": "L50: Updating Rows",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "The `UPDATE` statement is a DML command used to modify the existing records in a table. It is crucial to use a `WHERE` clause to target specific rows; otherwise, all rows in the table will be updated!\n`UPDATE table_name SET col1 = val1 WHERE id = 1;`\n\n**Your Task:**\nUpdate the `Users` table and set the `email` to `'bob_new@yahoo.com'` for the user whose `id` is equal to `2`.",
+        "schema": [
+          {
+            "name": "Users",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "email",
+                "type": "VARCHAR(255)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255));\nINSERT INTO Users VALUES (1, 'Alice', 'alice@gmail.com');\nINSERT INTO Users VALUES (2, 'Bob', 'bob@yahoo.com');",
+        "expectedQuery": "UPDATE Users SET email = 'bob_new@yahoo.com' WHERE id = 2; SELECT * FROM Users;",
+        "defaultCode": "-- Update Bob's email\nUPDATE Users\nSET \nWHERE id = 2;\n\n-- Keep this select query to render results\nSELECT * FROM Users;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Verify Row Modification",
+            "seedSql": "CREATE TABLE Users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255));\nINSERT INTO Users VALUES (2, 'Sam', 'sam@gmail.com');"
+          }
+        ],
+        "explanation": "The DML UPDATE statement identifies candidate rows using the WHERE filter and modifies the values of target columns as specified in the SET clause."
+      },
+      {
+        "id": "l51-delete-rows",
+        "title": "L51: Deleting Rows",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "The `DELETE` statement is used to delete existing records in a table. It is crucial to filter with a `WHERE` clause; executing `DELETE FROM table_name;` without it will erase all rows in the table!\n`DELETE FROM table_name WHERE id = 1;`\n\n**Your Task:**\nDelete the user record from the `Users` table whose `id` is equal to `1`.",
+        "schema": [
+          {
+            "name": "Users",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Users (id INT PRIMARY KEY, name VARCHAR(255));\nINSERT INTO Users VALUES (1, 'Alice');\nINSERT INTO Users VALUES (2, 'Bob');",
+        "expectedQuery": "DELETE FROM Users WHERE id = 1; SELECT * FROM Users;",
+        "defaultCode": "-- Delete user with id 1\nDELETE FROM Users\nWHERE \n\n-- Keep select to render results\nSELECT * FROM Users;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Check Row Deletion",
+            "seedSql": "CREATE TABLE Users (id INT PRIMARY KEY, name VARCHAR(255));\nINSERT INTO Users VALUES (1, 'Charlie');"
+          }
+        ],
+        "explanation": "The DELETE statement removes tuples matching the WHERE condition from the physical database table storage."
+      },
+      {
+        "id": "l52-replace-rows",
+        "title": "L52: Replacing Rows",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "The `REPLACE` statement (or `INSERT OR REPLACE` in SQLite/MySQL) is primarily used to overwrite already present tuples in a table. If there is a duplicate primary key (or unique constraint clash), the conflicting old row is deleted and the new row is inserted. Otherwise, it acts as standard insertion.\n`REPLACE INTO student (id, class) VALUES (4, 3);`\n\n**Your Task:**\nReplace the record in the `Student` table with `id = 1` and `class = 12`. (Since id=1 already exists with class=10, this should overwrite it).",
+        "schema": [
+          {
+            "name": "Student",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "class",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Student (id INT PRIMARY KEY, class INT);\nINSERT INTO Student VALUES (1, 10);\nINSERT INTO Student VALUES (2, 11);",
+        "expectedQuery": "INSERT OR REPLACE INTO Student (id, class) VALUES (1, 12); SELECT * FROM Student;",
+        "defaultCode": "-- Replace values for student id 1\nINSERT OR REPLACE INTO Student\n\n\n-- Keep select to view results\nSELECT * FROM Student;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Test Conflict Resolution",
+            "seedSql": "CREATE TABLE Student (id INT PRIMARY KEY, class INT);\nINSERT INTO Student VALUES (1, 9);"
+          }
+        ],
+        "explanation": "The REPLACE command checks for unique/primary key conflicts. If a match is found, it removes the conflicting record and inserts the new record, avoiding primary key clashes."
+      }
+    ]
+  },
+  {
+    "id": "ch5-joins",
+    "title": "Chapter 5: SQL Joining Tables",
+    "lessons": [
+      {
+        "id": "l53-inner-join",
+        "title": "L53: Inner Join",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "An `INNER JOIN` returns rows that have matching values in both tables. It uses a join condition to pair matching rows:\n`SELECT * FROM t1 INNER JOIN t2 ON t1.id = t2.parent_id;`\n\n**Your Task:**\nSelect the employee `name` and their corresponding department `name` (as `dept_name`) by performing an `INNER JOIN` between `Employees` and `Departments` tables matching department IDs.",
+        "schema": [
+          {
+            "name": "Employees",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "dept_id",
+                "type": "INT",
+                "key": "FK",
+                "references": "Departments.id"
+              }
+            ]
+          },
+          {
+            "name": "Departments",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Departments (id INT PRIMARY KEY, name VARCHAR(255));\nCREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), dept_id INT);\nINSERT INTO Departments VALUES (10, 'Engineering');\nINSERT INTO Departments VALUES (20, 'Sales');\nINSERT INTO Employees VALUES (1, 'Alice', 10);\nINSERT INTO Employees VALUES (2, 'Bob', 20);\nINSERT INTO Employees VALUES (3, 'Charlie', 10);",
+        "expectedQuery": "SELECT E.name, D.name AS dept_name FROM Employees E INNER JOIN Departments D ON E.dept_id = D.id;",
+        "defaultCode": "-- Perform INNER JOIN\nSELECT E.name, D.name AS dept_name\nFROM Employees E\nINNER JOIN Departments D\nON ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Join Match Verification",
+            "seedSql": "CREATE TABLE Departments (id INT PRIMARY KEY, name VARCHAR(255));\nCREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), dept_id INT);\nINSERT INTO Departments VALUES (100, 'Marketing');\nINSERT INTO Employees VALUES (10, 'Rex', 100);"
+          }
+        ],
+        "explanation": "INNER JOIN combines rows by checking if `E.dept_id = D.id` is true. Unmatched records in either table (e.g. an employee without a department) are omitted."
+      },
+      {
+        "id": "l54-left-join",
+        "title": "L54: Left Join",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "A `LEFT JOIN` (or Left Outer Join) returns all records from the left table, and the matched records from the right table. If there is no match, the right side is populated with `NULL`:\n`SELECT * FROM t1 LEFT JOIN t2 ON t1.id = t2.parent_id;`\n\n**Your Task:**\nSelect the customer `name` and their order `amount` using a `LEFT JOIN` between `Customers` (left) and `Orders` (right) matching customer IDs.",
+        "schema": [
+          {
+            "name": "Customers",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              }
+            ]
+          },
+          {
+            "name": "Orders",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "amount",
+                "type": "INT"
+              },
+              {
+                "name": "cust_id",
+                "type": "INT",
+                "key": "FK",
+                "references": "Customers.id"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255));\nCREATE TABLE Orders (id INT PRIMARY KEY, amount INT, cust_id INT);\nINSERT INTO Customers VALUES (1, 'Alice');\nINSERT INTO Customers VALUES (2, 'Bob');\nINSERT INTO Customers VALUES (3, 'Charlie');\nINSERT INTO Orders VALUES (100, 250, 1);\nINSERT INTO Orders VALUES (101, 120, 1);",
+        "expectedQuery": "SELECT C.name, O.amount FROM Customers C LEFT JOIN Orders O ON C.id = O.cust_id;",
+        "defaultCode": "-- Perform LEFT JOIN\nSELECT C.name, O.amount\nFROM Customers C\nLEFT JOIN Orders O\nON ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Check Null Mappings",
+            "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255));\nCREATE TABLE Orders (id INT PRIMARY KEY, amount INT, cust_id INT);\nINSERT INTO Customers VALUES (10, 'Sam');"
+          }
+        ],
+        "explanation": "LEFT JOIN guarantees that every left-side entity (Customer) is represented in the output. If a customer (like Bob or Charlie) has no orders, their order columns display NULL."
+      },
+      {
+        "id": "l55-right-full-joins",
+        "title": "L55: Right/Full Outer Joins",
+        "type": "coding",
+        "difficulty": "Hard",
+        "description": "A `FULL OUTER JOIN` combines the properties of LEFT and RIGHT joins, returning all rows from both tables and filling unmatched columns with `NULL`.\nSince SQLite does not natively support `RIGHT JOIN` or `FULL OUTER JOIN`, we must emulate a FULL OUTER JOIN using a `LEFT JOIN` and a `RIGHT JOIN` combined by a `UNION` clause:\n`SELECT * FROM t1 LEFT JOIN t2 ON t1.id = t2.id`\n`UNION`\n`SELECT * FROM t1 RIGHT JOIN t2 ON t1.id = t2.id;` (Since SQLite lacks right join, we emulate it by swapping table positions in the second left join: `t2 LEFT JOIN t1`).\n\n**Your Task:**\nEmulate a FULL OUTER JOIN by selecting `A.id` as `id_a` and `B.id` as `id_b` from table `A` and `B` combined via `UNION`.",
+        "schema": [
+          {
+            "name": "A",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              }
+            ]
+          },
+          {
+            "name": "B",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE A (id INT PRIMARY KEY);\nCREATE TABLE B (id INT PRIMARY KEY);\nINSERT INTO A VALUES (1);\nINSERT INTO A VALUES (2);\nINSERT INTO B VALUES (2);\nINSERT INTO B VALUES (3);",
+        "expectedQuery": "SELECT A.id AS id_a, B.id AS id_b FROM A LEFT JOIN B ON A.id = B.id UNION SELECT A.id AS id_a, B.id AS id_b FROM B LEFT JOIN A ON A.id = B.id;",
+        "defaultCode": "-- Emulate FULL OUTER JOIN using UNION\nSELECT A.id AS id_a, B.id AS id_b FROM A LEFT JOIN B ON A.id = B.id\nUNION\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Evaluate Combined Outer Joins",
+            "seedSql": "CREATE TABLE A (id INT PRIMARY KEY);\nCREATE TABLE B (id INT PRIMARY KEY);\nINSERT INTO A VALUES (10);\nINSERT INTO B VALUES (20);"
+          }
+        ],
+        "explanation": "Combining a left join (A left join B) and a right-style emulated join (B left join A) using UNION yields the complete outer union of both sets, matching SQLite's engine constraints."
+      },
+      {
+        "id": "l56-cross-joins",
+        "title": "L56: Cross Join",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "A `CROSS JOIN` returns the Cartesian product of the rows in both tables. Each row from the first table is paired with every row in the second table. If table A has 10 rows and table B has 5 rows, a CROSS JOIN outputs 50 rows.\n`SELECT * FROM t1 CROSS JOIN t2;`\n\n**Your Task:**\nPerform a `CROSS JOIN` between table `Sizes` and `Colors` and select the `size` and `color` columns.",
+        "schema": [
+          {
+            "name": "Sizes",
+            "columns": [
+              {
+                "name": "size",
+                "type": "VARCHAR(50)"
+              }
+            ]
+          },
+          {
+            "name": "Colors",
+            "columns": [
+              {
+                "name": "color",
+                "type": "VARCHAR(50)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Sizes (size VARCHAR(50));\nCREATE TABLE Colors (color VARCHAR(50));\nINSERT INTO Sizes VALUES ('S');\nINSERT INTO Sizes VALUES ('M');\nINSERT INTO Colors VALUES ('Red');\nINSERT INTO Colors VALUES ('Blue');",
+        "expectedQuery": "SELECT S.size, C.color FROM Sizes S CROSS JOIN Colors C;",
+        "defaultCode": "-- Cross join sizes and colors\nSELECT S.size, C.color\nFROM Sizes S\nCROSS JOIN Colors C;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Check Product",
+            "seedSql": "CREATE TABLE Sizes (size VARCHAR(50));\nCREATE TABLE Colors (color VARCHAR(50));\nINSERT INTO Sizes VALUES ('L');\nINSERT INTO Colors VALUES ('Green');"
+          }
+        ],
+        "explanation": "CROSS JOIN pairs every left table row with every right table row, generating all possible permutations of sizes and colors."
+      },
+      {
+        "id": "l57-self-joins",
+        "title": "L57: Self Join",
+        "type": "coding",
+        "difficulty": "Hard",
+        "description": "A self-join is a regular join, but the table is joined to itself. This is useful for comparing rows within the same table (e.g. employees paired with their manager who is also an employee).\nTo perform a self-join, you must use table aliases to distinguish the left instance from the right instance:\n`SELECT A.name, B.name FROM Employees A INNER JOIN Employees B ON A.manager_id = B.id;`\n\n**Your Task:**\nRetrieve the employee `name` and their manager's `name` (as `manager_name`) from the `Employees` table by joining it to itself matching manager IDs.",
+        "schema": [
+          {
+            "name": "Employees",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "manager_id",
+                "type": "INT",
+                "key": "FK",
+                "references": "Employees.id"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), manager_id INT);\nINSERT INTO Employees VALUES (1, 'Alice', NULL);\nINSERT INTO Employees VALUES (2, 'Bob', 1);\nINSERT INTO Employees VALUES (3, 'Charlie', 1);\nINSERT INTO Employees VALUES (4, 'David', 2);",
+        "expectedQuery": "SELECT A.name, B.name AS manager_name FROM Employees A INNER JOIN Employees B ON A.manager_id = B.id;",
+        "defaultCode": "-- Self join Employees A and B\nSELECT A.name, B.name AS manager_name\nFROM Employees A\nINNER JOIN Employees B\nON ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Check Hierarchy Mappings",
+            "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), manager_id INT);\nINSERT INTO Employees VALUES (1, 'Boss', NULL);\nINSERT INTO Employees VALUES (2, 'Staff', 1);"
+          }
+        ],
+        "explanation": "A self-join uses table aliases (like A and B) to treat a single table as two virtual tables, allowing columns in the same table to be matched against each other."
+      }
+    ]
+  },
+  {
+    "id": "ch6-subqueries",
+    "title": "Chapter 6: SQL Set Operations & Subqueries",
+    "lessons": [
+      {
+        "id": "l58-set-operations",
+        "title": "L58: Set Operations",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "SQL set operations combine results from multiple queries. Key operations:\n- `UNION`: Combines results and removes duplicates.\n- `UNION ALL`: Combines results and keeps duplicate rows.\nBoth SELECT queries must have the same number of columns with compatible data types.\n\n**Your Task:**\nRetrieve a unique list of all names by combining the `name` column from the `Customers` table and the `name` column from the `Employees` table using the `UNION` clause.",
+        "schema": [
+          {
+            "name": "Customers",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              }
+            ]
+          },
+          {
+            "name": "Employees",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255));\nCREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255));\nINSERT INTO Customers VALUES (1, 'Alice');\nINSERT INTO Customers VALUES (2, 'Bob');\nINSERT INTO Employees VALUES (10, 'Bob');\nINSERT INTO Employees VALUES (20, 'Charlie');",
+        "expectedQuery": "SELECT name FROM Customers UNION SELECT name FROM Employees;",
+        "defaultCode": "-- Union query of names\nSELECT name FROM Customers\nUNION\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Verify Set Union",
+            "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255));\nCREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255));\nINSERT INTO Customers VALUES (5, 'Karan');\nINSERT INTO Employees VALUES (50, 'Karan');"
+          }
+        ],
+        "explanation": "The UNION operator merges both datasets vertically and performs a distinct check to exclude any overlapping duplicates (like 'Bob')."
+      },
+      {
+        "id": "l59-nested-subquery",
+        "title": "L59: Nested Subqueries",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "A subquery is a nested query inside another statement. Subqueries in the `WHERE` clause evaluate first to provide a value or list for comparison:\n`SELECT * FROM Employees WHERE salary > (SELECT AVG(salary) FROM Employees);`\n\n**Your Task:**\nRetrieve the `name` and `salary` of employees whose `salary` is strictly greater than the average salary of all employees.",
+        "schema": [
+          {
+            "name": "Employees",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "salary",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), salary INT);\nINSERT INTO Employees VALUES (1, 'Alice', 50000);\nINSERT INTO Employees VALUES (2, 'Bob', 80000);\nINSERT INTO Employees VALUES (3, 'Charlie', 60000);",
+        "expectedQuery": "SELECT name, salary FROM Employees WHERE salary > (SELECT AVG(salary) FROM Employees);",
+        "defaultCode": "-- Filter using average salary subquery\nSELECT name, salary\nFROM Employees\nWHERE salary > (SELECT );",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Verify Nested Calculation",
+            "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), salary INT);\nINSERT INTO Employees VALUES (4, 'David', 90000);\nINSERT INTO Employees VALUES (5, 'Eve', 40000);"
+          }
+        ],
+        "explanation": "The inner query `(SELECT AVG(salary) FROM Employees)` runs first, returning a single numeric value (e.g. 63333). The outer query then filters rows using `salary > 63333`."
+      },
+      {
+        "id": "l60-correlated-subquery",
+        "title": "L60: Co-related Subqueries",
+        "type": "coding",
+        "difficulty": "Hard",
+        "description": "Unlike standard subqueries which execute once, a **correlated subquery** is evaluated once for each row processed by the outer query. It contains references to columns from the outer query:\n`SELECT * FROM Employees E WHERE salary > (SELECT AVG(salary) FROM Employees WHERE dept = E.dept);`\n\n**Your Task:**\nFind employees whose `salary` is greater than or equal to the average salary of their own `department`. Select `name`, `department`, and `salary`.",
+        "schema": [
+          {
+            "name": "Employees",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "department",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "salary",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), department VARCHAR(255), salary INT);\nINSERT INTO Employees VALUES (1, 'Alice', 'HR', 50000);\nINSERT INTO Employees VALUES (2, 'Bob', 'HR', 60000);\nINSERT INTO Employees VALUES (3, 'Charlie', 'IT', 90000);\nINSERT INTO Employees VALUES (4, 'David', 'IT', 70000);\nINSERT INTO Employees VALUES (5, 'Eve', 'IT', 80000);",
+        "expectedQuery": "SELECT name, department, salary FROM Employees E WHERE salary >= (SELECT AVG(salary) FROM Employees WHERE department = E.department);",
+        "defaultCode": "-- Correlated subquery\nSELECT name, department, salary\nFROM Employees E\nWHERE salary >= (SELECT AVG(salary) FROM Employees WHERE department = );",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Test Correlated Mappings",
+            "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), department VARCHAR(255), salary INT);\nINSERT INTO Employees VALUES (10, 'Sam', 'HR', 40000);\nINSERT INTO Employees VALUES (11, 'Billy', 'HR', 55000);"
+          }
+        ],
+        "explanation": "For each outer employee row E, the subquery calculates the average salary for `E.department` dynamically. This splits evaluation by grouping parameters."
+      },
+      {
+        "id": "l61-database-views",
+        "title": "L61: Database Views",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "A view is a virtual table whose contents are defined by a query. It does not store physical data; it dynamically executes its defined query when queried. Views simplify complex query access:\n`CREATE VIEW view_name AS SELECT col1 FROM table_name;`\n\n**Your Task:**\nCreate a view named `HighEarners` that selects the `name` and `salary` from the `Employees` table for employees with `salary > 70000`.",
+        "schema": [
+          {
+            "name": "Employees",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(255)"
+              },
+              {
+                "name": "salary",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), salary INT);\nINSERT INTO Employees VALUES (1, 'Alice', 50000);\nINSERT INTO Employees VALUES (2, 'Bob', 80000);",
+        "expectedQuery": "CREATE VIEW HighEarners AS SELECT name, salary FROM Employees WHERE salary > 70000;",
+        "defaultCode": "-- Create the view HighEarners\nCREATE VIEW ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Create View Verification",
+            "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), salary INT);"
+          }
+        ],
+        "explanation": "CREATE VIEW stores the SELECT statement structure in the database schema. When you select from `HighEarners`, the DBMS runs the query against the base Employees table."
+      }
+    ]
+  }
+]

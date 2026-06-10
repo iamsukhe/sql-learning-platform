@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Problem, Chapter, chapters } from '../data/problems';
+import { Problem, chapters } from '../data/problems';
 import { Search, CheckCircle2, Circle, Sparkles, ChevronDown, ChevronRight } from 'lucide-react';
 
 interface SidebarProps {
@@ -7,13 +7,15 @@ interface SidebarProps {
   currentProblemId: string;
   onSelectProblem: (id: string) => void;
   solvedProblems: string[];
+  isOpen: boolean;
 }
 
 export default function Sidebar({
   problems,
   currentProblemId,
   onSelectProblem,
-  solvedProblems
+  solvedProblems,
+  isOpen
 }: SidebarProps) {
   const [searchTerm, setSearchTerm] = useState('');
   
@@ -24,7 +26,10 @@ export default function Sidebar({
   useEffect(() => {
     const parentCh = chapters.find(ch => ch.lessons.some(l => l.id === currentProblemId));
     if (parentCh) {
-      setExpandedChapters(prev => ({ ...prev, [parentCh.id]: true }));
+      const timer = setTimeout(() => {
+        setExpandedChapters(prev => ({ ...prev, [parentCh.id]: true }));
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [currentProblemId]);
 
@@ -55,7 +60,7 @@ export default function Sidebar({
   const totalCount = problems.length;
 
   return (
-    <aside className="bg-slate-900 border-r border-slate-800 flex flex-col h-full overflow-hidden shrink-0">
+    <aside className={`bg-slate-900 border-r border-slate-800 flex flex-col h-full overflow-hidden shrink-0 transition-transform duration-300 ease-in-out fixed inset-y-0 left-0 z-40 w-[280px] lg:static lg:translate-x-0 ${isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}`}>
       {/* Stats Header */}
       <div className="p-4 border-b border-slate-800 bg-slate-950/15 flex flex-col gap-3.5">
         <div className="flex justify-between items-center">

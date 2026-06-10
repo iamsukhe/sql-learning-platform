@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import { Sparkles, Sun, Moon, Database, HelpCircle, AlertTriangle, ArrowRight, CheckCircle2, XCircle } from 'lucide-react';
+import { Sparkles, Sun, Moon, Database, HelpCircle, AlertTriangle, ArrowRight, CheckCircle2, BookOpen, Menu } from 'lucide-react';
 import { problems } from '../data/problems';
 import { 
   getSqlLib, 
@@ -16,12 +16,15 @@ import Sidebar from '../components/Sidebar';
 import SchemaViewer from '../components/SchemaViewer';
 import SqlEditor from '../components/SqlEditor';
 import ResultsPanel from '../components/ResultsPanel';
+import PdfViewer from '../components/PdfViewer';
 
 export default function Home() {
+  const [activeView, setActiveView] = useState<'notes' | 'sql'>('notes');
   const [currentProblemId, setCurrentProblemId] = useState<string>(problems[0].id);
   const [userCodes, setUserCodes] = useState<{ [problemId: string]: string }>({});
   const [solvedProblems, setSolvedProblems] = useState<string[]>([]);
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   
   const [isDbLoaded, setIsDbLoaded] = useState(false);
   const [dbError, setDbError] = useState<string | null>(null);
@@ -34,10 +37,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'input' | 'output' | 'tests'>('input');
   const [isEvaluating, setIsEvaluating] = useState(false);
 
-  // MCQ-specific states
-  const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(null);
-  const [mcqSubmitted, setMcqSubmitted] = useState<boolean>(false);
-  const [mcqPassed, setMcqPassed] = useState<boolean>(false);
+
 
   const activeProblem = problems.find(p => p.id === currentProblemId) || problems[0];
 
@@ -189,22 +189,16 @@ export default function Home() {
     }
   };
 
-  // MCQ submit handler
-  const handleSubmitMcq = () => {
-    if (selectedOptionIndex === null) return;
-    
-    const isCorrect = selectedOptionIndex === activeProblem.correctOptionIndex;
-    setMcqPassed(isCorrect);
-    setMcqSubmitted(true);
-    
-    if (isCorrect) {
-      confetti({
-        particleCount: 100,
-        spread: 60,
-        origin: { y: 0.7 }
-      });
-      markProblemSolved(currentProblemId);
-    }
+
+
+  // Theory completion handler
+  const handleCompleteTheory = () => {
+    confetti({
+      particleCount: 80,
+      spread: 50,
+      origin: { y: 0.7 }
+    });
+    markProblemSolved(currentProblemId);
   };
 
   const markProblemSolved = (problemId: string) => {
@@ -217,17 +211,13 @@ export default function Home() {
 
   const handleSelectProblem = (id: string) => {
     setCurrentProblemId(id);
+    setIsSidebarOpen(false); // Close sidebar drawer on mobile
     
     // Reset coding states
     setRunResult(null);
     setSubmissionResult(null);
     setActiveTab('input');
-    
-    // Reset MCQ states
-    setSelectedOptionIndex(null);
-    setMcqSubmitted(false);
-    setMcqPassed(false);
-  };
+  };  
 
   const handleNextLesson = () => {
     const currentIndex = problems.findIndex(p => p.id === currentProblemId);
@@ -244,17 +234,24 @@ export default function Home() {
   };
 
   // Description Parser & formatter (simple but highly styled markdown subset)
-  const parseInlineCode = (text: string) => {
-    const parts = text.split(/(`[^`]+`)/);
+  const parseInlineCode = (text: string): React.ReactNode[] => {
+    const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*)/);
     return parts.map((part, idx) => {
       if (part.startsWith('`') && part.endsWith('`')) {
         return (
           <code 
             key={idx} 
-            className="bg-slate-950 border border-slate-800 text-cyan-400 px-1.5 py-0.5 rounded font-mono text-[11px] font-semibold"
+            className="bg-slate-950 border border-slate-800 text-cyan-400 px-1.5 py-0.5 rounded font-mono text-[11px] font-semibold whitespace-nowrap"
           >
             {part.slice(1, -1)}
           </code>
+        );
+      }
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return (
+          <strong key={idx} className="font-bold text-slate-200">
+            {part.slice(2, -2)}
+          </strong>
         );
       }
       return part;
@@ -262,270 +259,419 @@ export default function Home() {
   };
 
   const renderDescription = (desc: string) => {
-    return desc.split('\n').map((line, idx) => {
-      if (line.trim().startsWith('-')) {
-        return (
-          <li key={idx} className="ml-4 mb-2 text-slate-400 text-xs">
-            {parseInlineCode(line.trim().slice(1).trim())}
-          </li>
-        );
-      }
-      if (line.trim().startsWith('**') && line.trim().endsWith('**')) {
-        return (
-          <h4 key={idx} className="mt-4 mb-2 text-slate-200 text-xs font-semibold">
-            {parseInlineCode(line.trim().replace(/\*\*/g, ''))}
-          </h4>
-        );
-      }
+    const lines = desc.split('\n');
+    const elements: React.ReactNode[] = [];
+    let currentTableHeaders: string[] | null = null;
+    let currentTableRows: string[][] = [];
+    let isInsideTable = false;
+
+    const renderAccumulatedTable = (key: string | number) => {
+      if (!isInsideTable) return null;
+      isInsideTable = false;
+      const headers = currentTableHeaders;
+      const rows = currentTableRows;
+      currentTableHeaders = null;
+      currentTableRows = [];
+
       return (
-        <p key={idx} className="mb-3 text-slate-400 text-xs leading-relaxed">
-          {parseInlineCode(line)}
-        </p>
+        <div key={key} className="overflow-x-auto border border-slate-800 rounded my-4 max-w-full">
+          <table className="w-full border-collapse text-xs text-left">
+            {headers && (
+              <thead>
+                <tr className="bg-slate-950/60 border-b border-slate-800">
+                  {headers.map((h, i) => (
+                    <th key={i} className="text-cyan-400 p-2.5 font-semibold font-sans">{parseInlineCode(h)}</th>
+                  ))}
+                </tr>
+              </thead>
+            )}
+            <tbody>
+              {rows.map((row, rIdx) => (
+                <tr key={rIdx} className="hover:bg-slate-800/10 border-b border-slate-900/60 last:border-b-0">
+                  {row.map((val, cIdx) => (
+                    <td key={cIdx} className="p-2.5 text-slate-300 leading-relaxed font-sans">
+                      {parseInlineCode(val)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       );
-    });
+    };
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const trimmed = line.trim();
+
+      if (trimmed.startsWith('|')) {
+        isInsideTable = true;
+        if (trimmed.includes(':---') || trimmed.match(/^\|[\s:-|]+$/)) {
+          continue;
+        }
+        const cells = line.split('|').map(c => c.trim());
+        if (cells[0] === '') cells.shift();
+        if (cells[cells.length - 1] === '') cells.pop();
+
+        if (!currentTableHeaders) {
+          currentTableHeaders = cells;
+        } else {
+          currentTableRows.push(cells);
+        }
+      } else {
+        if (isInsideTable) {
+          elements.push(renderAccumulatedTable(`table-${i}`));
+        }
+
+        if (trimmed === '') {
+          elements.push(<div key={i} className="h-3" />);
+          continue;
+        }
+
+        if (trimmed.startsWith('### ')) {
+          elements.push(
+            <h4 key={i} className="mt-5 mb-2.5 text-slate-200 text-sm font-semibold tracking-wide border-b border-slate-800/40 pb-1">
+              {parseInlineCode(trimmed.slice(4))}
+            </h4>
+          );
+        } else if (trimmed.startsWith('## ')) {
+          elements.push(
+            <h3 key={i} className="mt-6 mb-3 text-slate-100 text-base font-bold tracking-tight border-b border-slate-800 pb-1.5">
+              {parseInlineCode(trimmed.slice(3))}
+            </h3>
+          );
+        } else if (trimmed.startsWith('# ')) {
+          elements.push(
+            <h2 key={i} className="mt-8 mb-4 text-slate-100 text-lg font-extrabold tracking-tight border-b border-slate-800 pb-2">
+              {parseInlineCode(trimmed.slice(2))}
+            </h2>
+          );
+        } else if (trimmed.startsWith('**') && trimmed.endsWith('**')) {
+          elements.push(
+            <h4 key={i} className="mt-4 mb-2 text-slate-200 text-xs font-semibold uppercase tracking-wider text-cyan-400">
+              {parseInlineCode(trimmed.slice(2, -2))}
+            </h4>
+          );
+        } else if (trimmed.startsWith('-') || trimmed.startsWith('*')) {
+          elements.push(
+            <li key={i} className="ml-4 mb-1.5 text-slate-400 text-xs list-disc leading-relaxed pl-1.5">
+              {parseInlineCode(trimmed.slice(1).trim())}
+            </li>
+          );
+        } else if (trimmed.match(/^\d+\.\s/)) {
+          const match = trimmed.match(/^(\d+)\.\s(.*)/);
+          const num = match ? match[1] : '1';
+          const content = match ? match[2] : trimmed;
+          elements.push(
+            <div key={i} className="ml-2 mb-2 text-slate-400 text-xs leading-relaxed flex items-start gap-2">
+              <span className="text-cyan-500 font-semibold font-mono">{num}.</span>
+              <span className="flex-1">{parseInlineCode(content)}</span>
+            </div>
+          );
+        } else if (trimmed.match(/^[a-zA-Z]\.\s/)) {
+          const match = trimmed.match(/^([a-zA-Z])\.\s(.*)/);
+          const char = match ? match[1] : 'a';
+          const content = match ? match[2] : trimmed;
+          elements.push(
+            <div key={i} className="ml-6 mb-1.5 text-slate-400 text-xs leading-relaxed flex items-start gap-2">
+              <span className="text-slate-500 font-semibold font-mono">{char}.</span>
+              <span className="flex-1">{parseInlineCode(content)}</span>
+            </div>
+          );
+        } else if (trimmed.match(/^[ivxIVX]+\.\s/)) {
+          const match = trimmed.match(/^([ivxIVX]+)\.\s(.*)/);
+          const roman = match ? match[1] : 'i';
+          const content = match ? match[2] : trimmed;
+          elements.push(
+            <div key={i} className="ml-10 mb-1.5 text-slate-500 text-xs leading-relaxed flex items-start gap-2">
+              <span className="text-slate-600 font-mono">{roman}.</span>
+              <span className="flex-1">{parseInlineCode(content)}</span>
+            </div>
+          );
+        } else {
+          elements.push(
+            <p key={i} className="mb-3 text-slate-400 text-xs leading-relaxed">
+              {parseInlineCode(trimmed)}
+            </p>
+          );
+        }
+      }
+    }
+
+    if (isInsideTable) {
+      elements.push(renderAccumulatedTable(`table-end`));
+    }
+
+    return elements;
   };
 
   return (
-    <div className="grid grid-rows-[56px_1fr] h-screen w-screen bg-slate-950 text-slate-100 overflow-hidden font-sans select-none">
+    <div className="grid grid-rows-[56px_1fr] h-screen w-screen bg-slate-950 text-slate-100 overflow-hidden font-sans select-none animate-theme">
       {/* Top Navbar */}
-      <header className="flex items-center justify-between px-6 bg-slate-900 border-b border-slate-800 z-10 select-none">
-        <div className="flex items-center gap-2.5 text-base font-bold tracking-tight text-slate-100">
-          <Database size={20} className="text-cyan-400" />
-          <span>Leet<span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">SQL</span></span>
-        </div>
-
-        <div className="flex items-center gap-5">
-          <div className="flex items-center gap-2 text-slate-400 bg-slate-950/80 px-3 py-1 rounded-full border border-slate-800 text-xs font-semibold">
-            <Sparkles size={14} className="text-cyan-400" />
-            <span>{solvedProblems.length} / {problems.length} Completed</span>
+      <header className="flex items-center justify-between px-4 sm:px-6 bg-slate-900 border-b border-slate-800 z-10 select-none">
+        {/* Logo & Toggle */}
+        <div className="flex items-center gap-2.5">
+          {activeView === 'sql' && (
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="p-1.5 rounded bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-300 lg:hidden cursor-pointer"
+              title="Toggle Syllabus Sidebar"
+            >
+              <Menu size={16} />
+            </button>
+          )}
+          <div className="flex items-center gap-2 text-base font-bold tracking-tight text-slate-100">
+            <Database size={18} className="text-cyan-400" />
+            <span>Leet<span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">SQL</span></span>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        {/* Navigation Tabs (Notes vs SQL Practice) */}
+        <div className="flex bg-slate-950/80 p-0.5 sm:p-1 rounded-lg border border-slate-800 shrink-0">
+          <button
+            onClick={() => setActiveView('notes')}
+            className={`px-2 py-1.5 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
+              activeView === 'notes'
+                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-[0_0_12px_rgba(34,211,238,0.2)] font-extrabold'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <BookOpen size={13} />
+            <span className="hidden sm:inline">Lecture Notes</span>
+            <span className="sm:hidden">Notes</span>
+          </button>
+          <button
+            onClick={() => setActiveView('sql')}
+            className={`px-2 py-1.5 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
+              activeView === 'sql'
+                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-[0_0_12px_rgba(34,211,238,0.2)] font-extrabold'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <Database size={13} />
+            <span className="hidden sm:inline">SQL Problems</span>
+            <span className="sm:hidden">SQL</span>
+          </button>
+        </div>
+
+        {/* Right side stats & theme toggler */}
+        <div className="flex items-center gap-2 sm:gap-4">
+          <div className="hidden md:flex items-center gap-2 text-slate-400 bg-slate-950/80 px-3 py-1 rounded-full border border-slate-800 text-xs font-semibold">
+            <Sparkles size={14} className="text-cyan-400" />
+            <span>{solvedProblems.length} / {problems.length} Completed</span>
+          </div>
+
           <button 
             className="p-2 rounded-full bg-slate-950/80 border border-slate-800 text-slate-400 hover:bg-slate-900 hover:text-slate-100 transition-colors cursor-pointer" 
             onClick={toggleTheme}
             title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
           >
-            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
           </button>
         </div>
       </header>
 
       {/* Main Content Area */}
-      <main className="grid grid-cols-[280px_1fr] h-full w-full overflow-hidden">
-        {/* Sidebar */}
-        <Sidebar
-          problems={problems}
-          currentProblemId={currentProblemId}
-          solvedProblems={solvedProblems}
-          onSelectProblem={handleSelectProblem}
-        />
-
-        {/* Workspace Panel */}
-        {!isDbLoaded ? (
-          <div className="flex flex-col items-center justify-center gap-3 h-full bg-slate-950/40">
-            <div className="w-8 h-8 border-2 border-cyan-400/20 border-t-cyan-400 rounded-full animate-spin" />
-            <p className="text-xs text-slate-500 font-semibold tracking-wider uppercase">Loading Database Engine...</p>
-          </div>
-        ) : dbError ? (
-          <div className="flex flex-col items-center justify-center gap-3 h-full bg-slate-950/40">
-            <AlertTriangle size={44} className="text-red-500 animate-pulse" />
-            <h2 className="text-base font-semibold text-slate-200">Database Engine Error</h2>
-            <p className="text-xs text-slate-400 max-w-[380px] leading-relaxed">{dbError}</p>
-          </div>
+      <main className="h-full w-full overflow-hidden select-none">
+        {activeView === 'notes' ? (
+          <PdfViewer pdfUrl="/Full Notes.pdf" />
         ) : (
-          <div className="grid grid-cols-[1fr_1.25fr] gap-4 p-4 h-full overflow-hidden bg-slate-950/20">
-            
-            {/* Coding Sandbox Workspace */}
-            {activeProblem.type === 'coding' && (
-              <>
-                {/* Left Column: Description & Schema */}
-                <div className="flex flex-col gap-4 h-full overflow-hidden">
-                  {/* Problem Description Panel */}
-                  <div className="bg-slate-900 border border-slate-800 rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
-                    <div className="flex items-center justify-between px-4 py-3 bg-slate-950/50 border-b border-slate-800 min-h-[48px]">
-                      <div className="flex items-center gap-2 font-semibold text-slate-200 text-sm">
-                        <HelpCircle size={16} className="text-cyan-400" />
-                        <span>{activeProblem.title}</span>
-                      </div>
-                    </div>
-                    <div className="p-4 flex-1 overflow-y-auto">
-                      {renderDescription(activeProblem.description)}
-                    </div>
-                  </div>
+          <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] h-full w-full overflow-hidden relative">
+            {/* Sidebar */}
+            <Sidebar
+              problems={problems}
+              currentProblemId={currentProblemId}
+              solvedProblems={solvedProblems}
+              onSelectProblem={handleSelectProblem}
+              isOpen={isSidebarOpen}
+            />
 
-                  {/* Schema Viewer Panel */}
-                  <div className="h-full overflow-hidden">
-                    <SchemaViewer schemas={activeProblem.schema || []} />
-                  </div>
-                </div>
-
-                {/* Right Column: SQL Editor & Output */}
-                <div className="flex flex-col gap-4 h-full overflow-hidden">
-                  {/* Code Editor Panel */}
-                  <div className="flex-1 overflow-hidden">
-                    <SqlEditor
-                      value={currentCode}
-                      onChange={handleCodeChange}
-                      onRun={handleRunCode}
-                      onSubmit={handleSubmitCode}
-                      onReset={handleResetCode}
-                      schemas={activeProblem.schema || []}
-                      isEvaluating={isEvaluating}
-                    />
-                  </div>
-
-                  {/* Results Panel */}
-                  <div className="flex-1 overflow-hidden">
-                    <ResultsPanel
-                      seedTables={seedTables}
-                      runResult={runResult}
-                      submissionResult={submissionResult}
-                      activeTab={activeTab}
-                      setActiveTab={setActiveTab}
-                      isLoading={loadingTables || isEvaluating}
-                    />
-                  </div>
-                </div>
-              </>
+            {/* Backdrop overlay for mobile drawer */}
+            {isSidebarOpen && (
+              <div 
+                className="fixed inset-0 bg-slate-950/60 z-30 lg:hidden cursor-pointer"
+                onClick={() => setIsSidebarOpen(false)}
+              />
             )}
 
-            {/* MCQ Conceptual Workspace */}
-            {activeProblem.type === 'mcq' && (
-              <div className="col-span-2 grid grid-cols-[1fr_1.25fr] gap-4 h-full overflow-hidden">
-                {/* Left Column: Reading Content */}
-                <div className="bg-slate-900 border border-slate-800 rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
-                  <div className="flex items-center justify-between px-4 py-3 bg-slate-950/50 border-b border-slate-800 min-h-[48px]">
-                    <div className="flex items-center gap-2 font-semibold text-slate-200 text-sm">
-                      <HelpCircle size={16} className="text-cyan-400" />
-                      <span>{activeProblem.title} - Concept</span>
-                    </div>
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-cyan-400 bg-cyan-950/40 border border-cyan-500/20 px-2 py-0.5 rounded">
-                      CONCEPT
-                    </span>
-                  </div>
-                  <div className="p-4 flex-1 overflow-y-auto">
-                    {renderDescription(activeProblem.description)}
-                  </div>
-                </div>
+            {/* Workspace Panel */}
+            {!isDbLoaded ? (
+              <div className="flex flex-col items-center justify-center gap-3 h-full bg-slate-950/40 w-full">
+                <div className="w-8 h-8 border-2 border-cyan-400/20 border-t-cyan-400 rounded-full animate-spin" />
+                <p className="text-xs text-slate-500 font-semibold tracking-wider uppercase">Loading Database Engine...</p>
+              </div>
+            ) : dbError ? (
+              <div className="flex flex-col items-center justify-center gap-3 h-full bg-slate-950/40 w-full">
+                <AlertTriangle size={44} className="text-red-500 animate-pulse" />
+                <h2 className="text-base font-semibold text-slate-200">Database Engine Error</h2>
+                <p className="text-xs text-slate-400 max-w-[380px] leading-relaxed">{dbError}</p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4 p-3 h-full overflow-y-auto pb-12 bg-slate-950/20 w-full lg:grid lg:grid-cols-[1fr_1.25fr] lg:overflow-hidden lg:p-4 lg:pb-4">
+                
+                {/* Coding Sandbox Workspace */}
+                {activeProblem.type === 'coding' && (
+                  <>
+                    {/* Left Column: Description & Schema */}
+                    <div className="flex flex-col gap-4 h-auto lg:h-full lg:overflow-hidden shrink-0 lg:shrink">
+                      {/* Problem Description Panel */}
+                      <div className="bg-slate-900 border border-slate-800 rounded-lg shadow-lg overflow-hidden flex flex-col h-auto max-h-[400px] lg:max-h-none lg:h-full shrink-0 lg:shrink">
+                        <div className="flex items-center justify-between px-4 py-3 bg-slate-950/50 border-b border-slate-800 min-h-[48px]">
+                          <div className="flex items-center gap-2 font-semibold text-slate-200 text-sm">
+                            <HelpCircle size={16} className="text-cyan-400" />
+                            <span>{activeProblem.title}</span>
+                          </div>
+                        </div>
+                        <div className="p-5 flex-1 overflow-y-auto font-serif text-[13px] text-slate-300 leading-relaxed tracking-wide">
+                          {renderDescription(activeProblem.description)}
+                        </div>
+                      </div>
 
-                {/* Right Column: Interactive Quiz Card */}
-                <div className="bg-slate-900 border border-slate-800 rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
-                  <div className="flex items-center justify-between px-4 py-3 bg-slate-950/50 border-b border-slate-800 min-h-[48px]">
-                    <span className="font-semibold text-slate-200 text-sm">Concept Check</span>
-                  </div>
-                  <div className="p-6 flex-1 overflow-y-auto flex flex-col justify-between">
-                    <div>
-                      <h3 className="text-sm font-semibold text-slate-200 mb-4">{activeProblem.question}</h3>
-                      <div className="flex flex-col gap-3">
-                        {activeProblem.options?.map((option, idx) => {
-                          const isSelected = selectedOptionIndex === idx;
-                          const isCorrectOption = idx === activeProblem.correctOptionIndex;
-                          
-                          let cardClass = "p-4 rounded-lg border text-left text-xs transition-all cursor-pointer ";
-                          if (mcqSubmitted) {
-                            if (isCorrectOption) {
-                              cardClass += "bg-emerald-950/20 border-emerald-500/30 text-emerald-300";
-                            } else if (isSelected) {
-                              cardClass += "bg-rose-950/20 border-rose-500/30 text-rose-300";
-                            } else {
-                              cardClass += "bg-slate-950/40 border-slate-800/80 text-slate-500 cursor-default";
-                            }
-                          } else {
-                            if (isSelected) {
-                              cardClass += "bg-cyan-950/30 border-cyan-500/50 text-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.1)]";
-                            } else {
-                              cardClass += "bg-slate-950/60 border-slate-800/80 text-slate-300 hover:border-slate-700 hover:bg-slate-900/40";
-                            }
-                          }
-                          
-                          return (
-                            <button
-                              key={idx}
-                              onClick={() => !mcqSubmitted && setSelectedOptionIndex(idx)}
-                              disabled={mcqSubmitted}
-                              className={cardClass}
-                            >
-                              <div className="flex items-start gap-3">
-                                <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                                  isSelected ? 'bg-cyan-500 text-slate-950' : 'bg-slate-800 text-slate-400'
-                                }`}>
-                                  {String.fromCharCode(65 + idx)}
-                                </span>
-                                <span className="leading-relaxed">{option}</span>
-                              </div>
-                            </button>
-                          );
-                        })}
+                      {/* Schema Viewer Panel */}
+                      <div className="h-auto max-h-[300px] lg:max-h-none lg:h-full shrink-0 lg:shrink">
+                        <SchemaViewer schemas={activeProblem.schema || []} />
                       </div>
                     </div>
 
-                    <div className="mt-6 border-t border-slate-800 pt-4 flex flex-col gap-4">
-                      {mcqSubmitted && (
-                        <div className={`flex items-start gap-2.5 p-3 rounded-lg border text-xs leading-relaxed ${
-                          mcqPassed 
-                            ? 'bg-emerald-950/20 border-emerald-500/20 text-emerald-400' 
-                            : 'bg-rose-950/20 border-rose-500/20 text-rose-400'
-                        }`}>
-                          {mcqPassed ? (
-                            <>
-                              <CheckCircle2 size={16} className="text-emerald-400 flex-shrink-0 mt-0.5" />
-                              <div>
-                                <span className="font-semibold">Correct!</span> Well done. You&apos;ve mastered this concept.
-                              </div>
-                            </>
-                          ) : (
-                            <>
-                              <XCircle size={16} className="text-rose-400 flex-shrink-0 mt-0.5" />
-                              <div>
-                                <span className="font-semibold">Incorrect.</span> Try again to find the correct answer.
-                              </div>
-                            </>
+                    {/* Right Column: SQL Editor & Output */}
+                    <div className="flex flex-col gap-4 h-auto lg:h-full lg:overflow-hidden shrink-0 lg:shrink">
+                      {/* Code Editor Panel */}
+                      <div className="flex-1 min-h-[300px] lg:min-h-0 overflow-hidden shrink-0 lg:shrink">
+                        <SqlEditor
+                          value={currentCode}
+                          onChange={handleCodeChange}
+                          onRun={handleRunCode}
+                          onSubmit={handleSubmitCode}
+                          onReset={handleResetCode}
+                          schemas={activeProblem.schema || []}
+                          isEvaluating={isEvaluating}
+                        />
+                      </div>
+
+                      {/* Results Panel */}
+                      <div className="flex-1 min-h-[250px] lg:min-h-0 overflow-hidden shrink-0 lg:shrink">
+                        <ResultsPanel
+                          seedTables={seedTables}
+                          runResult={runResult}
+                          submissionResult={submissionResult}
+                          activeTab={activeTab}
+                          setActiveTab={setActiveTab}
+                          isLoading={loadingTables || isEvaluating}
+                          explanation={activeProblem.explanation}
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* Theory Conceptual Workspace */}
+                {activeProblem.type === 'theory' && (
+                  <div className="col-span-2 grid grid-cols-[1.5fr_1fr] gap-4 h-full overflow-hidden">
+                    {/* Left Column: Reading Content */}
+                    <div className="bg-slate-900 border border-slate-800 rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
+                      <div className="flex items-center justify-between px-4 py-3 bg-slate-950/50 border-b border-slate-800 min-h-[48px]">
+                        <div className="flex items-center gap-2 font-semibold text-slate-200 text-sm">
+                          <BookOpen size={16} className="text-cyan-400" />
+                          <span>{activeProblem.title} - Study Notes</span>
+                        </div>
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-cyan-400 bg-cyan-950/40 border border-cyan-500/20 px-2 py-0.5 rounded">
+                          THEORY
+                        </span>
+                      </div>
+                      <div className="p-6 flex-1 overflow-y-auto">
+                        {renderDescription(activeProblem.description)}
+                      </div>
+                    </div>
+
+                    {/* Right Column: Learning Control Panel */}
+                    <div className="bg-slate-900 border border-slate-800 rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
+                      <div className="flex items-center justify-between px-4 py-3 bg-slate-950/50 border-b border-slate-800 min-h-[48px]">
+                        <span className="font-semibold text-slate-200 text-sm">Learning Dashboard</span>
+                        <span className="text-[10px] text-slate-400 font-medium bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">
+                          {Math.max(1, Math.round(activeProblem.description.length / 500))} min read
+                        </span>
+                      </div>
+                      <div className="p-6 flex-1 overflow-y-auto flex flex-col justify-between">
+                        <div className="flex flex-col gap-5">
+                          {/* Key Takeaways */}
+                          {activeProblem.takeaways && activeProblem.takeaways.length > 0 && (
+                            <div className="p-4 bg-slate-950/40 border border-slate-800/80 rounded-lg">
+                              <h4 className="text-[10px] font-bold uppercase tracking-wider text-cyan-400 mb-2.5 flex items-center gap-1.5">
+                                <Sparkles size={12} className="text-cyan-400" />
+                                Key Takeaways
+                              </h4>
+                              <ul className="flex flex-col gap-2">
+                                {activeProblem.takeaways.map((takeaway, idx) => (
+                                  <li key={idx} className="text-xs text-slate-300 leading-relaxed flex items-start gap-2">
+                                    <span className="text-cyan-500 font-bold mt-0.5">•</span>
+                                    <span>{parseInlineCode(takeaway)}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {/* Self-Check Questions */}
+                          {activeProblem.selfCheck && activeProblem.selfCheck.length > 0 && (
+                            <div className="p-4 bg-slate-950/20 border border-slate-800/60 rounded-lg">
+                              <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
+                                <HelpCircle size={12} className="text-slate-400" />
+                                Self-Reflection Questions
+                              </h4>
+                              <p className="text-[11px] text-slate-500 leading-relaxed mb-3">
+                                Contemplate these questions to check your understanding:
+                              </p>
+                              <ul className="flex flex-col gap-2">
+                                {activeProblem.selfCheck.map((q, idx) => (
+                                  <li key={idx} className="text-xs text-slate-400 leading-relaxed flex items-start gap-2 font-medium">
+                                    <span className="text-slate-500 font-bold mt-0.5">?</span>
+                                    <span>{q}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
                           )}
                         </div>
-                      )}
 
-                      <div className="flex justify-end gap-3">
-                        {!mcqSubmitted ? (
-                          <button
-                            onClick={handleSubmitMcq}
-                            disabled={selectedOptionIndex === null}
-                            className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 rounded font-semibold text-xs hover:from-cyan-400 hover:to-blue-500 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-                          >
-                            Submit Answer
-                          </button>
-                        ) : (
-                          <>
-                            {!mcqPassed && (
-                              <button
-                                onClick={() => {
-                                  setMcqSubmitted(false);
-                                  setSelectedOptionIndex(null);
-                                }}
-                                className="px-4 py-2 bg-slate-800 border border-slate-700 text-slate-200 rounded font-semibold text-xs hover:bg-slate-700 transition-colors cursor-pointer"
-                              >
-                                Try Again
-                              </button>
-                            )}
-                            {hasNextLesson() && (
-                              <button
-                                onClick={handleNextLesson}
-                                className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 rounded font-semibold text-xs hover:from-cyan-400 hover:to-blue-500 transition-colors flex items-center gap-1.5 cursor-pointer"
-                              >
-                                Next Lesson
-                                <ArrowRight size={14} />
-                              </button>
-                            )}
-                          </>
-                        )}
+                        {/* Progress Controls */}
+                        <div className="mt-6 border-t border-slate-800 pt-4 flex flex-col gap-4">
+                          {solvedProblems.includes(activeProblem.id) ? (
+                            <div className="flex flex-col gap-3">
+                              <div className="flex items-start gap-2.5 p-3.5 rounded-lg border bg-emerald-950/20 border-emerald-500/20 text-emerald-400 text-xs leading-relaxed">
+                                <CheckCircle2 size={16} className="text-emerald-400 flex-shrink-0 mt-0.5" />
+                                <div>
+                                  <span className="font-semibold text-slate-200">Lesson Completed!</span>
+                                  <div className="text-slate-400 mt-0.5">You have read and mastered these study notes.</div>
+                                </div>
+                              </div>
+                              {hasNextLesson() && (
+                                <button
+                                  onClick={handleNextLesson}
+                                  className="w-full py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 rounded font-semibold text-xs hover:from-cyan-400 hover:to-blue-500 transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-[0_0_15px_rgba(34,211,238,0.1)]"
+                                >
+                                  Next Lesson
+                                  <ArrowRight size={14} />
+                                </button>
+                              )}
+                            </div>
+                          ) : (
+                            <button
+                              onClick={handleCompleteTheory}
+                              className="w-full py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 rounded font-semibold text-xs hover:from-cyan-400 hover:to-blue-500 transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-[0_0_15px_rgba(34,211,238,0.15)]"
+                            >
+                              <BookOpen size={14} />
+                              Mark as Completed
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
+
               </div>
             )}
-
           </div>
         )}
       </main>
