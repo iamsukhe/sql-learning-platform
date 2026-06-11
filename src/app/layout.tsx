@@ -3,8 +3,8 @@ import Script from "next/script";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
-  title: "LeetDBMS - Learn DBMS Interactively",
-  description: "Learn DBMS interactively with hands-on practice problems running fully inside your browser.",
+  title: "SQLQuest - Interactive SQL Learning Platform",
+  description: "Master SQL interactively with hands-on practice problems running fully inside your browser, completely free.",
 };
 
 export default function RootLayout({

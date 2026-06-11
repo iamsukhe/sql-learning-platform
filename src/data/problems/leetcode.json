@@ -1,0 +1,683 @@
+[
+  {
+    "id": "ch32-practice-intermediate-sql",
+    "title": "Chapter 32: SQL Exercise Set C - Part 1 (Questions 1\u20138)",
+    "lessons": [
+      {
+        "id": "lc-1179",
+        "title": "Reformat Department Table",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Write an SQL query to reformat the `Department` table such that there is a department `id` column and a revenue column for each month.\n\nReturn the result table in any order.",
+        "schema": [
+          {
+            "name": "Department",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT"
+              },
+              {
+                "name": "revenue",
+                "type": "INT"
+              },
+              {
+                "name": "month",
+                "type": "VARCHAR(5)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Department (\n  id INT,\n  revenue INT,\n  month VARCHAR(5),\n  PRIMARY KEY (id, month)\n);\nINSERT INTO Department VALUES (1, 8000, 'Jan');\nINSERT INTO Department VALUES (2, 9000, 'Jan');\nINSERT INTO Department VALUES (3, 10000, 'Feb');\nINSERT INTO Department VALUES (1, 7000, 'Feb');\nINSERT INTO Department VALUES (1, 6000, 'Mar');",
+        "expectedQuery": "SELECT id,\n       SUM(CASE WHEN month = 'Jan' THEN revenue ELSE NULL END) AS Jan_Revenue,\n       SUM(CASE WHEN month = 'Feb' THEN revenue ELSE NULL END) AS Feb_Revenue,\n       SUM(CASE WHEN month = 'Mar' THEN revenue ELSE NULL END) AS Mar_Revenue,\n       SUM(CASE WHEN month = 'Apr' THEN revenue ELSE NULL END) AS Apr_Revenue,\n       SUM(CASE WHEN month = 'May' THEN revenue ELSE NULL END) AS May_Revenue,\n       SUM(CASE WHEN month = 'Jun' THEN revenue ELSE NULL END) AS Jun_Revenue,\n       SUM(CASE WHEN month = 'Jul' THEN revenue ELSE NULL END) AS Jul_Revenue,\n       SUM(CASE WHEN month = 'Aug' THEN revenue ELSE NULL END) AS Aug_Revenue,\n       SUM(CASE WHEN month = 'Sep' THEN revenue ELSE NULL END) AS Sep_Revenue,\n       SUM(CASE WHEN month = 'Oct' THEN revenue ELSE NULL END) AS Oct_Revenue,\n       SUM(CASE WHEN month = 'Nov' THEN revenue ELSE NULL END) AS Nov_Revenue,\n       SUM(CASE WHEN month = 'Dec' THEN revenue ELSE NULL END) AS Dec_Revenue\nFROM Department\nGROUP BY id;",
+        "defaultCode": "-- Write your SELECT query below\nSELECT id,\n       SUM(CASE WHEN month = 'Jan' THEN revenue ELSE NULL END) AS Jan_Revenue,\n       SUM(CASE WHEN month = 'Feb' THEN revenue ELSE NULL END) AS Feb_Revenue\n       -- Add other months here...\nFROM Department\nGROUP BY id;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Department (\n  id INT,\n  revenue INT,\n  month VARCHAR(5),\n  PRIMARY KEY (id, month)\n);\nINSERT INTO Department VALUES (1, 8000, 'Jan');\nINSERT INTO Department VALUES (2, 9000, 'Jan');\nINSERT INTO Department VALUES (3, 10000, 'Feb');\nINSERT INTO Department VALUES (1, 7000, 'Feb');\nINSERT INTO Department VALUES (1, 6000, 'Mar');"
+          }
+        ],
+        "explanation": "Groups the department records by id and pivots the monthly revenue values using conditional aggregation with SUM and CASE WHEN."
+      },
+      {
+        "id": "lc-1527",
+        "title": "Patients With a Condition",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Write an SQL query to find the patient_id, patient_name, and conditions of the patients who have Type I Diabetes. Type I Diabetes always starts with `DIAB1` prefix.\n\nReturn the result table in any order.",
+        "schema": [
+          {
+            "name": "Patients",
+            "columns": [
+              {
+                "name": "patient_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "patient_name",
+                "type": "VARCHAR(30)"
+              },
+              {
+                "name": "conditions",
+                "type": "VARCHAR(100)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Patients (\n  patient_id INT PRIMARY KEY,\n  patient_name VARCHAR(30),\n  conditions VARCHAR(100)\n);\nINSERT INTO Patients VALUES (1, 'Daniel', 'YFEV COUGH');\nINSERT INTO Patients VALUES (2, 'Alice', '');\nINSERT INTO Patients VALUES (3, 'Bob', 'DIAB100 MYOP');\nINSERT INTO Patients VALUES (4, 'George', 'ACNE DIAB100');\nINSERT INTO Patients VALUES (5, 'Alain', 'DIAB201');",
+        "expectedQuery": "SELECT patient_id, patient_name, conditions FROM Patients WHERE conditions LIKE 'DIAB1%' OR conditions LIKE '% DIAB1%';",
+        "defaultCode": "-- Write your SELECT query below\nSELECT patient_id, patient_name, conditions\nFROM Patients\nWHERE ;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Patients (\n  patient_id INT PRIMARY KEY,\n  patient_name VARCHAR(30),\n  conditions VARCHAR(100)\n);\nINSERT INTO Patients VALUES (1, 'Daniel', 'YFEV COUGH');\nINSERT INTO Patients VALUES (2, 'Alice', '');\nINSERT INTO Patients VALUES (3, 'Bob', 'DIAB100 MYOP');\nINSERT INTO Patients VALUES (4, 'George', 'ACNE DIAB100');\nINSERT INTO Patients VALUES (5, 'Alain', 'DIAB201');"
+          }
+        ],
+        "explanation": "Checks if 'DIAB1' appears either at the very beginning of the conditions string (LIKE 'DIAB1%') or as a later word preceded by a space (LIKE '% DIAB1%')."
+      },
+      {
+        "id": "lc-1795",
+        "title": "Rearrange Products Table",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Write an SQL query to rearrange the `Products` table so that each row has `(product_id, store, price)`. If a product is not available in a store, do not include a row with that `product_id` and `store` combination in the result table.\n\nReturn the result table in any order.",
+        "schema": [
+          {
+            "name": "Products",
+            "columns": [
+              {
+                "name": "product_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "store1",
+                "type": "INT"
+              },
+              {
+                "name": "store2",
+                "type": "INT"
+              },
+              {
+                "name": "store3",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Products (\n  product_id INT PRIMARY KEY,\n  store1 INT,\n  store2 INT,\n  store3 INT\n);\nINSERT INTO Products VALUES (0, 95, 100, 105);\nINSERT INTO Products VALUES (1, 70, NULL, 80);",
+        "expectedQuery": "SELECT product_id, 'store1' AS store, store1 AS price FROM Products WHERE store1 IS NOT NULL\nUNION\nSELECT product_id, 'store2' AS store, store2 AS price FROM Products WHERE store2 IS NOT NULL\nUNION\nSELECT product_id, 'store3' AS store, store3 AS price FROM Products WHERE store3 IS NOT NULL;",
+        "defaultCode": "-- Write your SELECT query below\nSELECT product_id, 'store1' AS store, store1 AS price \nFROM Products \nWHERE store1 IS NOT NULL\nUNION\n-- Write queries for store2 and store3\n;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Products (\n  product_id INT PRIMARY KEY,\n  store1 INT,\n  store2 INT,\n  store3 INT\n);\nINSERT INTO Products VALUES (0, 95, 100, 105);\nINSERT INTO Products VALUES (1, 70, NULL, 80);"
+          }
+        ],
+        "explanation": "Unpivots columns to rows by selecting product_id, a constant string for the store name, and the store price for each store column that is not null, combining the results using UNION."
+      },
+      {
+        "id": "lc-1693",
+        "title": "Daily Leads and Partners",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "For each `date_id` and `make_name`, find the number of distinct `lead_id`'s and distinct `partner_id`'s.\n\nReturn the result table in any order.",
+        "schema": [
+          {
+            "name": "DailySales",
+            "columns": [
+              {
+                "name": "date_id",
+                "type": "DATE"
+              },
+              {
+                "name": "make_name",
+                "type": "VARCHAR(20)"
+              },
+              {
+                "name": "lead_id",
+                "type": "INT"
+              },
+              {
+                "name": "partner_id",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE DailySales (\n  date_id DATE,\n  make_name VARCHAR(20),\n  lead_id INT,\n  partner_id INT\n);\nINSERT INTO DailySales VALUES ('2020-12-08', 'toyota', 0, 1);\nINSERT INTO DailySales VALUES ('2020-12-08', 'toyota', 1, 0);\nINSERT INTO DailySales VALUES ('2020-12-08', 'toyota', 1, 2);\nINSERT INTO DailySales VALUES ('2020-12-07', 'toyota', 0, 2);\nINSERT INTO DailySales VALUES ('2020-12-07', 'toyota', 0, 1);\nINSERT INTO DailySales VALUES ('2020-12-08', 'honda', 1, 2);\nINSERT INTO DailySales VALUES ('2020-12-08', 'honda', 2, 1);\nINSERT INTO DailySales VALUES ('2020-12-07', 'honda', 0, 1);\nINSERT INTO DailySales VALUES ('2020-12-07', 'honda', 1, 2);\nINSERT INTO DailySales VALUES ('2020-12-07', 'honda', 2, 1);",
+        "expectedQuery": "SELECT date_id, make_name, COUNT(DISTINCT lead_id) AS unique_leads, COUNT(DISTINCT partner_id) AS unique_partners FROM DailySales GROUP BY date_id, make_name;",
+        "defaultCode": "-- Write your SELECT query below\nSELECT date_id, make_name, COUNT(DISTINCT lead_id) AS unique_leads\nFROM DailySales\nGROUP BY ;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE DailySales (\n  date_id DATE,\n  make_name VARCHAR(20),\n  lead_id INT,\n  partner_id INT\n);\nINSERT INTO DailySales VALUES ('2020-12-08', 'toyota', 0, 1);\nINSERT INTO DailySales VALUES ('2020-12-08', 'toyota', 1, 0);\nINSERT INTO DailySales VALUES ('2020-12-08', 'toyota', 1, 2);\nINSERT INTO DailySales VALUES ('2020-12-07', 'toyota', 0, 2);\nINSERT INTO DailySales VALUES ('2020-12-07', 'toyota', 0, 1);\nINSERT INTO DailySales VALUES ('2020-12-08', 'honda', 1, 2);\nINSERT INTO DailySales VALUES ('2020-12-08', 'honda', 2, 1);\nINSERT INTO DailySales VALUES ('2020-12-07', 'honda', 0, 1);\nINSERT INTO DailySales VALUES ('2020-12-07', 'honda', 1, 2);\nINSERT INTO DailySales VALUES ('2020-12-07', 'honda', 2, 1);"
+          }
+        ],
+        "explanation": "Groups the sales records by date_id and make_name, then aggregates counts of unique leads and unique partners using COUNT(DISTINCT ...)."
+      },
+      {
+        "id": "lc-181",
+        "title": "Employees Earning More Than Their Managers",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Write an SQL query to find the employees who earn more than their managers.\n\nReturn the result table in any order.",
+        "schema": [
+          {
+            "name": "Employee",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(30)"
+              },
+              {
+                "name": "salary",
+                "type": "INT"
+              },
+              {
+                "name": "managerId",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Employee (\n  id INT PRIMARY KEY,\n  name VARCHAR(30),\n  salary INT,\n  managerId INT\n);\nINSERT INTO Employee VALUES (1, 'Joe', 70000, 3);\nINSERT INTO Employee VALUES (2, 'Henry', 80000, 4);\nINSERT INTO Employee VALUES (3, 'Sam', 60000, NULL);\nINSERT INTO Employee VALUES (4, 'Max', 90000, NULL);",
+        "expectedQuery": "SELECT e1.name AS Employee FROM Employee AS e1 INNER JOIN Employee AS e2 ON e1.managerId = e2.id WHERE e1.salary > e2.salary;",
+        "defaultCode": "-- Write your SELECT query below\nSELECT e1.name AS Employee\nFROM Employee AS e1\nINNER JOIN Employee AS e2 ON \nWHERE ;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Employee (\n  id INT PRIMARY KEY,\n  name VARCHAR(30),\n  salary INT,\n  managerId INT\n);\nINSERT INTO Employee VALUES (1, 'Joe', 70000, 3);\nINSERT INTO Employee VALUES (2, 'Henry', 80000, 4);\nINSERT INTO Employee VALUES (3, 'Sam', 60000, NULL);\nINSERT INTO Employee VALUES (4, 'Max', 90000, NULL);"
+          }
+        ],
+        "explanation": "Performs a self-join comparing employee salary with manager salary, filtering where employee salary exceeds manager salary."
+      },
+      {
+        "id": "lc-1741",
+        "title": "Find Total Time Spent by Each Employee",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Write an SQL query to calculate the total time in minutes spent by each employee on each day at the office. Note that within one day, an employee can enter and leave more than once. The time spent in the office for a single entry is `out_time - in_time`.\n\nReturn the result table in any order.",
+        "schema": [
+          {
+            "name": "Employees",
+            "columns": [
+              {
+                "name": "emp_id",
+                "type": "INT"
+              },
+              {
+                "name": "event_day",
+                "type": "DATE"
+              },
+              {
+                "name": "in_time",
+                "type": "INT"
+              },
+              {
+                "name": "out_time",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Employees (\n  emp_id INT,\n  event_day DATE,\n  in_time INT,\n  out_time INT,\n  PRIMARY KEY (emp_id, event_day, in_time)\n);\nINSERT INTO Employees VALUES (1, '2020-11-28', 4, 32);\nINSERT INTO Employees VALUES (1, '2020-11-28', 55, 200);\nINSERT INTO Employees VALUES (1, '2020-12-03', 1, 42);\nINSERT INTO Employees VALUES (2, '2020-11-28', 3, 33);\nINSERT INTO Employees VALUES (2, '2020-12-09', 47, 74);",
+        "expectedQuery": "SELECT event_day AS day, emp_id, (SUM(out_time) - SUM(in_time)) AS total_time FROM Employees GROUP BY event_day, emp_id;",
+        "defaultCode": "-- Write your SELECT query below\nSELECT event_day AS day, emp_id, \nFROM Employees\nGROUP BY ;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Employees (\n  emp_id INT,\n  event_day DATE,\n  in_time INT,\n  out_time INT,\n  PRIMARY KEY (emp_id, event_day, in_time)\n);\nINSERT INTO Employees VALUES (1, '2020-11-28', 4, 32);\nINSERT INTO Employees VALUES (1, '2020-11-28', 55, 200);\nINSERT INTO Employees VALUES (1, '2020-12-03', 1, 42);\nINSERT INTO Employees VALUES (2, '2020-11-28', 3, 33);\nINSERT INTO Employees VALUES (2, '2020-12-09', 47, 74);"
+          }
+        ],
+        "explanation": "Groups the events by day and employee ID, summing the differences between out_time and in_time for each day."
+      },
+      {
+        "id": "lc-627",
+        "title": "Swap Salary",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Write an SQL query to swap all `'f'` and `'m'` values (i.e., change all `'f'` values to `'m'` and vice versa) with a single update statement and no intermediate temporary tables.\n\nNote that you must write a single update statement, and end it with a query to fetch the updated table.",
+        "schema": [
+          {
+            "name": "Salary",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(30)"
+              },
+              {
+                "name": "sex",
+                "type": "CHAR(1)"
+              },
+              {
+                "name": "salary",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Salary (\n  id INT PRIMARY KEY,\n  name VARCHAR(30),\n  sex CHAR(1),\n  salary INT\n);\nINSERT INTO Salary VALUES (1, 'A', 'm', 2500);\nINSERT INTO Salary VALUES (2, 'B', 'f', 1500);\nINSERT INTO Salary VALUES (3, 'C', 'm', 5500);\nINSERT INTO Salary VALUES (4, 'D', 'f', 500);",
+        "expectedQuery": "UPDATE Salary SET sex = CASE WHEN sex = 'm' THEN 'f' WHEN sex = 'f' THEN 'm' END; SELECT * FROM Salary;",
+        "defaultCode": "-- Write your UPDATE query below\nUPDATE Salary\nSET sex = CASE WHEN sex = 'm' THEN 'f' ELSE 'm' END;\n\n-- Keep select query to render results\nSELECT * FROM Salary;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Salary (\n  id INT PRIMARY KEY,\n  name VARCHAR(30),\n  sex CHAR(1),\n  salary INT\n);\nINSERT INTO Salary VALUES (1, 'A', 'm', 2500);\nINSERT INTO Salary VALUES (2, 'B', 'f', 1500);\nINSERT INTO Salary VALUES (3, 'C', 'm', 5500);\nINSERT INTO Salary VALUES (4, 'D', 'f', 500);"
+          }
+        ],
+        "explanation": "Updates the gender column in-place by checking if sex equals 'm' (changing it to 'f') or 'f' (changing it to 'm') using a CASE expression."
+      },
+      {
+        "id": "lc-182",
+        "title": "Duplicate Emails",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Write an SQL query to report all the duplicate emails. Note that it is guaranteed that the email field is not NULL.\n\nReturn the result table in any order.",
+        "schema": [
+          {
+            "name": "Person",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "email",
+                "type": "VARCHAR(50)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Person (\n  id INT PRIMARY KEY,\n  email VARCHAR(50)\n);\nINSERT INTO Person VALUES (1, 'a@b.com');\nINSERT INTO Person VALUES (2, 'c@d.com');\nINSERT INTO Person VALUES (3, 'a@b.com');",
+        "expectedQuery": "SELECT email FROM Person GROUP BY email HAVING COUNT(email) > 1;",
+        "defaultCode": "-- Write your SELECT query below\nSELECT email \nFROM Person \nGROUP BY email \nHAVING ;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Person (\n  id INT PRIMARY KEY,\n  email VARCHAR(50)\n);\nINSERT INTO Person VALUES (1, 'a@b.com');\nINSERT INTO Person VALUES (2, 'c@d.com');\nINSERT INTO Person VALUES (3, 'a@b.com');"
+          }
+        ],
+        "explanation": "Groups rows by email address and filters for email groups that have a count of elements greater than 1."
+      }
+    ]
+  },
+  {
+    "id": "ch33-practice-advanced-sql",
+    "title": "Chapter 33: SQL Exercise Set C - Part 2 (Questions 9\u201316)",
+    "lessons": [
+      {
+        "id": "lc-1484",
+        "title": "Group Sold Products By The Date",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Write an SQL query to find for each date the number of different products sold and their names. The sold products names for each date should be sorted lexicographically.\n\nReturn the result table ordered by `sell_date`.",
+        "schema": [
+          {
+            "name": "Activities",
+            "columns": [
+              {
+                "name": "sell_date",
+                "type": "DATE"
+              },
+              {
+                "name": "product",
+                "type": "VARCHAR(50)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Activities (\n  sell_date DATE,\n  product VARCHAR(50)\n);\nINSERT INTO Activities VALUES ('2020-05-30', 'Headphone');\nINSERT INTO Activities VALUES ('2020-06-01', 'Pencil');\nINSERT INTO Activities VALUES ('2020-06-02', 'Mask');\nINSERT INTO Activities VALUES ('2020-05-30', 'Basketball');\nINSERT INTO Activities VALUES ('2020-06-01', 'Bible');\nINSERT INTO Activities VALUES ('2020-06-02', 'Mask');\nINSERT INTO Activities VALUES ('2020-05-30', 'T-Shirt');",
+        "expectedQuery": "SELECT sell_date, COUNT(DISTINCT product) AS num_sold, group_concat(DISTINCT product) AS products FROM (SELECT DISTINCT sell_date, product FROM Activities ORDER BY sell_date, product) GROUP BY sell_date ORDER BY sell_date;",
+        "defaultCode": "-- Write your SELECT query below\n-- (Tip: Since SQLite doesn't support ORDER BY inside group_concat, sort the distinct pairs in a subquery first)\nSELECT sell_date, COUNT(DISTINCT product) AS num_sold, group_concat(DISTINCT product) AS products\nFROM (\n    SELECT DISTINCT sell_date, product \n    FROM Activities \n    ORDER BY sell_date, product\n)\nGROUP BY sell_date\nORDER BY sell_date;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Activities (\n  sell_date DATE,\n  product VARCHAR(50)\n);\nINSERT INTO Activities VALUES ('2020-05-30', 'Headphone');\nINSERT INTO Activities VALUES ('2020-06-01', 'Pencil');\nINSERT INTO Activities VALUES ('2020-06-02', 'Mask');\nINSERT INTO Activities VALUES ('2020-05-30', 'Basketball');\nINSERT INTO Activities VALUES ('2020-06-01', 'Bible');\nINSERT INTO Activities VALUES ('2020-06-02', 'Mask');\nINSERT INTO Activities VALUES ('2020-05-30', 'T-Shirt');"
+          }
+        ],
+        "explanation": "Since SQLite does not support custom sort order in group_concat, we first query unique sell_date and product combinations ordered lexicographically in a subquery, then aggregate them using group_concat in the outer query."
+      },
+      {
+        "id": "lc-1890",
+        "title": "The Latest Login in 2020",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Write an SQL query to report the latest login for all users in the year 2020. Do not include the users who did not login in 2020.\n\nReturn the result table in any order.",
+        "schema": [
+          {
+            "name": "Logins",
+            "columns": [
+              {
+                "name": "user_id",
+                "type": "INT"
+              },
+              {
+                "name": "time_stamp",
+                "type": "DATETIME"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Logins (\n  user_id INT,\n  time_stamp DATETIME,\n  PRIMARY KEY (user_id, time_stamp)\n);\nINSERT INTO Logins VALUES (6, '2020-06-30 15:06:07');\nINSERT INTO Logins VALUES (6, '2021-04-21 14:06:06');\nINSERT INTO Logins VALUES (6, '2019-03-07 00:18:15');\nINSERT INTO Logins VALUES (8, '2020-02-01 05:10:53');\nINSERT INTO Logins VALUES (8, '2020-12-30 00:46:50');\nINSERT INTO Logins VALUES (2, '2020-01-16 02:49:50');\nINSERT INTO Logins VALUES (2, '2019-08-25 07:59:08');\nINSERT INTO Logins VALUES (14, '2019-07-14 09:00:00');\nINSERT INTO Logins VALUES (14, '2021-01-06 11:59:59');",
+        "expectedQuery": "SELECT user_id, MAX(time_stamp) AS last_stamp FROM Logins WHERE strftime('%Y', time_stamp) = '2020' GROUP BY user_id;",
+        "defaultCode": "-- Write your SELECT query below\nSELECT user_id, MAX(time_stamp) AS last_stamp\nFROM Logins\nWHERE \nGROUP BY user_id;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Logins (\n  user_id INT,\n  time_stamp DATETIME,\n  PRIMARY KEY (user_id, time_stamp)\n);\nINSERT INTO Logins VALUES (6, '2020-06-30 15:06:07');\nINSERT INTO Logins VALUES (6, '2021-04-21 14:06:06');\nINSERT INTO Logins VALUES (6, '2019-03-07 00:18:15');\nINSERT INTO Logins VALUES (8, '2020-02-01 05:10:53');\nINSERT INTO Logins VALUES (8, '2020-12-30 00:46:50');\nINSERT INTO Logins VALUES (2, '2020-01-16 02:49:50');\nINSERT INTO Logins VALUES (2, '2019-08-25 07:59:08');\nINSERT INTO Logins VALUES (14, '2019-07-14 09:00:00');\nINSERT INTO Logins VALUES (14, '2021-01-06 11:59:59');"
+          }
+        ],
+        "explanation": "Filters for login logs occurring in the year 2020 using the SQLite strftime('%Y', time_stamp) = '2020' expression, grouping by user_id to extract their maximum (latest) timestamp."
+      },
+      {
+        "id": "lc-620",
+        "title": "Not Boring Movies",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Write an SQL query to report the movies with an odd-numbered ID and a description that is not \"boring\".\n\nReturn the result table ordered by rating in descending order.",
+        "schema": [
+          {
+            "name": "Cinema",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "movie",
+                "type": "VARCHAR(50)"
+              },
+              {
+                "name": "description",
+                "type": "VARCHAR(100)"
+              },
+              {
+                "name": "rating",
+                "type": "FLOAT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Cinema (\n  id INT PRIMARY KEY,\n  movie VARCHAR(50),\n  description VARCHAR(100),\n  rating FLOAT\n);\nINSERT INTO Cinema VALUES (1, 'War', 'great 3D', 8.9);\nINSERT INTO Cinema VALUES (2, 'Science', 'fiction', 8.5);\nINSERT INTO Cinema VALUES (3, 'irish', 'boring', 6.2);\nINSERT INTO Cinema VALUES (4, 'Ice song', 'Fantacy', 8.6);\nINSERT INTO Cinema VALUES (5, 'House card', 'Interesting', 9.1);",
+        "expectedQuery": "SELECT id, movie, description, rating FROM Cinema WHERE id % 2 = 1 AND description != 'boring' ORDER BY rating DESC;",
+        "defaultCode": "-- Write your SELECT query below\nSELECT id, movie, description, rating\nFROM Cinema\nWHERE \nORDER BY ;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Cinema (\n  id INT PRIMARY KEY,\n  movie VARCHAR(50),\n  description VARCHAR(100),\n  rating FLOAT\n);\nINSERT INTO Cinema VALUES (1, 'War', 'great 3D', 8.9);\nINSERT INTO Cinema VALUES (2, 'Science', 'fiction', 8.5);\nINSERT INTO Cinema VALUES (3, 'irish', 'boring', 6.2);\nINSERT INTO Cinema VALUES (4, 'Ice song', 'Fantacy', 8.6);\nINSERT INTO Cinema VALUES (5, 'House card', 'Interesting', 9.1);"
+          }
+        ],
+        "explanation": "Retrieves movie details for records with odd IDs (id % 2 = 1) and with description values other than 'boring', sorted by rating descending."
+      },
+      {
+        "id": "lc-1965",
+        "title": "Employees With Missing Information",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Write an SQL query to report the IDs of all the employees with missing information. The information of an employee is missing if the employee's name is missing, or the employee's salary is missing.\n\nReturn the result table ordered by `employee_id` in ascending order.",
+        "schema": [
+          {
+            "name": "Employees",
+            "columns": [
+              {
+                "name": "employee_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(30)"
+              }
+            ]
+          },
+          {
+            "name": "Salaries",
+            "columns": [
+              {
+                "name": "employee_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "salary",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Employees (\n  employee_id INT PRIMARY KEY,\n  name VARCHAR(30)\n);\nCREATE TABLE Salaries (\n  employee_id INT PRIMARY KEY,\n  salary INT\n);\nINSERT INTO Employees VALUES (2, 'Crew');\nINSERT INTO Employees VALUES (4, 'Haven');\nINSERT INTO Employees VALUES (5, 'Kristian');\nINSERT INTO Salaries VALUES (5, 76071);\nINSERT INTO Salaries VALUES (1, 22517);\nINSERT INTO Salaries VALUES (4, 63539);",
+        "expectedQuery": "SELECT employee_id FROM Employees WHERE employee_id NOT IN (SELECT employee_id FROM Salaries)\nUNION\nSELECT employee_id FROM Salaries WHERE employee_id NOT IN (SELECT employee_id FROM Employees)\nORDER BY employee_id;",
+        "defaultCode": "-- Write your SELECT query below\n-- (Tip: Since SQLite doesn't support FULL OUTER JOIN directly, query missing employee ids using UNION)\nSELECT employee_id FROM Employees WHERE employee_id NOT IN (SELECT employee_id FROM Salaries)\nUNION\n;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Employees (\n  employee_id INT PRIMARY KEY,\n  name VARCHAR(30)\n);\nCREATE TABLE Salaries (\n  employee_id INT PRIMARY KEY,\n  salary INT\n);\nINSERT INTO Employees VALUES (2, 'Crew');\nINSERT INTO Employees VALUES (4, 'Haven');\nINSERT INTO Employees VALUES (5, 'Kristian');\nINSERT INTO Salaries VALUES (5, 76071);\nINSERT INTO Salaries VALUES (1, 22517);\nINSERT INTO Salaries VALUES (4, 63539);"
+          }
+        ],
+        "explanation": "Uses UNION to combine employee IDs that exist in the Employees table but are missing from Salaries with employee IDs that exist in the Salaries table but are missing from Employees, ordered in ascending order."
+      },
+      {
+        "id": "lc-196",
+        "title": "Delete Duplicate Emails",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Write an SQL query to delete all duplicate emails, keeping only one unique email with the smallest `id`.\n\nNote that you must write a DELETE statement, and end it with a query to fetch the updated table.",
+        "schema": [
+          {
+            "name": "Person",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "email",
+                "type": "VARCHAR(50)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Person (\n  id INT PRIMARY KEY,\n  email VARCHAR(50)\n);\nINSERT INTO Person VALUES (1, 'john@example.com');\nINSERT INTO Person VALUES (2, 'bob@example.com');\nINSERT INTO Person VALUES (3, 'john@example.com');",
+        "expectedQuery": "DELETE FROM Person WHERE id NOT IN (SELECT MIN(id) FROM Person GROUP BY email); SELECT * FROM Person;",
+        "defaultCode": "-- Write your DELETE query below\nDELETE FROM Person\nWHERE ;\n\n-- Keep select query to render results\nSELECT * FROM Person;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Person (\n  id INT PRIMARY KEY,\n  email VARCHAR(50)\n);\nINSERT INTO Person VALUES (1, 'john@example.com');\nINSERT INTO Person VALUES (2, 'bob@example.com');\nINSERT INTO Person VALUES (3, 'john@example.com');"
+          }
+        ],
+        "explanation": "Deletes duplicate records from the Person table by keeping only the smallest id for each unique email address using a NOT IN subquery."
+      },
+      {
+        "id": "lc-197",
+        "title": "Rising Temperature",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Write an SQL query to find all dates' `id` with higher temperatures compared to its previous dates (yesterday).\n\nReturn the result table in any order.",
+        "schema": [
+          {
+            "name": "Weather",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "recordDate",
+                "type": "DATE"
+              },
+              {
+                "name": "temperature",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Weather (\n  id INT PRIMARY KEY,\n  recordDate DATE,\n  temperature INT\n);\nINSERT INTO Weather VALUES (1, '2015-01-01', 10);\nINSERT INTO Weather VALUES (2, '2015-01-02', 25);\nINSERT INTO Weather VALUES (3, '2015-01-03', 20);\nINSERT INTO Weather VALUES (4, '2015-01-04', 30);",
+        "expectedQuery": "SELECT w1.id FROM Weather w1 JOIN Weather w2 ON w1.recordDate = date(w2.recordDate, '+1 day') WHERE w1.temperature > w2.temperature;",
+        "defaultCode": "-- Write your SELECT query below\n-- (Tip: In SQLite, compare dates using date(w2.recordDate, '+1 day') to find consecutive days)\nSELECT w1.id\nFROM Weather w1\nJOIN Weather w2 ON \nWHERE ;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Weather (\n  id INT PRIMARY KEY,\n  recordDate DATE,\n  temperature INT\n);\nINSERT INTO Weather VALUES (1, '2015-01-01', 10);\nINSERT INTO Weather VALUES (2, '2015-01-02', 25);\nINSERT INTO Weather VALUES (3, '2015-01-03', 20);\nINSERT INTO Weather VALUES (4, '2015-01-04', 30);"
+          }
+        ],
+        "explanation": "Joins the Weather table to itself comparing dates offset by 1 day using date(w2.recordDate, '+1 day'), and filters for records where the temperature is higher than the previous day."
+      },
+      {
+        "id": "lc-607",
+        "title": "Sales Person",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Write an SQL query to find the names of all the salespersons who did not have any orders related to the company with the name \"RED\".\n\nReturn the result table in any order.",
+        "schema": [
+          {
+            "name": "SalesPerson",
+            "columns": [
+              {
+                "name": "sales_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(30)"
+              },
+              {
+                "name": "salary",
+                "type": "INT"
+              },
+              {
+                "name": "commission_rate",
+                "type": "INT"
+              },
+              {
+                "name": "hire_date",
+                "type": "DATE"
+              }
+            ]
+          },
+          {
+            "name": "Company",
+            "columns": [
+              {
+                "name": "com_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(30)"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(30)"
+              }
+            ]
+          },
+          {
+            "name": "Orders",
+            "columns": [
+              {
+                "name": "order_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "order_date",
+                "type": "DATE"
+              },
+              {
+                "name": "com_id",
+                "type": "INT"
+              },
+              {
+                "name": "sales_id",
+                "type": "INT"
+              },
+              {
+                "name": "amount",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE SalesPerson (\n  sales_id INT PRIMARY KEY,\n  name VARCHAR(30),\n  salary INT,\n  commission_rate INT,\n  hire_date DATE\n);\nCREATE TABLE Company (\n  com_id INT PRIMARY KEY,\n  name VARCHAR(30),\n  city VARCHAR(30)\n);\nCREATE TABLE Orders (\n  order_id INT PRIMARY KEY,\n  order_date DATE,\n  com_id INT,\n  sales_id INT,\n  amount INT,\n  FOREIGN KEY(com_id) REFERENCES Company(com_id),\n  FOREIGN KEY(sales_id) REFERENCES SalesPerson(sales_id)\n);\nINSERT INTO SalesPerson VALUES (1, 'John', 100000, 6, '2006-04-01');\nINSERT INTO SalesPerson VALUES (2, 'Amy', 12000, 5, '2010-05-01');\nINSERT INTO SalesPerson VALUES (3, 'Mark', 65000, 12, '2008-12-25');\nINSERT INTO SalesPerson VALUES (4, 'Pam', 25000, 25, '2005-01-01');\nINSERT INTO SalesPerson VALUES (5, 'Alex', 5000, 10, '2007-02-03');\nINSERT INTO Company VALUES (1, 'RED', 'Boston');\nINSERT INTO Company VALUES (2, 'ORANGE', 'New York');\nINSERT INTO Company VALUES (3, 'YELLOW', 'Boston');\nINSERT INTO Company VALUES (4, 'GREEN', 'Austin');\nINSERT INTO Orders VALUES (1, '2014-01-01', 3, 4, 10000);\nINSERT INTO Orders VALUES (2, '2014-02-01', 4, 5, 5000);\nINSERT INTO Orders VALUES (3, '2014-03-01', 1, 1, 50000);\nINSERT INTO Orders VALUES (4, '2014-04-01', 1, 4, 25000);",
+        "expectedQuery": "SELECT name FROM SalesPerson WHERE sales_id NOT IN (SELECT DISTINCT o.sales_id FROM Orders o INNER JOIN Company c ON o.com_id = c.com_id WHERE c.name = 'RED');",
+        "defaultCode": "-- Write your SELECT query below\nSELECT name\nFROM SalesPerson\nWHERE sales_id NOT IN (\n    -- Find all sales_id with orders related to RED company\n);",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE SalesPerson (\n  sales_id INT PRIMARY KEY,\n  name VARCHAR(30),\n  salary INT,\n  commission_rate INT,\n  hire_date DATE\n);\nCREATE TABLE Company (\n  com_id INT PRIMARY KEY,\n  name VARCHAR(30),\n  city VARCHAR(30)\n);\nCREATE TABLE Orders (\n  order_id INT PRIMARY KEY,\n  order_date DATE,\n  com_id INT,\n  sales_id INT,\n  amount INT,\n  FOREIGN KEY(com_id) REFERENCES Company(com_id),\n  FOREIGN KEY(sales_id) REFERENCES SalesPerson(sales_id)\n);\nINSERT INTO SalesPerson VALUES (1, 'John', 100000, 6, '2006-04-01');\nINSERT INTO SalesPerson VALUES (2, 'Amy', 12000, 5, '2010-05-01');\nINSERT INTO SalesPerson VALUES (3, 'Mark', 65000, 12, '2008-12-25');\nINSERT INTO SalesPerson VALUES (4, 'Pam', 25000, 25, '2005-01-01');\nINSERT INTO SalesPerson VALUES (5, 'Alex', 5000, 10, '2007-02-03');\nINSERT INTO Company VALUES (1, 'RED', 'Boston');\nINSERT INTO Company VALUES (2, 'ORANGE', 'New York');\nINSERT INTO Company VALUES (3, 'YELLOW', 'Boston');\nINSERT INTO Company VALUES (4, 'GREEN', 'Austin');\nINSERT INTO Orders VALUES (1, '2014-01-01', 3, 4, 10000);\nINSERT INTO Orders VALUES (2, '2014-02-01', 4, 5, 5000);\nINSERT INTO Orders VALUES (3, '2014-03-01', 1, 1, 50000);\nINSERT INTO Orders VALUES (4, '2014-04-01', 1, 4, 25000);"
+          }
+        ],
+        "explanation": "Uses a subquery to select sales_ids of representatives who had orders linked to the company named 'RED', then selects the name of all salespersons whose IDs are NOT IN that list."
+      },
+      {
+        "id": "lc-176",
+        "title": "Second Highest Salary",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "Write an SQL query to find the second highest distinct salary from the `Employee` table. If there is no second highest salary, return `null`.",
+        "schema": [
+          {
+            "name": "Employee",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "salary",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Employee (\n  id INT PRIMARY KEY,\n  salary INT\n);\nINSERT INTO Employee VALUES (1, 100);\nINSERT INTO Employee VALUES (2, 200);\nINSERT INTO Employee VALUES (3, 300);",
+        "expectedQuery": "SELECT (SELECT DISTINCT salary FROM Employee ORDER BY salary DESC LIMIT 1 OFFSET 1) AS SecondHighestSalary;",
+        "defaultCode": "-- Write your SELECT query below\nSELECT (\n    -- Subquery to select second highest distinct salary\n) AS SecondHighestSalary;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Employee (\n  id INT PRIMARY KEY,\n  salary INT\n);\nINSERT INTO Employee VALUES (1, 100);\nINSERT INTO Employee VALUES (2, 200);\nINSERT INTO Employee VALUES (3, 300);"
+          }
+        ],
+        "explanation": "Retrieves the second highest distinct salary value using LIMIT 1 OFFSET 1 ordered by salary DESC inside a scalar subquery. If there is no second highest salary, SQL naturally evaluates the scalar subquery output as NULL."
+      }
+    ]
+  }
+]

@@ -17,6 +17,7 @@ import SchemaViewer from '../components/SchemaViewer';
 import SqlEditor from '../components/SqlEditor';
 import ResultsPanel from '../components/ResultsPanel';
 import PdfViewer from '../components/PdfViewer';
+import ErdViewer from '../components/ErdViewer';
 
 export default function Home() {
   const [activeView, setActiveView] = useState<'notes' | 'sql'>('notes');
@@ -125,7 +126,7 @@ export default function Home() {
 
   // 1. Initialize Theme
   useEffect(() => {
-    const savedTheme = (localStorage.getItem('leetdbms-theme') || localStorage.getItem('leetsql-theme')) as 'dark' | 'light' || 'dark';
+    const savedTheme = (localStorage.getItem('sqlquest-theme') || localStorage.getItem('leetdbms-theme') || localStorage.getItem('leetsql-theme')) as 'dark' | 'light' || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
     
     const timer = setTimeout(() => {
@@ -138,13 +139,13 @@ export default function Home() {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
     document.documentElement.setAttribute('data-theme', nextTheme);
-    localStorage.setItem('leetdbms-theme', nextTheme);
+    localStorage.setItem('sqlquest-theme', nextTheme);
   };
 
   // 2. Load progress from localStorage
   useEffect(() => {
-    const solved = localStorage.getItem('leetdbms-solved') || localStorage.getItem('leetsql-solved');
-    const savedCodes = localStorage.getItem('leetdbms-codes') || localStorage.getItem('leetsql-codes');
+    const solved = localStorage.getItem('sqlquest-solved') || localStorage.getItem('leetdbms-solved') || localStorage.getItem('leetsql-solved');
+    const savedCodes = localStorage.getItem('sqlquest-codes') || localStorage.getItem('leetdbms-codes') || localStorage.getItem('leetsql-codes');
     
     const timer = setTimeout(() => {
       if (solved) {
@@ -202,7 +203,7 @@ export default function Home() {
   const handleCodeChange = (newCode: string) => {
     const nextCodes = { ...userCodes, [currentProblemId]: newCode };
     setUserCodes(nextCodes);
-    localStorage.setItem('leetdbms-codes', JSON.stringify(nextCodes));
+    localStorage.setItem('sqlquest-codes', JSON.stringify(nextCodes));
   };
 
   const handleResetCode = () => {
@@ -287,7 +288,7 @@ export default function Home() {
     if (!solvedProblems.includes(problemId)) {
       const nextSolved = [...solvedProblems, problemId];
       setSolvedProblems(nextSolved);
-      localStorage.setItem('leetdbms-solved', JSON.stringify(nextSolved));
+      localStorage.setItem('sqlquest-solved', JSON.stringify(nextSolved));
     }
   };
 
@@ -346,6 +347,9 @@ export default function Home() {
     let currentTableHeaders: string[] | null = null;
     let currentTableRows: string[][] = [];
     let isInsideTable = false;
+    let isInsideCodeBlock = false;
+    let codeBlockContent: string[] = [];
+    let codeBlockLang = '';
 
     const renderAccumulatedTable = (key: string | number) => {
       if (!isInsideTable) return null;
@@ -387,6 +391,42 @@ export default function Home() {
       const line = lines[i];
       const trimmed = line.trim();
 
+      // Check code block markers first
+      if (trimmed.startsWith('```')) {
+        if (isInsideTable) {
+          elements.push(renderAccumulatedTable(`table-pre-code-${i}`));
+        }
+
+        if (isInsideCodeBlock) {
+          // Close code block
+          isInsideCodeBlock = false;
+          if (codeBlockLang.startsWith('erd-')) {
+            const erdType = codeBlockLang.slice(4) as 'basic' | 'strong-weak' | 'attributes' | 'relationships';
+            elements.push(<ErdViewer key={`erd-${i}`} type={erdType} />);
+          } else {
+            const codeText = codeBlockContent.join('\n');
+            elements.push(
+              <pre key={`code-${i}`} className="bg-slate-950/80 border border-slate-800/80 rounded-lg p-4 font-mono text-xs text-cyan-400 my-4 overflow-x-auto select-text leading-relaxed">
+                <code>{codeText}</code>
+              </pre>
+            );
+          }
+          codeBlockContent = [];
+          codeBlockLang = '';
+        } else {
+          // Open code block
+          isInsideCodeBlock = true;
+          codeBlockLang = trimmed.slice(3).trim();
+        }
+        continue;
+      }
+
+      if (isInsideCodeBlock) {
+        codeBlockContent.push(line);
+        continue;
+      }
+
+      // Check table rows
       if (trimmed.startsWith('|')) {
         isInsideTable = true;
         if (trimmed.includes(':---') || trimmed.match(/^\|[\s:-|]+$/)) {
@@ -485,6 +525,14 @@ export default function Home() {
       elements.push(renderAccumulatedTable(`table-end`));
     }
 
+    if (isInsideCodeBlock && codeBlockContent.length > 0) {
+      elements.push(
+        <pre key="code-end" className="bg-slate-950/80 border border-slate-800/80 rounded-lg p-4 font-mono text-xs text-cyan-400 my-4 overflow-x-auto select-text leading-relaxed">
+          <code>{codeBlockContent.join('\n')}</code>
+        </pre>
+      );
+    }
+
     return elements;
   };
 
@@ -505,7 +553,7 @@ export default function Home() {
           )}
           <div className="flex items-center gap-2 text-base font-bold tracking-tight text-slate-100">
             <Database size={18} className="text-cyan-400" />
-            <span>Leet<span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">DBMS</span></span>
+            <span>SQL<span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Quest</span></span>
           </div>
         </div>
 

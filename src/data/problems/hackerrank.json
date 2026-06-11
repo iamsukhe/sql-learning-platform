@@ -1,1058 +1,7 @@
 [
   {
-    "id": "ch1-basics",
-    "title": "Chapter 1: SQL Basics & DDL Coding",
-    "lessons": [
-      {
-        "id": "l35-literal-select",
-        "title": "L35: Selecting Literal Values",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "In SQL, the `SELECT` statement is used to retrieve data. You can select literal constants (numbers or text strings) directly without referencing any database table.\nTo give a custom column header to the output, we use the `AS` keyword to define an alias.\nFor example:\n`SELECT 123 AS number;` OR `SELECT 'Hello' AS greeting;`\n\n**Your Task:**\nWrite a SQL query that selects the text `'Welcome to SQL!'` and names the column `greeting`.",
-        "schema": [],
-        "seedSql": "",
-        "expectedQuery": "SELECT 'Welcome to SQL!' AS greeting;",
-        "defaultCode": "-- Write your SELECT query below\nSELECT ",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Default Test",
-            "seedSql": ""
-          }
-        ],
-        "explanation": "Selecting literal values directly returns a single-row result table with your values under the alias column name. The FROM clause is not required for queries that evaluate literal expressions."
-      },
-      {
-        "id": "l36-select-single",
-        "title": "L36: Retrieving a Single Column",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "To fetch columns of data from an actual table, use the basic syntax:\n`SELECT column_name FROM table_name;`\n\n**Your Task:**\nQuery the `Users` table and retrieve only the `name` column for all records.",
-        "schema": [
-          {
-            "name": "Users",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "email",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "age",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), age INT);\nINSERT INTO Users VALUES (1, 'Alice', 'alice@gmail.com', 22);\nINSERT INTO Users VALUES (2, 'Bob', 'bob@yahoo.com', 28);\nINSERT INTO Users VALUES (3, 'Charlie', 'charlie@outlook.com', 19);",
-        "expectedQuery": "SELECT name FROM Users;",
-        "defaultCode": "-- Retrieve only the name column\nSELECT \nFROM Users;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Verify Column",
-            "seedSql": "CREATE TABLE Users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), age INT);\nINSERT INTO Users VALUES (1, 'David', 'david@gmail.com', 30);"
-          }
-        ],
-        "explanation": "The SELECT statement extracts specific columns, and the FROM clause tells the engine which table to search. Only the requested column data is returned."
-      },
-      {
-        "id": "l37-select-multi",
-        "title": "L37: Retrieving Multiple Columns",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "To retrieve multiple columns from a table, list their names separated by a comma in the `SELECT` clause:\n`SELECT col1, col2 FROM table_name;`\n\nTo retrieve all columns, you can use the asterisk wildcard (*), although listing specific columns is generally preferred for performance.\n\n**Your Task:**\nRetrieve the `name` and `email` columns of all users in the `Users` table.",
-        "schema": [
-          {
-            "name": "Users",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "email",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "age",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), age INT);\nINSERT INTO Users VALUES (1, 'Alice', 'alice@gmail.com', 22);\nINSERT INTO Users VALUES (2, 'Bob', 'bob@yahoo.com', 28);",
-        "expectedQuery": "SELECT name, email FROM Users;",
-        "defaultCode": "-- Retrieve name and email columns\nSELECT \nFROM Users;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Check Multiple Users",
-            "seedSql": "CREATE TABLE Users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), age INT);\nINSERT INTO Users VALUES (10, 'Eve', 'eve@gmail.com', 25);"
-          }
-        ],
-        "explanation": "Separating column names with a comma tells the query parser to project multiple columns in the final output dataset."
-      },
-      {
-        "id": "l38-dual-tables",
-        "title": "L38: Querying Without FROM (DUAL)",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "In some RDBMS systems (like Oracle), you must specify a `FROM` clause even for literal calculations. This is handled using the `DUAL` table—a dummy table with one column and one row. In SQLite and MySQL, you can run SELECT directly without a FROM clause, but you can also execute arithmetic equations.\n\n**Your Task:**\nWrite a SQL query that calculates the sum of `55 + 11` and names the result column `total`.",
-        "schema": [],
-        "seedSql": "",
-        "expectedQuery": "SELECT 55 + 11 AS total;",
-        "defaultCode": "-- Calculate 55 + 11\nSELECT ",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Evaluate Calculation",
-            "seedSql": ""
-          }
-        ],
-        "explanation": "According to Lecture 9, calculations like arithmetic operations, functions (`now()`, `ucase()`), and static text expressions can be executed in database engines using SELECT. The DUAL table is traditionally used in databases that strictly require a FROM clause."
-      }
-    ]
-  },
-  {
-    "id": "ch2-querying",
-    "title": "Chapter 2: SQL Querying (Filters & Wildcards)",
-    "lessons": [
-      {
-        "id": "l39-where-filter",
-        "title": "L39: Filtering with WHERE",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "To filter records based on a condition, we append the `WHERE` clause:\n`SELECT * FROM table_name WHERE condition;`\nCommon operators include `=`, `>`, `<`, `>=`, `<=`, and `<>` (not equal).\n\n**Your Task:**\nSelect all columns from the `Customers` table for customers whose `age` is strictly greater than 18.",
-        "schema": [
-          {
-            "name": "Customers",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "age",
-                "type": "INT"
-              },
-              {
-                "name": "city",
-                "type": "VARCHAR(255)"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255), age INT, city VARCHAR(255));\nINSERT INTO Customers VALUES (1, 'John', 17, 'Delhi');\nINSERT INTO Customers VALUES (2, 'Emily', 24, 'Mumbai');\nINSERT INTO Customers VALUES (3, 'Michael', 19, 'Bangalore');",
-        "expectedQuery": "SELECT * FROM Customers WHERE age > 18;",
-        "defaultCode": "-- Select customers with age > 18\nSELECT \nFROM Customers\nWHERE ",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Check Filter",
-            "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255), age INT, city VARCHAR(255));\nINSERT INTO Customers VALUES (5, 'Sophia', 15, 'Pune');\nINSERT INTO Customers VALUES (6, 'Liam', 22, 'Delhi');"
-          }
-        ],
-        "explanation": "The WHERE clause acts as a row filter. It inspects each row's values against the boolean expression, only keeping rows that evaluate to true."
-      },
-      {
-        "id": "l40-between-range",
-        "title": "L40: Range Queries with BETWEEN",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "The `BETWEEN` operator selects values within a given range. The values can be numbers, text, or dates. The endpoints (start and end values) are **inclusive**:\n`SELECT * FROM Customers WHERE age BETWEEN 20 AND 30;`\n\n**Your Task:**\nSelect all columns from the `Customers` table for customers whose `age` is between 18 and 25 (inclusive).",
-        "schema": [
-          {
-            "name": "Customers",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "age",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255), age INT);\nINSERT INTO Customers VALUES (1, 'Alice', 17);\nINSERT INTO Customers VALUES (2, 'Bob', 22);\nINSERT INTO Customers VALUES (3, 'Charlie', 25);\nINSERT INTO Customers VALUES (4, 'David', 31);",
-        "expectedQuery": "SELECT * FROM Customers WHERE age BETWEEN 18 AND 25;",
-        "defaultCode": "-- Filter using BETWEEN\nSELECT \nFROM Customers\nWHERE ",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Check Inclusive Range",
-            "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255), age INT);\nINSERT INTO Customers VALUES (1, 'Rex', 18);\nINSERT INTO Customers VALUES (2, 'Sam', 26);"
-          }
-        ],
-        "explanation": "The BETWEEN operator checks if a column value falls within the lower and upper bounds, including both boundary values. It is a shorthand for `col >= lower AND col <= upper`."
-      },
-      {
-        "id": "l41-in-list",
-        "title": "L41: Multi-value Checks with IN",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "The `IN` operator allows you to specify multiple values in a `WHERE` clause, acting as a shorthand for multiple `OR` conditions:\n`SELECT * FROM Customers WHERE city IN ('Mumbai', 'Delhi');`\n\n**Your Task:**\nRetrieve all columns from the `Customers` table where the `city` is either `'Delhi'` or `'Mumbai'`.",
-        "schema": [
-          {
-            "name": "Customers",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "city",
-                "type": "VARCHAR(255)"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255), city VARCHAR(255));\nINSERT INTO Customers VALUES (1, 'Amit', 'Delhi');\nINSERT INTO Customers VALUES (2, 'Sneha', 'Mumbai');\nINSERT INTO Customers VALUES (3, 'Vikram', 'Bangalore');",
-        "expectedQuery": "SELECT * FROM Customers WHERE city IN ('Delhi', 'Mumbai');",
-        "defaultCode": "-- Retrieve customers in Delhi or Mumbai\nSELECT \nFROM Customers\nWHERE ",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Test Locations List",
-            "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255), city VARCHAR(255));\nINSERT INTO Customers VALUES (4, 'John', 'Chennai');\nINSERT INTO Customers VALUES (5, 'Karan', 'Delhi');"
-          }
-        ],
-        "explanation": "The IN operator checks if a column's value matches any element in the specified list of values, allowing clean and readable query writing."
-      },
-      {
-        "id": "l42-like-wildcard",
-        "title": "L42: Pattern Matching with LIKE",
-        "type": "coding",
-        "difficulty": "Medium",
-        "description": "The `LIKE` operator is used to search for a specified pattern in a column. Wildcards used:\n- `%`: Represents zero, one, or multiple characters.\n- `_`: Represents a single character.\nFor example, `WHERE name LIKE 'A%'` finds names starting with 'A'.\n`WHERE name LIKE '%p_'` finds names containing 'p' as the second to last character.\n\n**Your Task:**\nRetrieve all columns from the `Customers` table for customers whose `name` ends with the character `'y'`.",
-        "schema": [
-          {
-            "name": "Customers",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255));\nINSERT INTO Customers VALUES (1, 'Emily');\nINSERT INTO Customers VALUES (2, 'John');\nINSERT INTO Customers VALUES (3, 'Amy');\nINSERT INTO Customers VALUES (4, 'Jack');",
-        "expectedQuery": "SELECT * FROM Customers WHERE name LIKE '%y';",
-        "defaultCode": "-- Find names ending with 'y'\nSELECT \nFROM Customers\nWHERE name LIKE ",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Pattern Check",
-            "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255));\nINSERT INTO Customers VALUES (10, 'Andy');\nINSERT INTO Customers VALUES (11, 'Billy');"
-          }
-        ],
-        "explanation": "The % wildcard matches any text string of any length. Using '%y' forces the engine to filter for string values that terminate with the letter 'y'."
-      },
-      {
-        "id": "l43-order-by",
-        "title": "L43: Sorting Results with ORDER BY",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "To sort the query output, we use the `ORDER BY` clause. By default, it sorts in ascending order. To sort in descending order, use the `DESC` keyword:\n`SELECT * FROM Customers ORDER BY name DESC;`\n\n**Your Task:**\nSelect all columns from the `Customers` table and sort the results by `age` in descending order.",
-        "schema": [
-          {
-            "name": "Customers",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "age",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255), age INT);\nINSERT INTO Customers VALUES (1, 'John', 19);\nINSERT INTO Customers VALUES (2, 'Emily', 24);\nINSERT INTO Customers VALUES (3, 'Sam', 22);",
-        "expectedQuery": "SELECT * FROM Customers ORDER BY age DESC;",
-        "defaultCode": "-- Sort customers by age DESC\nSELECT \nFROM Customers\nORDER BY ",
-        "ordered": true,
-        "testCases": [
-          {
-            "name": "Verify Sort Order",
-            "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255), age INT);\nINSERT INTO Customers VALUES (4, 'Sophia', 30);\nINSERT INTO Customers VALUES (5, 'Liam', 18);"
-          }
-        ],
-        "explanation": "ORDER BY processes the resulting rows and sorts them lexicographically or numerically based on the key columns provided. Setting ordered=true forces validation to check sort sequence correctness."
-      }
-    ]
-  },
-  {
-    "id": "ch3-aggregations",
-    "title": "Chapter 3: SQL Aggregations & Grouping",
-    "lessons": [
-      {
-        "id": "l44-aggregate-functions",
-        "title": "L44: SQL Aggregate Functions",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "Aggregate functions perform a calculation on a set of values and return a single value:\n- `COUNT(column)`: Returns the number of rows.\n- `SUM(column)`: Returns the sum of numeric values.\n- `AVG(column)`: Returns the average value.\n- `MIN(column)`: Returns the smallest value.\n- `MAX(column)`: Returns the largest value.\n\n**Your Task:**\nCalculate the total count of rows in the `Employees` table as `total_count` and the sum of `salary` as `total_salary`.",
-        "schema": [
-          {
-            "name": "Employees",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "salary",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), salary INT);\nINSERT INTO Employees VALUES (1, 'Amit', 50000);\nINSERT INTO Employees VALUES (2, 'Rohan', 60000);\nINSERT INTO Employees VALUES (3, 'Karan', 45000);",
-        "expectedQuery": "SELECT COUNT(*) AS total_count, SUM(salary) AS total_salary FROM Employees;",
-        "defaultCode": "-- Aggregate count and salary sum\nSELECT \nFROM Employees;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Verify Summary Calculations",
-            "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), salary INT);\nINSERT INTO Employees VALUES (4, 'Nikhil', 70000);"
-          }
-        ],
-        "explanation": "Aggregate functions process multiple column entries across all selected rows to calculate and return a single summary metric."
-      },
-      {
-        "id": "l45-group-by",
-        "title": "L45: Grouping Data with GROUP BY",
-        "type": "coding",
-        "difficulty": "Medium",
-        "description": "The `GROUP BY` statement groups rows that have the same values in specified columns into summary rows (like finding the number of customers in each city).\n`SELECT city, COUNT(id) FROM Customers GROUP BY city;`\n\n**Your Task:**\nSelect the `department` and the count of employees in each department (named as `emp_count`) from the `Employees` table, grouped by `department`.",
-        "schema": [
-          {
-            "name": "Employees",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "department",
-                "type": "VARCHAR(255)"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), department VARCHAR(255));\nINSERT INTO Employees VALUES (1, 'Alice', 'HR');\nINSERT INTO Employees VALUES (2, 'Bob', 'IT');\nINSERT INTO Employees VALUES (3, 'Charlie', 'IT');\nINSERT INTO Employees VALUES (4, 'David', 'HR');\nINSERT INTO Employees VALUES (5, 'Eve', 'Finance');",
-        "expectedQuery": "SELECT department, COUNT(*) AS emp_count FROM Employees GROUP BY department;",
-        "defaultCode": "-- Group employees by department\nSELECT department, \nFROM Employees\nGROUP BY ",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Verify Groups",
-            "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), department VARCHAR(255));\nINSERT INTO Employees VALUES (6, 'Kunal', 'IT');\nINSERT INTO Employees VALUES (7, 'Ritu', 'Finance');"
-          }
-        ],
-        "explanation": "GROUP BY splits the rows into buckets based on the grouping key columns, applies the aggregate function (like COUNT) to each bucket, and outputs one row per group."
-      },
-      {
-        "id": "l46-having-clause",
-        "title": "L46: Filtering Groups with HAVING",
-        "type": "coding",
-        "difficulty": "Medium",
-        "description": "The `HAVING` clause was added to SQL because the `WHERE` keyword cannot be used with aggregate functions. `WHERE` filters individual rows *before* grouping, while `HAVING` filters group summaries *after* grouping has occurred:\n`SELECT city, COUNT(id) FROM Customers GROUP BY city HAVING COUNT(id) > 5;`\n\n**Your Task:**\nRetrieve the `department` and count of employees (as `emp_count`) from the `Employees` table, grouped by `department`, but only include departments that have strictly more than 1 employee.",
-        "schema": [
-          {
-            "name": "Employees",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "department",
-                "type": "VARCHAR(255)"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), department VARCHAR(255));\nINSERT INTO Employees VALUES (1, 'Alice', 'HR');\nINSERT INTO Employees VALUES (2, 'Bob', 'IT');\nINSERT INTO Employees VALUES (3, 'Charlie', 'IT');\nINSERT INTO Employees VALUES (4, 'David', 'HR');\nINSERT INTO Employees VALUES (5, 'Eve', 'Finance');",
-        "expectedQuery": "SELECT department, COUNT(*) AS emp_count FROM Employees GROUP BY department HAVING COUNT(*) > 1;",
-        "defaultCode": "-- Filter groups using HAVING\nSELECT department, COUNT(*) AS emp_count\nFROM Employees\nGROUP BY department\nHAVING ",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Filter Group Count",
-            "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), department VARCHAR(255));\nINSERT INTO Employees VALUES (6, 'Neha', 'Finance');"
-          }
-        ],
-        "explanation": "HAVING acts as a filter on the aggregated groups. In this example, the HR and IT groups have count=2 (so they are output), while Finance (count=1) is discarded."
-      },
-      {
-        "id": "l47-distinct-rows",
-        "title": "L47: Getting Unique Values with DISTINCT",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "The `DISTINCT` keyword is used to return only unique, non-duplicate values in the query output:\n`SELECT DISTINCT city FROM Customers;`\n\n*Note*: According to Lecture 9, if you use `GROUP BY` on a column without any aggregate functions, the output is functionally identical to a `DISTINCT` query, as the database engine automatically realizes you want to group matching entries.\n\n**Your Task:**\nRetrieve the unique list of departments from the `Employees` table using the `DISTINCT` keyword.",
-        "schema": [
-          {
-            "name": "Employees",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "department",
-                "type": "VARCHAR(255)"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), department VARCHAR(255));\nINSERT INTO Employees VALUES (1, 'Alice', 'HR');\nINSERT INTO Employees VALUES (2, 'Bob', 'IT');\nINSERT INTO Employees VALUES (3, 'Charlie', 'IT');\nINSERT INTO Employees VALUES (4, 'David', 'HR');",
-        "expectedQuery": "SELECT DISTINCT department FROM Employees;",
-        "defaultCode": "-- Retrieve unique departments\nSELECT \nFROM Employees;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Check Unique Departments",
-            "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), department VARCHAR(255));\nINSERT INTO Employees VALUES (5, 'Eve', 'Finance');\nINSERT INTO Employees VALUES (6, 'Kunal', 'IT');"
-          }
-        ],
-        "explanation": "DISTINCT filters out any duplicate records from the final projection, returning only the unique set of values found in the target columns."
-      }
-    ]
-  },
-  {
-    "id": "ch4-altering",
-    "title": "Chapter 4: SQL Constraints & Altering",
-    "lessons": [
-      {
-        "id": "l48-alter-table",
-        "title": "L48: Table Alter Operations",
-        "type": "coding",
-        "difficulty": "Medium",
-        "description": "The `ALTER TABLE` statement is used to add, delete, or modify columns in an existing table structure. Syntax:\n- Add column: `ALTER TABLE table_name ADD column_name datatype;`\n- Drop column: `ALTER TABLE table_name DROP COLUMN column_name;` (In some RDBMS, like older SQLite, dropping is done by creating a new table, but modern systems support standard DDL syntax).\n\n**Your Task:**\nAlter the `Customers` table by adding a new column named `age` of type `INT`.",
-        "schema": [
-          {
-            "name": "Customers",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255));\nINSERT INTO Customers VALUES (1, 'Alice');",
-        "expectedQuery": "ALTER TABLE Customers ADD age INT;",
-        "defaultCode": "-- Add column age INT to Customers\nALTER TABLE ",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Execute Schema Modification",
-            "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255));"
-          }
-        ],
-        "explanation": "The DDL ALTER TABLE statement directly modifies the table's catalog metadata, adding the column definition to the relation schema."
-      },
-      {
-        "id": "l49-table-constraints",
-        "title": "L49: Key Constraints DDL",
-        "type": "coding",
-        "difficulty": "Hard",
-        "description": "When creating a table, we can specify inline or out-of-line column constraints such as `PRIMARY KEY`, `NOT NULL`, `UNIQUE`, `DEFAULT`, and `CHECK`:\n`CREATE TABLE Accounts (id INT PRIMARY KEY, rate DOUBLE NOT NULL DEFAULT 4.25);`\n\n**Your Task:**\nCreate a table named `Users` with three columns:\n- `id` of type `INT` as the `PRIMARY KEY`\n- `email` of type `VARCHAR(255)` with a `UNIQUE` constraint\n- `age` of type `INT` with a `CHECK` constraint validating that `age > 18`.",
-        "schema": [],
-        "seedSql": "",
-        "expectedQuery": "CREATE TABLE Users (id INT PRIMARY KEY, email VARCHAR(255) UNIQUE, age INT CHECK (age > 18));",
-        "defaultCode": "-- Create the Users table with constraints\nCREATE TABLE Users (\n  \n);",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Check DDL Execution",
-            "seedSql": ""
-          }
-        ],
-        "explanation": "Declaring key constraints inside CREATE TABLE instructs the database engine to validate records against these rules during all future insertions and updates."
-      },
-      {
-        "id": "l50-update-rows",
-        "title": "L50: Updating Rows",
-        "type": "coding",
-        "difficulty": "Medium",
-        "description": "The `UPDATE` statement is a DML command used to modify the existing records in a table. It is crucial to use a `WHERE` clause to target specific rows; otherwise, all rows in the table will be updated!\n`UPDATE table_name SET col1 = val1 WHERE id = 1;`\n\n**Your Task:**\nUpdate the `Users` table and set the `email` to `'bob_new@yahoo.com'` for the user whose `id` is equal to `2`.",
-        "schema": [
-          {
-            "name": "Users",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "email",
-                "type": "VARCHAR(255)"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255));\nINSERT INTO Users VALUES (1, 'Alice', 'alice@gmail.com');\nINSERT INTO Users VALUES (2, 'Bob', 'bob@yahoo.com');",
-        "expectedQuery": "UPDATE Users SET email = 'bob_new@yahoo.com' WHERE id = 2; SELECT * FROM Users;",
-        "defaultCode": "-- Update Bob's email\nUPDATE Users\nSET \nWHERE id = 2;\n\n-- Keep this select query to render results\nSELECT * FROM Users;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Verify Row Modification",
-            "seedSql": "CREATE TABLE Users (id INT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255));\nINSERT INTO Users VALUES (2, 'Sam', 'sam@gmail.com');"
-          }
-        ],
-        "explanation": "The DML UPDATE statement identifies candidate rows using the WHERE filter and modifies the values of target columns as specified in the SET clause."
-      },
-      {
-        "id": "l51-delete-rows",
-        "title": "L51: Deleting Rows",
-        "type": "coding",
-        "difficulty": "Medium",
-        "description": "The `DELETE` statement is used to delete existing records in a table. It is crucial to filter with a `WHERE` clause; executing `DELETE FROM table_name;` without it will erase all rows in the table!\n`DELETE FROM table_name WHERE id = 1;`\n\n**Your Task:**\nDelete the user record from the `Users` table whose `id` is equal to `1`.",
-        "schema": [
-          {
-            "name": "Users",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Users (id INT PRIMARY KEY, name VARCHAR(255));\nINSERT INTO Users VALUES (1, 'Alice');\nINSERT INTO Users VALUES (2, 'Bob');",
-        "expectedQuery": "DELETE FROM Users WHERE id = 1; SELECT * FROM Users;",
-        "defaultCode": "-- Delete user with id 1\nDELETE FROM Users\nWHERE \n\n-- Keep select to render results\nSELECT * FROM Users;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Check Row Deletion",
-            "seedSql": "CREATE TABLE Users (id INT PRIMARY KEY, name VARCHAR(255));\nINSERT INTO Users VALUES (1, 'Charlie');"
-          }
-        ],
-        "explanation": "The DELETE statement removes tuples matching the WHERE condition from the physical database table storage."
-      },
-      {
-        "id": "l52-replace-rows",
-        "title": "L52: Replacing Rows",
-        "type": "coding",
-        "difficulty": "Medium",
-        "description": "The `REPLACE` statement (or `INSERT OR REPLACE` in SQLite/MySQL) is primarily used to overwrite already present tuples in a table. If there is a duplicate primary key (or unique constraint clash), the conflicting old row is deleted and the new row is inserted. Otherwise, it acts as standard insertion.\n`REPLACE INTO student (id, class) VALUES (4, 3);`\n\n**Your Task:**\nReplace the record in the `Student` table with `id = 1` and `class = 12`. (Since id=1 already exists with class=10, this should overwrite it).",
-        "schema": [
-          {
-            "name": "Student",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "class",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Student (id INT PRIMARY KEY, class INT);\nINSERT INTO Student VALUES (1, 10);\nINSERT INTO Student VALUES (2, 11);",
-        "expectedQuery": "INSERT OR REPLACE INTO Student (id, class) VALUES (1, 12); SELECT * FROM Student;",
-        "defaultCode": "-- Replace values for student id 1\nINSERT OR REPLACE INTO Student\n\n\n-- Keep select to view results\nSELECT * FROM Student;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Test Conflict Resolution",
-            "seedSql": "CREATE TABLE Student (id INT PRIMARY KEY, class INT);\nINSERT INTO Student VALUES (1, 9);"
-          }
-        ],
-        "explanation": "The REPLACE command checks for unique/primary key conflicts. If a match is found, it removes the conflicting record and inserts the new record, avoiding primary key clashes."
-      }
-    ]
-  },
-  {
-    "id": "ch5-joins",
-    "title": "Chapter 5: SQL Joining Tables",
-    "lessons": [
-      {
-        "id": "l53-inner-join",
-        "title": "L53: Inner Join",
-        "type": "coding",
-        "difficulty": "Medium",
-        "description": "An `INNER JOIN` returns rows that have matching values in both tables. It uses a join condition to pair matching rows:\n`SELECT * FROM t1 INNER JOIN t2 ON t1.id = t2.parent_id;`\n\n**Your Task:**\nSelect the employee `name` and their corresponding department `name` (as `dept_name`) by performing an `INNER JOIN` between `Employees` and `Departments` tables matching department IDs.",
-        "schema": [
-          {
-            "name": "Employees",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "dept_id",
-                "type": "INT",
-                "key": "FK",
-                "references": "Departments.id"
-              }
-            ]
-          },
-          {
-            "name": "Departments",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Departments (id INT PRIMARY KEY, name VARCHAR(255));\nCREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), dept_id INT);\nINSERT INTO Departments VALUES (10, 'Engineering');\nINSERT INTO Departments VALUES (20, 'Sales');\nINSERT INTO Employees VALUES (1, 'Alice', 10);\nINSERT INTO Employees VALUES (2, 'Bob', 20);\nINSERT INTO Employees VALUES (3, 'Charlie', 10);",
-        "expectedQuery": "SELECT E.name, D.name AS dept_name FROM Employees E INNER JOIN Departments D ON E.dept_id = D.id;",
-        "defaultCode": "-- Perform INNER JOIN\nSELECT E.name, D.name AS dept_name\nFROM Employees E\nINNER JOIN Departments D\nON ",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Join Match Verification",
-            "seedSql": "CREATE TABLE Departments (id INT PRIMARY KEY, name VARCHAR(255));\nCREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), dept_id INT);\nINSERT INTO Departments VALUES (100, 'Marketing');\nINSERT INTO Employees VALUES (10, 'Rex', 100);"
-          }
-        ],
-        "explanation": "INNER JOIN combines rows by checking if `E.dept_id = D.id` is true. Unmatched records in either table (e.g. an employee without a department) are omitted."
-      },
-      {
-        "id": "l54-left-join",
-        "title": "L54: Left Join",
-        "type": "coding",
-        "difficulty": "Medium",
-        "description": "A `LEFT JOIN` (or Left Outer Join) returns all records from the left table, and the matched records from the right table. If there is no match, the right side is populated with `NULL`:\n`SELECT * FROM t1 LEFT JOIN t2 ON t1.id = t2.parent_id;`\n\n**Your Task:**\nSelect the customer `name` and their order `amount` using a `LEFT JOIN` between `Customers` (left) and `Orders` (right) matching customer IDs.",
-        "schema": [
-          {
-            "name": "Customers",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              }
-            ]
-          },
-          {
-            "name": "Orders",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "amount",
-                "type": "INT"
-              },
-              {
-                "name": "cust_id",
-                "type": "INT",
-                "key": "FK",
-                "references": "Customers.id"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255));\nCREATE TABLE Orders (id INT PRIMARY KEY, amount INT, cust_id INT);\nINSERT INTO Customers VALUES (1, 'Alice');\nINSERT INTO Customers VALUES (2, 'Bob');\nINSERT INTO Customers VALUES (3, 'Charlie');\nINSERT INTO Orders VALUES (100, 250, 1);\nINSERT INTO Orders VALUES (101, 120, 1);",
-        "expectedQuery": "SELECT C.name, O.amount FROM Customers C LEFT JOIN Orders O ON C.id = O.cust_id;",
-        "defaultCode": "-- Perform LEFT JOIN\nSELECT C.name, O.amount\nFROM Customers C\nLEFT JOIN Orders O\nON ",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Check Null Mappings",
-            "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255));\nCREATE TABLE Orders (id INT PRIMARY KEY, amount INT, cust_id INT);\nINSERT INTO Customers VALUES (10, 'Sam');"
-          }
-        ],
-        "explanation": "LEFT JOIN guarantees that every left-side entity (Customer) is represented in the output. If a customer (like Bob or Charlie) has no orders, their order columns display NULL."
-      },
-      {
-        "id": "l55-right-full-joins",
-        "title": "L55: Right/Full Outer Joins",
-        "type": "coding",
-        "difficulty": "Hard",
-        "description": "A `FULL OUTER JOIN` combines the properties of LEFT and RIGHT joins, returning all rows from both tables and filling unmatched columns with `NULL`.\nSince SQLite does not natively support `RIGHT JOIN` or `FULL OUTER JOIN`, we must emulate a FULL OUTER JOIN using a `LEFT JOIN` and a `RIGHT JOIN` combined by a `UNION` clause:\n`SELECT * FROM t1 LEFT JOIN t2 ON t1.id = t2.id`\n`UNION`\n`SELECT * FROM t1 RIGHT JOIN t2 ON t1.id = t2.id;` (Since SQLite lacks right join, we emulate it by swapping table positions in the second left join: `t2 LEFT JOIN t1`).\n\n**Your Task:**\nEmulate a FULL OUTER JOIN by selecting `A.id` as `id_a` and `B.id` as `id_b` from table `A` and `B` combined via `UNION`.",
-        "schema": [
-          {
-            "name": "A",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              }
-            ]
-          },
-          {
-            "name": "B",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE A (id INT PRIMARY KEY);\nCREATE TABLE B (id INT PRIMARY KEY);\nINSERT INTO A VALUES (1);\nINSERT INTO A VALUES (2);\nINSERT INTO B VALUES (2);\nINSERT INTO B VALUES (3);",
-        "expectedQuery": "SELECT A.id AS id_a, B.id AS id_b FROM A LEFT JOIN B ON A.id = B.id UNION SELECT A.id AS id_a, B.id AS id_b FROM B LEFT JOIN A ON A.id = B.id;",
-        "defaultCode": "-- Emulate FULL OUTER JOIN using UNION\nSELECT A.id AS id_a, B.id AS id_b FROM A LEFT JOIN B ON A.id = B.id\nUNION\nSELECT ",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Evaluate Combined Outer Joins",
-            "seedSql": "CREATE TABLE A (id INT PRIMARY KEY);\nCREATE TABLE B (id INT PRIMARY KEY);\nINSERT INTO A VALUES (10);\nINSERT INTO B VALUES (20);"
-          }
-        ],
-        "explanation": "Combining a left join (A left join B) and a right-style emulated join (B left join A) using UNION yields the complete outer union of both sets, matching SQLite's engine constraints."
-      },
-      {
-        "id": "l56-cross-joins",
-        "title": "L56: Cross Join",
-        "type": "coding",
-        "difficulty": "Medium",
-        "description": "A `CROSS JOIN` returns the Cartesian product of the rows in both tables. Each row from the first table is paired with every row in the second table. If table A has 10 rows and table B has 5 rows, a CROSS JOIN outputs 50 rows.\n`SELECT * FROM t1 CROSS JOIN t2;`\n\n**Your Task:**\nPerform a `CROSS JOIN` between table `Sizes` and `Colors` and select the `size` and `color` columns.",
-        "schema": [
-          {
-            "name": "Sizes",
-            "columns": [
-              {
-                "name": "size",
-                "type": "VARCHAR(50)"
-              }
-            ]
-          },
-          {
-            "name": "Colors",
-            "columns": [
-              {
-                "name": "color",
-                "type": "VARCHAR(50)"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Sizes (size VARCHAR(50));\nCREATE TABLE Colors (color VARCHAR(50));\nINSERT INTO Sizes VALUES ('S');\nINSERT INTO Sizes VALUES ('M');\nINSERT INTO Colors VALUES ('Red');\nINSERT INTO Colors VALUES ('Blue');",
-        "expectedQuery": "SELECT S.size, C.color FROM Sizes S CROSS JOIN Colors C;",
-        "defaultCode": "-- Cross join sizes and colors\nSELECT S.size, C.color\nFROM Sizes S\nCROSS JOIN Colors C;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Check Product",
-            "seedSql": "CREATE TABLE Sizes (size VARCHAR(50));\nCREATE TABLE Colors (color VARCHAR(50));\nINSERT INTO Sizes VALUES ('L');\nINSERT INTO Colors VALUES ('Green');"
-          }
-        ],
-        "explanation": "CROSS JOIN pairs every left table row with every right table row, generating all possible permutations of sizes and colors."
-      },
-      {
-        "id": "l57-self-joins",
-        "title": "L57: Self Join",
-        "type": "coding",
-        "difficulty": "Hard",
-        "description": "A self-join is a regular join, but the table is joined to itself. This is useful for comparing rows within the same table (e.g. employees paired with their manager who is also an employee).\nTo perform a self-join, you must use table aliases to distinguish the left instance from the right instance:\n`SELECT A.name, B.name FROM Employees A INNER JOIN Employees B ON A.manager_id = B.id;`\n\n**Your Task:**\nRetrieve the employee `name` and their manager's `name` (as `manager_name`) from the `Employees` table by joining it to itself matching manager IDs.",
-        "schema": [
-          {
-            "name": "Employees",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "manager_id",
-                "type": "INT",
-                "key": "FK",
-                "references": "Employees.id"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), manager_id INT);\nINSERT INTO Employees VALUES (1, 'Alice', NULL);\nINSERT INTO Employees VALUES (2, 'Bob', 1);\nINSERT INTO Employees VALUES (3, 'Charlie', 1);\nINSERT INTO Employees VALUES (4, 'David', 2);",
-        "expectedQuery": "SELECT A.name, B.name AS manager_name FROM Employees A INNER JOIN Employees B ON A.manager_id = B.id;",
-        "defaultCode": "-- Self join Employees A and B\nSELECT A.name, B.name AS manager_name\nFROM Employees A\nINNER JOIN Employees B\nON ",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Check Hierarchy Mappings",
-            "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), manager_id INT);\nINSERT INTO Employees VALUES (1, 'Boss', NULL);\nINSERT INTO Employees VALUES (2, 'Staff', 1);"
-          }
-        ],
-        "explanation": "A self-join uses table aliases (like A and B) to treat a single table as two virtual tables, allowing columns in the same table to be matched against each other."
-      }
-    ]
-  },
-  {
-    "id": "ch6-subqueries",
-    "title": "Chapter 6: SQL Set Operations & Subqueries",
-    "lessons": [
-      {
-        "id": "l58-set-operations",
-        "title": "L58: Set Operations",
-        "type": "coding",
-        "difficulty": "Medium",
-        "description": "SQL set operations combine results from multiple queries. Key operations:\n- `UNION`: Combines results and removes duplicates.\n- `UNION ALL`: Combines results and keeps duplicate rows.\nBoth SELECT queries must have the same number of columns with compatible data types.\n\n**Your Task:**\nRetrieve a unique list of all names by combining the `name` column from the `Customers` table and the `name` column from the `Employees` table using the `UNION` clause.",
-        "schema": [
-          {
-            "name": "Customers",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              }
-            ]
-          },
-          {
-            "name": "Employees",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255));\nCREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255));\nINSERT INTO Customers VALUES (1, 'Alice');\nINSERT INTO Customers VALUES (2, 'Bob');\nINSERT INTO Employees VALUES (10, 'Bob');\nINSERT INTO Employees VALUES (20, 'Charlie');",
-        "expectedQuery": "SELECT name FROM Customers UNION SELECT name FROM Employees;",
-        "defaultCode": "-- Union query of names\nSELECT name FROM Customers\nUNION\nSELECT ",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Verify Set Union",
-            "seedSql": "CREATE TABLE Customers (id INT PRIMARY KEY, name VARCHAR(255));\nCREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255));\nINSERT INTO Customers VALUES (5, 'Karan');\nINSERT INTO Employees VALUES (50, 'Karan');"
-          }
-        ],
-        "explanation": "The UNION operator merges both datasets vertically and performs a distinct check to exclude any overlapping duplicates (like 'Bob')."
-      },
-      {
-        "id": "l59-nested-subquery",
-        "title": "L59: Nested Subqueries",
-        "type": "coding",
-        "difficulty": "Medium",
-        "description": "A subquery is a nested query inside another statement. Subqueries in the `WHERE` clause evaluate first to provide a value or list for comparison:\n`SELECT * FROM Employees WHERE salary > (SELECT AVG(salary) FROM Employees);`\n\n**Your Task:**\nRetrieve the `name` and `salary` of employees whose `salary` is strictly greater than the average salary of all employees.",
-        "schema": [
-          {
-            "name": "Employees",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "salary",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), salary INT);\nINSERT INTO Employees VALUES (1, 'Alice', 50000);\nINSERT INTO Employees VALUES (2, 'Bob', 80000);\nINSERT INTO Employees VALUES (3, 'Charlie', 60000);",
-        "expectedQuery": "SELECT name, salary FROM Employees WHERE salary > (SELECT AVG(salary) FROM Employees);",
-        "defaultCode": "-- Filter using average salary subquery\nSELECT name, salary\nFROM Employees\nWHERE salary > (SELECT );",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Verify Nested Calculation",
-            "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), salary INT);\nINSERT INTO Employees VALUES (4, 'David', 90000);\nINSERT INTO Employees VALUES (5, 'Eve', 40000);"
-          }
-        ],
-        "explanation": "The inner query `(SELECT AVG(salary) FROM Employees)` runs first, returning a single numeric value (e.g. 63333). The outer query then filters rows using `salary > 63333`."
-      },
-      {
-        "id": "l60-correlated-subquery",
-        "title": "L60: Co-related Subqueries",
-        "type": "coding",
-        "difficulty": "Hard",
-        "description": "Unlike standard subqueries which execute once, a **correlated subquery** is evaluated once for each row processed by the outer query. It contains references to columns from the outer query:\n`SELECT * FROM Employees E WHERE salary > (SELECT AVG(salary) FROM Employees WHERE dept = E.dept);`\n\n**Your Task:**\nFind employees whose `salary` is greater than or equal to the average salary of their own `department`. Select `name`, `department`, and `salary`.",
-        "schema": [
-          {
-            "name": "Employees",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "department",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "salary",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), department VARCHAR(255), salary INT);\nINSERT INTO Employees VALUES (1, 'Alice', 'HR', 50000);\nINSERT INTO Employees VALUES (2, 'Bob', 'HR', 60000);\nINSERT INTO Employees VALUES (3, 'Charlie', 'IT', 90000);\nINSERT INTO Employees VALUES (4, 'David', 'IT', 70000);\nINSERT INTO Employees VALUES (5, 'Eve', 'IT', 80000);",
-        "expectedQuery": "SELECT name, department, salary FROM Employees E WHERE salary >= (SELECT AVG(salary) FROM Employees WHERE department = E.department);",
-        "defaultCode": "-- Correlated subquery\nSELECT name, department, salary\nFROM Employees E\nWHERE salary >= (SELECT AVG(salary) FROM Employees WHERE department = );",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Test Correlated Mappings",
-            "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), department VARCHAR(255), salary INT);\nINSERT INTO Employees VALUES (10, 'Sam', 'HR', 40000);\nINSERT INTO Employees VALUES (11, 'Billy', 'HR', 55000);"
-          }
-        ],
-        "explanation": "For each outer employee row E, the subquery calculates the average salary for `E.department` dynamically. This splits evaluation by grouping parameters."
-      },
-      {
-        "id": "l61-database-views",
-        "title": "L61: Database Views",
-        "type": "coding",
-        "difficulty": "Medium",
-        "description": "A view is a virtual table whose contents are defined by a query. It does not store physical data; it dynamically executes its defined query when queried. Views simplify complex query access:\n`CREATE VIEW view_name AS SELECT col1 FROM table_name;`\n\n**Your Task:**\nCreate a view named `HighEarners` that selects the `name` and `salary` from the `Employees` table for employees with `salary > 70000`.",
-        "schema": [
-          {
-            "name": "Employees",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(255)"
-              },
-              {
-                "name": "salary",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), salary INT);\nINSERT INTO Employees VALUES (1, 'Alice', 50000);\nINSERT INTO Employees VALUES (2, 'Bob', 80000);",
-        "expectedQuery": "CREATE VIEW HighEarners AS SELECT name, salary FROM Employees WHERE salary > 70000;",
-        "defaultCode": "-- Create the view HighEarners\nCREATE VIEW ",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Create View Verification",
-            "seedSql": "CREATE TABLE Employees (id INT PRIMARY KEY, name VARCHAR(255), salary INT);"
-          }
-        ],
-        "explanation": "CREATE VIEW stores the SELECT statement structure in the database schema. When you select from `HighEarners`, the DBMS runs the query against the base Employees table."
-      }
-    ]
-  },
-  {
-    "id": "ch7-worker-basics",
-    "title": "Chapter 7: Worker Database Basics (Q1–Q10)",
+    "id": "ch22-worker-basics",
+    "title": "Chapter 22: SQL Exercise Set A (Questions 1\u201310)",
     "lessons": [
       {
         "id": "q1-worker",
@@ -1937,8 +886,8 @@
     ]
   },
   {
-    "id": "ch8-worker-filters",
-    "title": "Chapter 8: Worker Filtering & Formatting (Q11–Q20)",
+    "id": "ch23-worker-filtering",
+    "title": "Chapter 23: SQL Exercise Set A (Questions 11\u201320)",
     "lessons": [
       {
         "id": "q11-worker",
@@ -2823,8 +1772,8 @@
     ]
   },
   {
-    "id": "ch9-worker-aggregations",
-    "title": "Chapter 9: Worker Aggregations & Modulo (Q21–Q30)",
+    "id": "ch24-worker-aggregations",
+    "title": "Chapter 24: SQL Exercise Set A (Questions 21\u201330)",
     "lessons": [
       {
         "id": "q21-worker",
@@ -3769,8 +2718,8 @@
     ]
   },
   {
-    "id": "ch10-worker-dates",
-    "title": "Chapter 10: Worker Date, Time & Limits (Q31–Q40)",
+    "id": "ch25-worker-dates",
+    "title": "Chapter 25: SQL Exercise Set A (Questions 31\u201340)",
     "lessons": [
       {
         "id": "q31-worker",
@@ -4655,8 +3604,8 @@
     ]
   },
   {
-    "id": "ch11-worker-subqueries",
-    "title": "Chapter 11: Worker Advanced Subqueries (Q41–Q50)",
+    "id": "ch26-worker-subqueries",
+    "title": "Chapter 26: SQL Exercise Set A (Questions 41\u201350)",
     "lessons": [
       {
         "id": "q41-worker",
@@ -5541,693 +4490,12 @@
     ]
   },
   {
-    "id": "ch12-leetcode-1",
-    "title": "Chapter 12: LeetCode SQL Practice - Part 1 (Questions 1–8)",
-    "lessons": [
-      {
-        "id": "lc-1179",
-        "title": "LC 1179: Reformat Department Table",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "Write an SQL query to reformat the `Department` table such that there is a department `id` column and a revenue column for each month.\n\nReturn the result table in any order.",
-        "schema": [
-          {
-            "name": "Department",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT"
-              },
-              {
-                "name": "revenue",
-                "type": "INT"
-              },
-              {
-                "name": "month",
-                "type": "VARCHAR(5)"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Department (\n  id INT,\n  revenue INT,\n  month VARCHAR(5),\n  PRIMARY KEY (id, month)\n);\nINSERT INTO Department VALUES (1, 8000, 'Jan');\nINSERT INTO Department VALUES (2, 9000, 'Jan');\nINSERT INTO Department VALUES (3, 10000, 'Feb');\nINSERT INTO Department VALUES (1, 7000, 'Feb');\nINSERT INTO Department VALUES (1, 6000, 'Mar');",
-        "expectedQuery": "SELECT id,\n       SUM(CASE WHEN month = 'Jan' THEN revenue ELSE NULL END) AS Jan_Revenue,\n       SUM(CASE WHEN month = 'Feb' THEN revenue ELSE NULL END) AS Feb_Revenue,\n       SUM(CASE WHEN month = 'Mar' THEN revenue ELSE NULL END) AS Mar_Revenue,\n       SUM(CASE WHEN month = 'Apr' THEN revenue ELSE NULL END) AS Apr_Revenue,\n       SUM(CASE WHEN month = 'May' THEN revenue ELSE NULL END) AS May_Revenue,\n       SUM(CASE WHEN month = 'Jun' THEN revenue ELSE NULL END) AS Jun_Revenue,\n       SUM(CASE WHEN month = 'Jul' THEN revenue ELSE NULL END) AS Jul_Revenue,\n       SUM(CASE WHEN month = 'Aug' THEN revenue ELSE NULL END) AS Aug_Revenue,\n       SUM(CASE WHEN month = 'Sep' THEN revenue ELSE NULL END) AS Sep_Revenue,\n       SUM(CASE WHEN month = 'Oct' THEN revenue ELSE NULL END) AS Oct_Revenue,\n       SUM(CASE WHEN month = 'Nov' THEN revenue ELSE NULL END) AS Nov_Revenue,\n       SUM(CASE WHEN month = 'Dec' THEN revenue ELSE NULL END) AS Dec_Revenue\nFROM Department\nGROUP BY id;",
-        "defaultCode": "-- Write your SELECT query below\nSELECT id,\n       SUM(CASE WHEN month = 'Jan' THEN revenue ELSE NULL END) AS Jan_Revenue,\n       SUM(CASE WHEN month = 'Feb' THEN revenue ELSE NULL END) AS Feb_Revenue\n       -- Add other months here...\nFROM Department\nGROUP BY id;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Base Test",
-            "seedSql": "CREATE TABLE Department (\n  id INT,\n  revenue INT,\n  month VARCHAR(5),\n  PRIMARY KEY (id, month)\n);\nINSERT INTO Department VALUES (1, 8000, 'Jan');\nINSERT INTO Department VALUES (2, 9000, 'Jan');\nINSERT INTO Department VALUES (3, 10000, 'Feb');\nINSERT INTO Department VALUES (1, 7000, 'Feb');\nINSERT INTO Department VALUES (1, 6000, 'Mar');"
-          }
-        ],
-        "explanation": "Groups the department records by id and pivots the monthly revenue values using conditional aggregation with SUM and CASE WHEN."
-      },
-      {
-        "id": "lc-1527",
-        "title": "LC 1527: Patients With a Condition",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "Write an SQL query to find the patient_id, patient_name, and conditions of the patients who have Type I Diabetes. Type I Diabetes always starts with `DIAB1` prefix.\n\nReturn the result table in any order.",
-        "schema": [
-          {
-            "name": "Patients",
-            "columns": [
-              {
-                "name": "patient_id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "patient_name",
-                "type": "VARCHAR(30)"
-              },
-              {
-                "name": "conditions",
-                "type": "VARCHAR(100)"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Patients (\n  patient_id INT PRIMARY KEY,\n  patient_name VARCHAR(30),\n  conditions VARCHAR(100)\n);\nINSERT INTO Patients VALUES (1, 'Daniel', 'YFEV COUGH');\nINSERT INTO Patients VALUES (2, 'Alice', '');\nINSERT INTO Patients VALUES (3, 'Bob', 'DIAB100 MYOP');\nINSERT INTO Patients VALUES (4, 'George', 'ACNE DIAB100');\nINSERT INTO Patients VALUES (5, 'Alain', 'DIAB201');",
-        "expectedQuery": "SELECT patient_id, patient_name, conditions FROM Patients WHERE conditions LIKE 'DIAB1%' OR conditions LIKE '% DIAB1%';",
-        "defaultCode": "-- Write your SELECT query below\nSELECT patient_id, patient_name, conditions\nFROM Patients\nWHERE ;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Base Test",
-            "seedSql": "CREATE TABLE Patients (\n  patient_id INT PRIMARY KEY,\n  patient_name VARCHAR(30),\n  conditions VARCHAR(100)\n);\nINSERT INTO Patients VALUES (1, 'Daniel', 'YFEV COUGH');\nINSERT INTO Patients VALUES (2, 'Alice', '');\nINSERT INTO Patients VALUES (3, 'Bob', 'DIAB100 MYOP');\nINSERT INTO Patients VALUES (4, 'George', 'ACNE DIAB100');\nINSERT INTO Patients VALUES (5, 'Alain', 'DIAB201');"
-          }
-        ],
-        "explanation": "Checks if 'DIAB1' appears either at the very beginning of the conditions string (LIKE 'DIAB1%') or as a later word preceded by a space (LIKE '% DIAB1%')."
-      },
-      {
-        "id": "lc-1795",
-        "title": "LC 1795: Rearrange Products Table",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "Write an SQL query to rearrange the `Products` table so that each row has `(product_id, store, price)`. If a product is not available in a store, do not include a row with that `product_id` and `store` combination in the result table.\n\nReturn the result table in any order.",
-        "schema": [
-          {
-            "name": "Products",
-            "columns": [
-              {
-                "name": "product_id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "store1",
-                "type": "INT"
-              },
-              {
-                "name": "store2",
-                "type": "INT"
-              },
-              {
-                "name": "store3",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Products (\n  product_id INT PRIMARY KEY,\n  store1 INT,\n  store2 INT,\n  store3 INT\n);\nINSERT INTO Products VALUES (0, 95, 100, 105);\nINSERT INTO Products VALUES (1, 70, NULL, 80);",
-        "expectedQuery": "SELECT product_id, 'store1' AS store, store1 AS price FROM Products WHERE store1 IS NOT NULL\nUNION\nSELECT product_id, 'store2' AS store, store2 AS price FROM Products WHERE store2 IS NOT NULL\nUNION\nSELECT product_id, 'store3' AS store, store3 AS price FROM Products WHERE store3 IS NOT NULL;",
-        "defaultCode": "-- Write your SELECT query below\nSELECT product_id, 'store1' AS store, store1 AS price \nFROM Products \nWHERE store1 IS NOT NULL\nUNION\n-- Write queries for store2 and store3\n;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Base Test",
-            "seedSql": "CREATE TABLE Products (\n  product_id INT PRIMARY KEY,\n  store1 INT,\n  store2 INT,\n  store3 INT\n);\nINSERT INTO Products VALUES (0, 95, 100, 105);\nINSERT INTO Products VALUES (1, 70, NULL, 80);"
-          }
-        ],
-        "explanation": "Unpivots columns to rows by selecting product_id, a constant string for the store name, and the store price for each store column that is not null, combining the results using UNION."
-      },
-      {
-        "id": "lc-1693",
-        "title": "LC 1693: Daily Leads and Partners",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "For each `date_id` and `make_name`, find the number of distinct `lead_id`'s and distinct `partner_id`'s.\n\nReturn the result table in any order.",
-        "schema": [
-          {
-            "name": "DailySales",
-            "columns": [
-              {
-                "name": "date_id",
-                "type": "DATE"
-              },
-              {
-                "name": "make_name",
-                "type": "VARCHAR(20)"
-              },
-              {
-                "name": "lead_id",
-                "type": "INT"
-              },
-              {
-                "name": "partner_id",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE DailySales (\n  date_id DATE,\n  make_name VARCHAR(20),\n  lead_id INT,\n  partner_id INT\n);\nINSERT INTO DailySales VALUES ('2020-12-08', 'toyota', 0, 1);\nINSERT INTO DailySales VALUES ('2020-12-08', 'toyota', 1, 0);\nINSERT INTO DailySales VALUES ('2020-12-08', 'toyota', 1, 2);\nINSERT INTO DailySales VALUES ('2020-12-07', 'toyota', 0, 2);\nINSERT INTO DailySales VALUES ('2020-12-07', 'toyota', 0, 1);\nINSERT INTO DailySales VALUES ('2020-12-08', 'honda', 1, 2);\nINSERT INTO DailySales VALUES ('2020-12-08', 'honda', 2, 1);\nINSERT INTO DailySales VALUES ('2020-12-07', 'honda', 0, 1);\nINSERT INTO DailySales VALUES ('2020-12-07', 'honda', 1, 2);\nINSERT INTO DailySales VALUES ('2020-12-07', 'honda', 2, 1);",
-        "expectedQuery": "SELECT date_id, make_name, COUNT(DISTINCT lead_id) AS unique_leads, COUNT(DISTINCT partner_id) AS unique_partners FROM DailySales GROUP BY date_id, make_name;",
-        "defaultCode": "-- Write your SELECT query below\nSELECT date_id, make_name, COUNT(DISTINCT lead_id) AS unique_leads\nFROM DailySales\nGROUP BY ;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Base Test",
-            "seedSql": "CREATE TABLE DailySales (\n  date_id DATE,\n  make_name VARCHAR(20),\n  lead_id INT,\n  partner_id INT\n);\nINSERT INTO DailySales VALUES ('2020-12-08', 'toyota', 0, 1);\nINSERT INTO DailySales VALUES ('2020-12-08', 'toyota', 1, 0);\nINSERT INTO DailySales VALUES ('2020-12-08', 'toyota', 1, 2);\nINSERT INTO DailySales VALUES ('2020-12-07', 'toyota', 0, 2);\nINSERT INTO DailySales VALUES ('2020-12-07', 'toyota', 0, 1);\nINSERT INTO DailySales VALUES ('2020-12-08', 'honda', 1, 2);\nINSERT INTO DailySales VALUES ('2020-12-08', 'honda', 2, 1);\nINSERT INTO DailySales VALUES ('2020-12-07', 'honda', 0, 1);\nINSERT INTO DailySales VALUES ('2020-12-07', 'honda', 1, 2);\nINSERT INTO DailySales VALUES ('2020-12-07', 'honda', 2, 1);"
-          }
-        ],
-        "explanation": "Groups the sales records by date_id and make_name, then aggregates counts of unique leads and unique partners using COUNT(DISTINCT ...)."
-      },
-      {
-        "id": "lc-181",
-        "title": "LC 181: Employees Earning More Than Their Managers",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "Write an SQL query to find the employees who earn more than their managers.\n\nReturn the result table in any order.",
-        "schema": [
-          {
-            "name": "Employee",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(30)"
-              },
-              {
-                "name": "salary",
-                "type": "INT"
-              },
-              {
-                "name": "managerId",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Employee (\n  id INT PRIMARY KEY,\n  name VARCHAR(30),\n  salary INT,\n  managerId INT\n);\nINSERT INTO Employee VALUES (1, 'Joe', 70000, 3);\nINSERT INTO Employee VALUES (2, 'Henry', 80000, 4);\nINSERT INTO Employee VALUES (3, 'Sam', 60000, NULL);\nINSERT INTO Employee VALUES (4, 'Max', 90000, NULL);",
-        "expectedQuery": "SELECT e1.name AS Employee FROM Employee AS e1 INNER JOIN Employee AS e2 ON e1.managerId = e2.id WHERE e1.salary > e2.salary;",
-        "defaultCode": "-- Write your SELECT query below\nSELECT e1.name AS Employee\nFROM Employee AS e1\nINNER JOIN Employee AS e2 ON \nWHERE ;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Base Test",
-            "seedSql": "CREATE TABLE Employee (\n  id INT PRIMARY KEY,\n  name VARCHAR(30),\n  salary INT,\n  managerId INT\n);\nINSERT INTO Employee VALUES (1, 'Joe', 70000, 3);\nINSERT INTO Employee VALUES (2, 'Henry', 80000, 4);\nINSERT INTO Employee VALUES (3, 'Sam', 60000, NULL);\nINSERT INTO Employee VALUES (4, 'Max', 90000, NULL);"
-          }
-        ],
-        "explanation": "Performs a self-join comparing employee salary with manager salary, filtering where employee salary exceeds manager salary."
-      },
-      {
-        "id": "lc-1741",
-        "title": "LC 1741: Find Total Time Spent by Each Employee",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "Write an SQL query to calculate the total time in minutes spent by each employee on each day at the office. Note that within one day, an employee can enter and leave more than once. The time spent in the office for a single entry is `out_time - in_time`.\n\nReturn the result table in any order.",
-        "schema": [
-          {
-            "name": "Employees",
-            "columns": [
-              {
-                "name": "emp_id",
-                "type": "INT"
-              },
-              {
-                "name": "event_day",
-                "type": "DATE"
-              },
-              {
-                "name": "in_time",
-                "type": "INT"
-              },
-              {
-                "name": "out_time",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Employees (\n  emp_id INT,\n  event_day DATE,\n  in_time INT,\n  out_time INT,\n  PRIMARY KEY (emp_id, event_day, in_time)\n);\nINSERT INTO Employees VALUES (1, '2020-11-28', 4, 32);\nINSERT INTO Employees VALUES (1, '2020-11-28', 55, 200);\nINSERT INTO Employees VALUES (1, '2020-12-03', 1, 42);\nINSERT INTO Employees VALUES (2, '2020-11-28', 3, 33);\nINSERT INTO Employees VALUES (2, '2020-12-09', 47, 74);",
-        "expectedQuery": "SELECT event_day AS day, emp_id, (SUM(out_time) - SUM(in_time)) AS total_time FROM Employees GROUP BY event_day, emp_id;",
-        "defaultCode": "-- Write your SELECT query below\nSELECT event_day AS day, emp_id, \nFROM Employees\nGROUP BY ;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Base Test",
-            "seedSql": "CREATE TABLE Employees (\n  emp_id INT,\n  event_day DATE,\n  in_time INT,\n  out_time INT,\n  PRIMARY KEY (emp_id, event_day, in_time)\n);\nINSERT INTO Employees VALUES (1, '2020-11-28', 4, 32);\nINSERT INTO Employees VALUES (1, '2020-11-28', 55, 200);\nINSERT INTO Employees VALUES (1, '2020-12-03', 1, 42);\nINSERT INTO Employees VALUES (2, '2020-11-28', 3, 33);\nINSERT INTO Employees VALUES (2, '2020-12-09', 47, 74);"
-          }
-        ],
-        "explanation": "Groups the events by day and employee ID, summing the differences between out_time and in_time for each day."
-      },
-      {
-        "id": "lc-627",
-        "title": "LC 627: Swap Salary",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "Write an SQL query to swap all `'f'` and `'m'` values (i.e., change all `'f'` values to `'m'` and vice versa) with a single update statement and no intermediate temporary tables.\n\nNote that you must write a single update statement, and end it with a query to fetch the updated table.",
-        "schema": [
-          {
-            "name": "Salary",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(30)"
-              },
-              {
-                "name": "sex",
-                "type": "CHAR(1)"
-              },
-              {
-                "name": "salary",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Salary (\n  id INT PRIMARY KEY,\n  name VARCHAR(30),\n  sex CHAR(1),\n  salary INT\n);\nINSERT INTO Salary VALUES (1, 'A', 'm', 2500);\nINSERT INTO Salary VALUES (2, 'B', 'f', 1500);\nINSERT INTO Salary VALUES (3, 'C', 'm', 5500);\nINSERT INTO Salary VALUES (4, 'D', 'f', 500);",
-        "expectedQuery": "UPDATE Salary SET sex = CASE WHEN sex = 'm' THEN 'f' WHEN sex = 'f' THEN 'm' END; SELECT * FROM Salary;",
-        "defaultCode": "-- Write your UPDATE query below\nUPDATE Salary\nSET sex = CASE WHEN sex = 'm' THEN 'f' ELSE 'm' END;\n\n-- Keep select query to render results\nSELECT * FROM Salary;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Base Test",
-            "seedSql": "CREATE TABLE Salary (\n  id INT PRIMARY KEY,\n  name VARCHAR(30),\n  sex CHAR(1),\n  salary INT\n);\nINSERT INTO Salary VALUES (1, 'A', 'm', 2500);\nINSERT INTO Salary VALUES (2, 'B', 'f', 1500);\nINSERT INTO Salary VALUES (3, 'C', 'm', 5500);\nINSERT INTO Salary VALUES (4, 'D', 'f', 500);"
-          }
-        ],
-        "explanation": "Updates the gender column in-place by checking if sex equals 'm' (changing it to 'f') or 'f' (changing it to 'm') using a CASE expression."
-      },
-      {
-        "id": "lc-182",
-        "title": "LC 182: Duplicate Emails",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "Write an SQL query to report all the duplicate emails. Note that it is guaranteed that the email field is not NULL.\n\nReturn the result table in any order.",
-        "schema": [
-          {
-            "name": "Person",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "email",
-                "type": "VARCHAR(50)"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Person (\n  id INT PRIMARY KEY,\n  email VARCHAR(50)\n);\nINSERT INTO Person VALUES (1, 'a@b.com');\nINSERT INTO Person VALUES (2, 'c@d.com');\nINSERT INTO Person VALUES (3, 'a@b.com');",
-        "expectedQuery": "SELECT email FROM Person GROUP BY email HAVING COUNT(email) > 1;",
-        "defaultCode": "-- Write your SELECT query below\nSELECT email \nFROM Person \nGROUP BY email \nHAVING ;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Base Test",
-            "seedSql": "CREATE TABLE Person (\n  id INT PRIMARY KEY,\n  email VARCHAR(50)\n);\nINSERT INTO Person VALUES (1, 'a@b.com');\nINSERT INTO Person VALUES (2, 'c@d.com');\nINSERT INTO Person VALUES (3, 'a@b.com');"
-          }
-        ],
-        "explanation": "Groups rows by email address and filters for email groups that have a count of elements greater than 1."
-      }
-    ]
-  },
-  {
-    "id": "ch13-leetcode-2",
-    "title": "Chapter 13: LeetCode SQL Practice - Part 2 (Questions 9–16)",
-    "lessons": [
-      {
-        "id": "lc-1484",
-        "title": "LC 1484: Group Sold Products By The Date",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "Write an SQL query to find for each date the number of different products sold and their names. The sold products names for each date should be sorted lexicographically.\n\nReturn the result table ordered by `sell_date`.",
-        "schema": [
-          {
-            "name": "Activities",
-            "columns": [
-              {
-                "name": "sell_date",
-                "type": "DATE"
-              },
-              {
-                "name": "product",
-                "type": "VARCHAR(50)"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Activities (\n  sell_date DATE,\n  product VARCHAR(50)\n);\nINSERT INTO Activities VALUES ('2020-05-30', 'Headphone');\nINSERT INTO Activities VALUES ('2020-06-01', 'Pencil');\nINSERT INTO Activities VALUES ('2020-06-02', 'Mask');\nINSERT INTO Activities VALUES ('2020-05-30', 'Basketball');\nINSERT INTO Activities VALUES ('2020-06-01', 'Bible');\nINSERT INTO Activities VALUES ('2020-06-02', 'Mask');\nINSERT INTO Activities VALUES ('2020-05-30', 'T-Shirt');",
-        "expectedQuery": "SELECT sell_date, COUNT(DISTINCT product) AS num_sold, group_concat(DISTINCT product) AS products FROM (SELECT DISTINCT sell_date, product FROM Activities ORDER BY sell_date, product) GROUP BY sell_date ORDER BY sell_date;",
-        "defaultCode": "-- Write your SELECT query below\n-- (Tip: Since SQLite doesn't support ORDER BY inside group_concat, sort the distinct pairs in a subquery first)\nSELECT sell_date, COUNT(DISTINCT product) AS num_sold, group_concat(DISTINCT product) AS products\nFROM (\n    SELECT DISTINCT sell_date, product \n    FROM Activities \n    ORDER BY sell_date, product\n)\nGROUP BY sell_date\nORDER BY sell_date;",
-        "ordered": true,
-        "testCases": [
-          {
-            "name": "Base Test",
-            "seedSql": "CREATE TABLE Activities (\n  sell_date DATE,\n  product VARCHAR(50)\n);\nINSERT INTO Activities VALUES ('2020-05-30', 'Headphone');\nINSERT INTO Activities VALUES ('2020-06-01', 'Pencil');\nINSERT INTO Activities VALUES ('2020-06-02', 'Mask');\nINSERT INTO Activities VALUES ('2020-05-30', 'Basketball');\nINSERT INTO Activities VALUES ('2020-06-01', 'Bible');\nINSERT INTO Activities VALUES ('2020-06-02', 'Mask');\nINSERT INTO Activities VALUES ('2020-05-30', 'T-Shirt');"
-          }
-        ],
-        "explanation": "Since SQLite does not support custom sort order in group_concat, we first query unique sell_date and product combinations ordered lexicographically in a subquery, then aggregate them using group_concat in the outer query."
-      },
-      {
-        "id": "lc-1890",
-        "title": "LC 1890: The Latest Login in 2020",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "Write an SQL query to report the latest login for all users in the year 2020. Do not include the users who did not login in 2020.\n\nReturn the result table in any order.",
-        "schema": [
-          {
-            "name": "Logins",
-            "columns": [
-              {
-                "name": "user_id",
-                "type": "INT"
-              },
-              {
-                "name": "time_stamp",
-                "type": "DATETIME"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Logins (\n  user_id INT,\n  time_stamp DATETIME,\n  PRIMARY KEY (user_id, time_stamp)\n);\nINSERT INTO Logins VALUES (6, '2020-06-30 15:06:07');\nINSERT INTO Logins VALUES (6, '2021-04-21 14:06:06');\nINSERT INTO Logins VALUES (6, '2019-03-07 00:18:15');\nINSERT INTO Logins VALUES (8, '2020-02-01 05:10:53');\nINSERT INTO Logins VALUES (8, '2020-12-30 00:46:50');\nINSERT INTO Logins VALUES (2, '2020-01-16 02:49:50');\nINSERT INTO Logins VALUES (2, '2019-08-25 07:59:08');\nINSERT INTO Logins VALUES (14, '2019-07-14 09:00:00');\nINSERT INTO Logins VALUES (14, '2021-01-06 11:59:59');",
-        "expectedQuery": "SELECT user_id, MAX(time_stamp) AS last_stamp FROM Logins WHERE strftime('%Y', time_stamp) = '2020' GROUP BY user_id;",
-        "defaultCode": "-- Write your SELECT query below\nSELECT user_id, MAX(time_stamp) AS last_stamp\nFROM Logins\nWHERE \nGROUP BY user_id;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Base Test",
-            "seedSql": "CREATE TABLE Logins (\n  user_id INT,\n  time_stamp DATETIME,\n  PRIMARY KEY (user_id, time_stamp)\n);\nINSERT INTO Logins VALUES (6, '2020-06-30 15:06:07');\nINSERT INTO Logins VALUES (6, '2021-04-21 14:06:06');\nINSERT INTO Logins VALUES (6, '2019-03-07 00:18:15');\nINSERT INTO Logins VALUES (8, '2020-02-01 05:10:53');\nINSERT INTO Logins VALUES (8, '2020-12-30 00:46:50');\nINSERT INTO Logins VALUES (2, '2020-01-16 02:49:50');\nINSERT INTO Logins VALUES (2, '2019-08-25 07:59:08');\nINSERT INTO Logins VALUES (14, '2019-07-14 09:00:00');\nINSERT INTO Logins VALUES (14, '2021-01-06 11:59:59');"
-          }
-        ],
-        "explanation": "Filters for login logs occurring in the year 2020 using the SQLite strftime('%Y', time_stamp) = '2020' expression, grouping by user_id to extract their maximum (latest) timestamp."
-      },
-      {
-        "id": "lc-620",
-        "title": "LC 620: Not Boring Movies",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "Write an SQL query to report the movies with an odd-numbered ID and a description that is not \"boring\".\n\nReturn the result table ordered by rating in descending order.",
-        "schema": [
-          {
-            "name": "Cinema",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "movie",
-                "type": "VARCHAR(50)"
-              },
-              {
-                "name": "description",
-                "type": "VARCHAR(100)"
-              },
-              {
-                "name": "rating",
-                "type": "FLOAT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Cinema (\n  id INT PRIMARY KEY,\n  movie VARCHAR(50),\n  description VARCHAR(100),\n  rating FLOAT\n);\nINSERT INTO Cinema VALUES (1, 'War', 'great 3D', 8.9);\nINSERT INTO Cinema VALUES (2, 'Science', 'fiction', 8.5);\nINSERT INTO Cinema VALUES (3, 'irish', 'boring', 6.2);\nINSERT INTO Cinema VALUES (4, 'Ice song', 'Fantacy', 8.6);\nINSERT INTO Cinema VALUES (5, 'House card', 'Interesting', 9.1);",
-        "expectedQuery": "SELECT id, movie, description, rating FROM Cinema WHERE id % 2 = 1 AND description != 'boring' ORDER BY rating DESC;",
-        "defaultCode": "-- Write your SELECT query below\nSELECT id, movie, description, rating\nFROM Cinema\nWHERE \nORDER BY ;",
-        "ordered": true,
-        "testCases": [
-          {
-            "name": "Base Test",
-            "seedSql": "CREATE TABLE Cinema (\n  id INT PRIMARY KEY,\n  movie VARCHAR(50),\n  description VARCHAR(100),\n  rating FLOAT\n);\nINSERT INTO Cinema VALUES (1, 'War', 'great 3D', 8.9);\nINSERT INTO Cinema VALUES (2, 'Science', 'fiction', 8.5);\nINSERT INTO Cinema VALUES (3, 'irish', 'boring', 6.2);\nINSERT INTO Cinema VALUES (4, 'Ice song', 'Fantacy', 8.6);\nINSERT INTO Cinema VALUES (5, 'House card', 'Interesting', 9.1);"
-          }
-        ],
-        "explanation": "Retrieves movie details for records with odd IDs (id % 2 = 1) and with description values other than 'boring', sorted by rating descending."
-      },
-      {
-        "id": "lc-1965",
-        "title": "LC 1965: Employees With Missing Information",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "Write an SQL query to report the IDs of all the employees with missing information. The information of an employee is missing if the employee's name is missing, or the employee's salary is missing.\n\nReturn the result table ordered by `employee_id` in ascending order.",
-        "schema": [
-          {
-            "name": "Employees",
-            "columns": [
-              {
-                "name": "employee_id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(30)"
-              }
-            ]
-          },
-          {
-            "name": "Salaries",
-            "columns": [
-              {
-                "name": "employee_id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "salary",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Employees (\n  employee_id INT PRIMARY KEY,\n  name VARCHAR(30)\n);\nCREATE TABLE Salaries (\n  employee_id INT PRIMARY KEY,\n  salary INT\n);\nINSERT INTO Employees VALUES (2, 'Crew');\nINSERT INTO Employees VALUES (4, 'Haven');\nINSERT INTO Employees VALUES (5, 'Kristian');\nINSERT INTO Salaries VALUES (5, 76071);\nINSERT INTO Salaries VALUES (1, 22517);\nINSERT INTO Salaries VALUES (4, 63539);",
-        "expectedQuery": "SELECT employee_id FROM Employees WHERE employee_id NOT IN (SELECT employee_id FROM Salaries)\nUNION\nSELECT employee_id FROM Salaries WHERE employee_id NOT IN (SELECT employee_id FROM Employees)\nORDER BY employee_id;",
-        "defaultCode": "-- Write your SELECT query below\n-- (Tip: Since SQLite doesn't support FULL OUTER JOIN directly, query missing employee ids using UNION)\nSELECT employee_id FROM Employees WHERE employee_id NOT IN (SELECT employee_id FROM Salaries)\nUNION\n;",
-        "ordered": true,
-        "testCases": [
-          {
-            "name": "Base Test",
-            "seedSql": "CREATE TABLE Employees (\n  employee_id INT PRIMARY KEY,\n  name VARCHAR(30)\n);\nCREATE TABLE Salaries (\n  employee_id INT PRIMARY KEY,\n  salary INT\n);\nINSERT INTO Employees VALUES (2, 'Crew');\nINSERT INTO Employees VALUES (4, 'Haven');\nINSERT INTO Employees VALUES (5, 'Kristian');\nINSERT INTO Salaries VALUES (5, 76071);\nINSERT INTO Salaries VALUES (1, 22517);\nINSERT INTO Salaries VALUES (4, 63539);"
-          }
-        ],
-        "explanation": "Uses UNION to combine employee IDs that exist in the Employees table but are missing from Salaries with employee IDs that exist in the Salaries table but are missing from Employees, ordered in ascending order."
-      },
-      {
-        "id": "lc-196",
-        "title": "LC 196: Delete Duplicate Emails",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "Write an SQL query to delete all duplicate emails, keeping only one unique email with the smallest `id`.\n\nNote that you must write a DELETE statement, and end it with a query to fetch the updated table.",
-        "schema": [
-          {
-            "name": "Person",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "email",
-                "type": "VARCHAR(50)"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Person (\n  id INT PRIMARY KEY,\n  email VARCHAR(50)\n);\nINSERT INTO Person VALUES (1, 'john@example.com');\nINSERT INTO Person VALUES (2, 'bob@example.com');\nINSERT INTO Person VALUES (3, 'john@example.com');",
-        "expectedQuery": "DELETE FROM Person WHERE id NOT IN (SELECT MIN(id) FROM Person GROUP BY email); SELECT * FROM Person;",
-        "defaultCode": "-- Write your DELETE query below\nDELETE FROM Person\nWHERE ;\n\n-- Keep select query to render results\nSELECT * FROM Person;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Base Test",
-            "seedSql": "CREATE TABLE Person (\n  id INT PRIMARY KEY,\n  email VARCHAR(50)\n);\nINSERT INTO Person VALUES (1, 'john@example.com');\nINSERT INTO Person VALUES (2, 'bob@example.com');\nINSERT INTO Person VALUES (3, 'john@example.com');"
-          }
-        ],
-        "explanation": "Deletes duplicate records from the Person table by keeping only the smallest id for each unique email address using a NOT IN subquery."
-      },
-      {
-        "id": "lc-197",
-        "title": "LC 197: Rising Temperature",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "Write an SQL query to find all dates' `id` with higher temperatures compared to its previous dates (yesterday).\n\nReturn the result table in any order.",
-        "schema": [
-          {
-            "name": "Weather",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "recordDate",
-                "type": "DATE"
-              },
-              {
-                "name": "temperature",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Weather (\n  id INT PRIMARY KEY,\n  recordDate DATE,\n  temperature INT\n);\nINSERT INTO Weather VALUES (1, '2015-01-01', 10);\nINSERT INTO Weather VALUES (2, '2015-01-02', 25);\nINSERT INTO Weather VALUES (3, '2015-01-03', 20);\nINSERT INTO Weather VALUES (4, '2015-01-04', 30);",
-        "expectedQuery": "SELECT w1.id FROM Weather w1 JOIN Weather w2 ON w1.recordDate = date(w2.recordDate, '+1 day') WHERE w1.temperature > w2.temperature;",
-        "defaultCode": "-- Write your SELECT query below\n-- (Tip: In SQLite, compare dates using date(w2.recordDate, '+1 day') to find consecutive days)\nSELECT w1.id\nFROM Weather w1\nJOIN Weather w2 ON \nWHERE ;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Base Test",
-            "seedSql": "CREATE TABLE Weather (\n  id INT PRIMARY KEY,\n  recordDate DATE,\n  temperature INT\n);\nINSERT INTO Weather VALUES (1, '2015-01-01', 10);\nINSERT INTO Weather VALUES (2, '2015-01-02', 25);\nINSERT INTO Weather VALUES (3, '2015-01-03', 20);\nINSERT INTO Weather VALUES (4, '2015-01-04', 30);"
-          }
-        ],
-        "explanation": "Joins the Weather table to itself comparing dates offset by 1 day using date(w2.recordDate, '+1 day'), and filters for records where the temperature is higher than the previous day."
-      },
-      {
-        "id": "lc-607",
-        "title": "LC 607: Sales Person",
-        "type": "coding",
-        "difficulty": "Easy",
-        "description": "Write an SQL query to find the names of all the salespersons who did not have any orders related to the company with the name \"RED\".\n\nReturn the result table in any order.",
-        "schema": [
-          {
-            "name": "SalesPerson",
-            "columns": [
-              {
-                "name": "sales_id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(30)"
-              },
-              {
-                "name": "salary",
-                "type": "INT"
-              },
-              {
-                "name": "commission_rate",
-                "type": "INT"
-              },
-              {
-                "name": "hire_date",
-                "type": "DATE"
-              }
-            ]
-          },
-          {
-            "name": "Company",
-            "columns": [
-              {
-                "name": "com_id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "name",
-                "type": "VARCHAR(30)"
-              },
-              {
-                "name": "city",
-                "type": "VARCHAR(30)"
-              }
-            ]
-          },
-          {
-            "name": "Orders",
-            "columns": [
-              {
-                "name": "order_id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "order_date",
-                "type": "DATE"
-              },
-              {
-                "name": "com_id",
-                "type": "INT"
-              },
-              {
-                "name": "sales_id",
-                "type": "INT"
-              },
-              {
-                "name": "amount",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE SalesPerson (\n  sales_id INT PRIMARY KEY,\n  name VARCHAR(30),\n  salary INT,\n  commission_rate INT,\n  hire_date DATE\n);\nCREATE TABLE Company (\n  com_id INT PRIMARY KEY,\n  name VARCHAR(30),\n  city VARCHAR(30)\n);\nCREATE TABLE Orders (\n  order_id INT PRIMARY KEY,\n  order_date DATE,\n  com_id INT,\n  sales_id INT,\n  amount INT,\n  FOREIGN KEY(com_id) REFERENCES Company(com_id),\n  FOREIGN KEY(sales_id) REFERENCES SalesPerson(sales_id)\n);\nINSERT INTO SalesPerson VALUES (1, 'John', 100000, 6, '2006-04-01');\nINSERT INTO SalesPerson VALUES (2, 'Amy', 12000, 5, '2010-05-01');\nINSERT INTO SalesPerson VALUES (3, 'Mark', 65000, 12, '2008-12-25');\nINSERT INTO SalesPerson VALUES (4, 'Pam', 25000, 25, '2005-01-01');\nINSERT INTO SalesPerson VALUES (5, 'Alex', 5000, 10, '2007-02-03');\nINSERT INTO Company VALUES (1, 'RED', 'Boston');\nINSERT INTO Company VALUES (2, 'ORANGE', 'New York');\nINSERT INTO Company VALUES (3, 'YELLOW', 'Boston');\nINSERT INTO Company VALUES (4, 'GREEN', 'Austin');\nINSERT INTO Orders VALUES (1, '2014-01-01', 3, 4, 10000);\nINSERT INTO Orders VALUES (2, '2014-02-01', 4, 5, 5000);\nINSERT INTO Orders VALUES (3, '2014-03-01', 1, 1, 50000);\nINSERT INTO Orders VALUES (4, '2014-04-01', 1, 4, 25000);",
-        "expectedQuery": "SELECT name FROM SalesPerson WHERE sales_id NOT IN (SELECT DISTINCT o.sales_id FROM Orders o INNER JOIN Company c ON o.com_id = c.com_id WHERE c.name = 'RED');",
-        "defaultCode": "-- Write your SELECT query below\nSELECT name\nFROM SalesPerson\nWHERE sales_id NOT IN (\n    -- Find all sales_id with orders related to RED company\n);",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Base Test",
-            "seedSql": "CREATE TABLE SalesPerson (\n  sales_id INT PRIMARY KEY,\n  name VARCHAR(30),\n  salary INT,\n  commission_rate INT,\n  hire_date DATE\n);\nCREATE TABLE Company (\n  com_id INT PRIMARY KEY,\n  name VARCHAR(30),\n  city VARCHAR(30)\n);\nCREATE TABLE Orders (\n  order_id INT PRIMARY KEY,\n  order_date DATE,\n  com_id INT,\n  sales_id INT,\n  amount INT,\n  FOREIGN KEY(com_id) REFERENCES Company(com_id),\n  FOREIGN KEY(sales_id) REFERENCES SalesPerson(sales_id)\n);\nINSERT INTO SalesPerson VALUES (1, 'John', 100000, 6, '2006-04-01');\nINSERT INTO SalesPerson VALUES (2, 'Amy', 12000, 5, '2010-05-01');\nINSERT INTO SalesPerson VALUES (3, 'Mark', 65000, 12, '2008-12-25');\nINSERT INTO SalesPerson VALUES (4, 'Pam', 25000, 25, '2005-01-01');\nINSERT INTO SalesPerson VALUES (5, 'Alex', 5000, 10, '2007-02-03');\nINSERT INTO Company VALUES (1, 'RED', 'Boston');\nINSERT INTO Company VALUES (2, 'ORANGE', 'New York');\nINSERT INTO Company VALUES (3, 'YELLOW', 'Boston');\nINSERT INTO Company VALUES (4, 'GREEN', 'Austin');\nINSERT INTO Orders VALUES (1, '2014-01-01', 3, 4, 10000);\nINSERT INTO Orders VALUES (2, '2014-02-01', 4, 5, 5000);\nINSERT INTO Orders VALUES (3, '2014-03-01', 1, 1, 50000);\nINSERT INTO Orders VALUES (4, '2014-04-01', 1, 4, 25000);"
-          }
-        ],
-        "explanation": "Uses a subquery to select sales_ids of representatives who had orders linked to the company named 'RED', then selects the name of all salespersons whose IDs are NOT IN that list."
-      },
-      {
-        "id": "lc-176",
-        "title": "LC 176: Second Highest Salary",
-        "type": "coding",
-        "difficulty": "Medium",
-        "description": "Write an SQL query to find the second highest distinct salary from the `Employee` table. If there is no second highest salary, return `null`.",
-        "schema": [
-          {
-            "name": "Employee",
-            "columns": [
-              {
-                "name": "id",
-                "type": "INT",
-                "key": "PK"
-              },
-              {
-                "name": "salary",
-                "type": "INT"
-              }
-            ]
-          }
-        ],
-        "seedSql": "CREATE TABLE Employee (\n  id INT PRIMARY KEY,\n  salary INT\n);\nINSERT INTO Employee VALUES (1, 100);\nINSERT INTO Employee VALUES (2, 200);\nINSERT INTO Employee VALUES (3, 300);",
-        "expectedQuery": "SELECT (SELECT DISTINCT salary FROM Employee ORDER BY salary DESC LIMIT 1 OFFSET 1) AS SecondHighestSalary;",
-        "defaultCode": "-- Write your SELECT query below\nSELECT (\n    -- Subquery to select second highest distinct salary\n) AS SecondHighestSalary;",
-        "ordered": false,
-        "testCases": [
-          {
-            "name": "Base Test",
-            "seedSql": "CREATE TABLE Employee (\n  id INT PRIMARY KEY,\n  salary INT\n);\nINSERT INTO Employee VALUES (1, 100);\nINSERT INTO Employee VALUES (2, 200);\nINSERT INTO Employee VALUES (3, 300);"
-          }
-        ],
-        "explanation": "Retrieves the second highest distinct salary value using LIMIT 1 OFFSET 1 ordered by salary DESC inside a scalar subquery. If there is no second highest salary, SQL naturally evaluates the scalar subquery output as NULL."
-      }
-    ]
-  },
-  {
-    "id": "ch14-hr-basic-select",
-    "title": "Chapter 14: HackerRank Basic Select (Q1–Q20)",
+    "id": "ch27-practice-basic-select",
+    "title": "Chapter 27: SQL Exercise Set B - Basic Select (Questions 1\u201320)",
     "lessons": [
       {
         "id": "hr-bs-1",
-        "title": "HR 1: Revising the Select Query I",
+        "title": "Revising the Select Query I",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query all columns for all American cities in the **CITY** table with populations larger than 100,000. The CountryCode for America is `USA`.\n\n**Hint:** Filter by `countrycode` and `population` using the `AND` logical operator.",
@@ -6273,7 +4541,7 @@
       },
       {
         "id": "hr-bs-2",
-        "title": "HR 2: Revising the Select Query II",
+        "title": "Revising the Select Query II",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the **NAME** field for all American cities in the **CITY** table with populations larger than 120,000. The CountryCode for America is `USA`.\n\n**Hint:** Project only the `name` column instead of `*`.",
@@ -6319,7 +4587,7 @@
       },
       {
         "id": "hr-bs-3",
-        "title": "HR 3: Select All",
+        "title": "Select All",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query all columns (attributes) for every row in the **CITY** table.\n\n**Hint:** Do not write any `WHERE` clause filter.",
@@ -6365,7 +4633,7 @@
       },
       {
         "id": "hr-bs-4",
-        "title": "HR 4: Select By ID",
+        "title": "Select By ID",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query all columns for a city in **CITY** with the ID `1661`.\n\n**Hint:** Use `WHERE id = 1661`.",
@@ -6411,7 +4679,7 @@
       },
       {
         "id": "hr-bs-5",
-        "title": "HR 5: Japanese Cities' Attributes",
+        "title": "Japanese Cities' Attributes",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query all attributes of every Japanese city in the **CITY** table. The CountryCode for Japan is `JPN`.\n\n**Hint:** Filter by countrycode equaling 'JPN'.",
@@ -6457,7 +4725,7 @@
       },
       {
         "id": "hr-bs-6",
-        "title": "HR 6: Japanese Cities' Names",
+        "title": "Japanese Cities' Names",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the names of all the Japanese cities in the **CITY** table. The CountryCode for Japan is `JPN`.\n\n**Hint:** Project only the `name` column.",
@@ -6503,7 +4771,7 @@
       },
       {
         "id": "hr-bs-7",
-        "title": "HR 7: Weather Observation Station 1",
+        "title": "Weather Observation Station 1",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query a list of **CITY** and **STATE** from the **STATION** table.\n\n**Hint:** Select two column names separated by a comma.",
@@ -6549,7 +4817,7 @@
       },
       {
         "id": "hr-bs-8",
-        "title": "HR 8: Weather Observation Station 3",
+        "title": "Weather Observation Station 3",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query a list of **CITY** names from **STATION** for stations with an even **ID** number. Exclude duplicates from your answer.\n\n**Hint:** Combine `DISTINCT` and the modulo operator `%` (`id % 2 = 0`).",
@@ -6595,7 +4863,7 @@
       },
       {
         "id": "hr-bs-9",
-        "title": "HR 9: Weather Observation Station 4",
+        "title": "Weather Observation Station 4",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Find the difference between the total number of **CITY** entries in the table and the number of distinct **CITY** entries in the table.\n\n**Hint:** Compute the mathematical difference: `COUNT(city) - COUNT(DISTINCT city)`.",
@@ -6641,7 +4909,7 @@
       },
       {
         "id": "hr-bs-10",
-        "title": "HR 10: Weather Observation Station 5",
+        "title": "Weather Observation Station 5",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the two cities in **STATION** with the shortest and longest **CITY** names, as well as their respective lengths (i.e.: number of characters in the name). If there is more than one smallest or largest city, choose the one that comes first alphabetically.\n\n**Hint:** Combine short and long query rows using `UNION ALL` with individual ordered `LIMIT 1` subqueries.",
@@ -6687,7 +4955,7 @@
       },
       {
         "id": "hr-bs-11",
-        "title": "HR 11: Weather Observation Station 6",
+        "title": "Weather Observation Station 6",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the list of **CITY** names starting with vowels (i.e., `a`, `e`, `i`, `o`, or `u`) from **STATION**. Your result cannot contain duplicates.\n\n**Hint:** In SQLite, check the first letter of the city: `LOWER(SUBSTR(city, 1, 1)) IN ('a', 'e', 'i', 'o', 'u')`.",
@@ -6733,7 +5001,7 @@
       },
       {
         "id": "hr-bs-12",
-        "title": "HR 12: Weather Observation Station 7",
+        "title": "Weather Observation Station 7",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the list of **CITY** names ending with vowels (i.e., `a`, `e`, `i`, `o`, or `u`) from **STATION**. Your result cannot contain duplicates.\n\n**Hint:** In SQLite, use `LOWER(SUBSTR(city, -1, 1)) IN ('a', 'e', 'i', 'o', 'u')` to match trailing characters.",
@@ -6779,7 +5047,7 @@
       },
       {
         "id": "hr-bs-13",
-        "title": "HR 13: Weather Observation Station 8",
+        "title": "Weather Observation Station 8",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the list of **CITY** names starting and ending with vowels (i.e., `a`, `e`, `i`, `o`, or `u`) from **STATION**. Your result cannot contain duplicates.\n\n**Hint:** Intersect both starting and ending checks with an `AND` conjunction.",
@@ -6825,7 +5093,7 @@
       },
       {
         "id": "hr-bs-14",
-        "title": "HR 14: Weather Observation Station 9",
+        "title": "Weather Observation Station 9",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the list of **CITY** names from **STATION** that do not start with vowels. Your result cannot contain duplicates.\n\n**Hint:** Negate the vowel matching check: `NOT IN ('a', 'e', 'i', 'o', 'u')`.",
@@ -6871,7 +5139,7 @@
       },
       {
         "id": "hr-bs-15",
-        "title": "HR 15: Weather Observation Station 10",
+        "title": "Weather Observation Station 10",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the list of **CITY** names from **STATION** that do not end with vowels. Your result cannot contain duplicates.\n\n**Hint:** Negate the trailing letter vowel check: `LOWER(SUBSTR(city, -1, 1)) NOT IN ('a', 'e', 'i', 'o', 'u')`.",
@@ -6917,7 +5185,7 @@
       },
       {
         "id": "hr-bs-16",
-        "title": "HR 16: Weather Observation Station 11",
+        "title": "Weather Observation Station 11",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the list of **CITY** names from **STATION** that either do not start with a vowel or do not end with a vowel. Your result cannot contain duplicates.\n\n**Hint:** Connect the negated first/last character vowel matches using an `OR` logic gate.",
@@ -6963,7 +5231,7 @@
       },
       {
         "id": "hr-bs-17",
-        "title": "HR 17: Weather Observation Station 12",
+        "title": "Weather Observation Station 12",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the list of **CITY** names from **STATION** that do not start with a vowel and do not end with a vowel. Your result cannot contain duplicates.\n\n**Hint:** Intersect the negated start and end checks using `AND`.",
@@ -7009,7 +5277,7 @@
       },
       {
         "id": "hr-bs-18",
-        "title": "HR 18: Higher Than 75 Marks",
+        "title": "Higher Than 75 Marks",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the Name of any student in **STUDENTS** who scored higher than `75` Marks. Order your output by the last three characters of each name. If two or more students have names ending in the same last three characters, sort them by ascending **ID**.\n\n**Hint:** Use `SUBSTR(name, -3, 3)` in the `ORDER BY` clause.",
@@ -7047,7 +5315,7 @@
       },
       {
         "id": "hr-bs-19",
-        "title": "HR 19: Employee Names",
+        "title": "Employee Names",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Write a query that prints a list of employee names from the **Employee** table in alphabetical order.\n\n**Hint:** Use `ORDER BY name ASC`.",
@@ -7089,7 +5357,7 @@
       },
       {
         "id": "hr-bs-20",
-        "title": "HR 20: Employee Salaries",
+        "title": "Employee Salaries",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Write a query that prints a list of employee names for employees in **Employee** having a salary greater than `$2000` per month who have been employees for less than `10` months. Sort your result by ascending **employee_id**.\n\n**Hint:** Filter using `salary > 2000 AND months < 10`.",
@@ -7132,12 +5400,12 @@
     ]
   },
   {
-    "id": "ch15-hr-adv-select",
-    "title": "Chapter 15: HackerRank Advanced Select (Q1–Q5)",
+    "id": "ch28-practice-advanced-select",
+    "title": "Chapter 28: SQL Exercise Set B - Advanced Select (Questions 1\u20135)",
     "lessons": [
       {
         "id": "hr-as-1",
-        "title": "HR 1: Type of Triangle",
+        "title": "Type of Triangle",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Write an SQL query to identify the type of each record in the **TRIANGLES** table using its three side lengths. Output one of: `Equilateral`, `Isosceles`, `Scalene`, or `Not A Triangle`.\n\n**Hint:** A triangle is invalid if `a + b <= c` or `b + c <= a` or `a + c <= b`. Use a `CASE WHEN` statement.",
@@ -7174,7 +5442,7 @@
       },
       {
         "id": "hr-as-2",
-        "title": "HR 2: The PADS",
+        "title": "The PADS",
         "type": "coding",
         "difficulty": "Medium",
         "description": "Query an alphabetically ordered list of all names in **OCCUPATIONS**, immediately followed by the first letter of each occupation as a parenthetical (e.g.: `Aniket(D)`). Then, query the number of occurrences of each occupation. Sort the occurrences in ascending order, formatted as: `There are a total of [occupation_count] [occupation]s.`\n\n**Hint:** In SQLite, combine lists using `UNION ALL` wrapping sorting structures.",
@@ -7207,7 +5475,7 @@
       },
       {
         "id": "hr-as-3",
-        "title": "HR 3: Occupations",
+        "title": "Occupations",
         "type": "coding",
         "difficulty": "Hard",
         "description": "Pivot the **OCCUPATIONS** table so that each Name is sorted alphabetically and displayed under its corresponding Occupation. The column headers should be `Doctor`, `Professor`, `Singer`, and `Actor` in order.\n\n**Hint:** Use the window function `ROW_NUMBER() OVER(PARTITION BY occupation ORDER BY name)` to assign sequential row indices before grouping.",
@@ -7240,7 +5508,7 @@
       },
       {
         "id": "hr-as-4",
-        "title": "HR 4: Binary Tree Nodes",
+        "title": "Binary Tree Nodes",
         "type": "coding",
         "difficulty": "Medium",
         "description": "Write a query to find the node type of *Binary Tree* in **BST** table ordered by the value of the node. Output `Root`, `Inner`, or `Leaf`.\n\n**Hint:** A node is 'Root' if its parent `P` is NULL, 'Inner' if its ID `N` exists in the parent column, and 'Leaf' otherwise.",
@@ -7274,7 +5542,7 @@
       },
       {
         "id": "hr-as-5",
-        "title": "HR 5: New Companies",
+        "title": "New Companies",
         "type": "coding",
         "difficulty": "Medium",
         "description": "For each company, query the company_code, founder name, and count of distinct lead managers, senior managers, managers, and employees. Sort by company_code ascending.\n\n**Hint:** Join the hierarchy tables on company_code and query `COUNT(DISTINCT ...)` groups.",
@@ -7385,12 +5653,12 @@
     ]
   },
   {
-    "id": "ch16-hr-aggregations",
-    "title": "Chapter 16: HackerRank Aggregations (Q1–Q17)",
+    "id": "ch29-practice-aggregations",
+    "title": "Chapter 29: SQL Exercise Set B - Aggregations (Questions 1\u201317)",
     "lessons": [
       {
         "id": "hr-agg-1",
-        "title": "HR 1: Revising Aggregations - Count",
+        "title": "Revising Aggregations - Count",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query a count of the number of cities in **CITY** having a population greater than 100,000.\n\n**Hint:** Use `COUNT(*)` with the population threshold filter.",
@@ -7436,7 +5704,7 @@
       },
       {
         "id": "hr-agg-2",
-        "title": "HR 2: Revising Aggregations - Sum",
+        "title": "Revising Aggregations - Sum",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the total population of all cities in **CITY** where District is `California`.\n\n**Hint:** Sum the population values: `SUM(population)` where `district = 'California'`.",
@@ -7482,7 +5750,7 @@
       },
       {
         "id": "hr-agg-3",
-        "title": "HR 3: Revising Aggregations - Averages",
+        "title": "Revising Aggregations - Averages",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the average population of all cities in **CITY** where District is `California`.\n\n**Hint:** Use the aggregate function `AVG(population)`.",
@@ -7528,7 +5796,7 @@
       },
       {
         "id": "hr-agg-4",
-        "title": "HR 4: Average Population",
+        "title": "Average Population",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the average population for all cities in **CITY**, rounded down to the nearest integer.\n\n**Hint:** In SQL, cast the output average as an integer: `CAST(AVG(population) AS INT)`.",
@@ -7574,7 +5842,7 @@
       },
       {
         "id": "hr-agg-5",
-        "title": "HR 5: Japan Population",
+        "title": "Japan Population",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the sum of the populations for all Japanese cities in **CITY**.\n\n**Hint:** Filter by countrycode equaling 'JPN'.",
@@ -7620,7 +5888,7 @@
       },
       {
         "id": "hr-agg-6",
-        "title": "HR 6: Population Density Difference",
+        "title": "Population Density Difference",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the difference between the maximum and minimum populations in the **CITY** table.\n\n**Hint:** Use `MAX(population) - MIN(population)`.",
@@ -7666,7 +5934,7 @@
       },
       {
         "id": "hr-agg-7",
-        "title": "HR 7: The Blunder",
+        "title": "The Blunder",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Samantha was tasked with calculating the average salary of all employees in the **Employee** table, but key '0' on her keyboard broke. Write a query calculating the amount of error (i.e.: actual average minus miscalculated average), rounded up to the next integer.\n\n**Hint:** Cast to string and replace zero characters: `REPLACE(CAST(salary AS VARCHAR), '0', '')`. Wrap the calculation in `ROUND(...)` or `CAST(val + 0.999 AS INT)` to round up.",
@@ -7708,7 +5976,7 @@
       },
       {
         "id": "hr-agg-8",
-        "title": "HR 8: Top Earners",
+        "title": "Top Earners",
         "type": "coding",
         "difficulty": "Easy",
         "description": "We define an employee's total earnings to be their monthly salary multiplied by months worked. Write a query to find the maximum total earnings for any employee in the **Employee** table as well as the total number of employees who have maximum earnings.\n\n**Hint:** Group by `salary * months`, sort descending, and use `LIMIT 1`.",
@@ -7750,7 +6018,7 @@
       },
       {
         "id": "hr-agg-9",
-        "title": "HR 9: Weather Observation Station 2",
+        "title": "Weather Observation Station 2",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the sum of Northern Latitudes (**LAT_N**) and sum of Western Longitudes (**LONG_W**) from **STATION**, rounded to `2` decimal places.\n\n**Hint:** Project `ROUND(SUM(lat_n), 2), ROUND(SUM(long_w), 2)`.",
@@ -7796,7 +6064,7 @@
       },
       {
         "id": "hr-agg-10",
-        "title": "HR 10: Weather Observation Station 13",
+        "title": "Weather Observation Station 13",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the sum of Northern Latitudes (**LAT_N**) from **STATION** having values greater than `38.7880` and less than `137.2345`, rounded to `4` decimal places.\n\n**Hint:** Filter using `WHERE lat_n BETWEEN 38.7880 AND 137.2345`.",
@@ -7842,7 +6110,7 @@
       },
       {
         "id": "hr-agg-11",
-        "title": "HR 11: Weather Observation Station 14",
+        "title": "Weather Observation Station 14",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the greatest value of Northern Latitude (**LAT_N**) from **STATION** that is less than `137.2345`, rounded to `4` decimal places.\n\n**Hint:** Use `ROUND(MAX(lat_n), 4)`.",
@@ -7888,7 +6156,7 @@
       },
       {
         "id": "hr-agg-12",
-        "title": "HR 12: Weather Observation Station 15",
+        "title": "Weather Observation Station 15",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the Western Longitude (**LONG_W**) for the largest Northern Latitude (**LAT_N**) in **STATION** that is less than `137.2345`. Round your answer to `4` decimal places.\n\n**Hint:** Sort by `lat_n DESC` and apply `LIMIT 1`.",
@@ -7934,7 +6202,7 @@
       },
       {
         "id": "hr-agg-13",
-        "title": "HR 13: Weather Observation Station 16",
+        "title": "Weather Observation Station 16",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the smallest Northern Latitude (**LAT_N**) from **STATION** that is greater than `38.7780`. Round your answer to `4` decimal places.\n\n**Hint:** Use `ROUND(MIN(lat_n), 4)`.",
@@ -7980,7 +6248,7 @@
       },
       {
         "id": "hr-agg-14",
-        "title": "HR 14: Weather Observation Station 17",
+        "title": "Weather Observation Station 17",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Query the Western Longitude (**LONG_W**) for the smallest Northern Latitude (**LAT_N**) in **STATION** that is greater than `38.7780`. Round your answer to `4` decimal places.\n\n**Hint:** Sort by `lat_n ASC` and apply `LIMIT 1`.",
@@ -8026,7 +6294,7 @@
       },
       {
         "id": "hr-agg-15",
-        "title": "HR 15: Weather Observation Station 18",
+        "title": "Weather Observation Station 18",
         "type": "coding",
         "difficulty": "Medium",
         "description": "Consider $P_1(a, c)$ and $P_2(b, d)$ to be two points on a 2D plane where $a$ is the minimum value of Northern Latitude, $b$ is the maximum value of Northern Latitude, $c$ is the minimum value of Western Longitude, and $d$ is the maximum value of Western Longitude. Query the *Manhattan Distance* between points $P_1$ and $P_2$, rounded to `4` decimal places.\n\n**Hint:** Manhattan distance formula is: `|a - b| + |c - d|` which maps to `ABS(MIN(lat_n) - MAX(lat_n)) + ABS(MIN(long_w) - MAX(long_w))`.",
@@ -8072,7 +6340,7 @@
       },
       {
         "id": "hr-agg-16",
-        "title": "HR 16: Weather Observation Station 19",
+        "title": "Weather Observation Station 19",
         "type": "coding",
         "difficulty": "Medium",
         "description": "Consider $P_1(a, c)$ and $P_2(b, d)$ to be two points on a 2D plane where $a$ is the minimum Northern Latitude, $b$ is the maximum Northern Latitude, $c$ is the minimum Western Longitude, and $d$ is the maximum Western Longitude. Query the *Euclidean Distance* between points $P_1$ and $P_2$, rounded to `4` decimal places.\n\n**Hint:** Euclidean distance formula is: `sqrt((a - b)^2 + (c - d)^2)`. Use `SQRT` and `POWER`.",
@@ -8118,7 +6386,7 @@
       },
       {
         "id": "hr-agg-17",
-        "title": "HR 17: Weather Observation Station 20",
+        "title": "Weather Observation Station 20",
         "type": "coding",
         "difficulty": "Hard",
         "description": "Query the *Median* of the Northern Latitudes (**LAT_N**) from **STATION** and round your answer to `4` decimal places.\n\n**Hint:** Calculate the median index using window function `ROW_NUMBER() OVER(ORDER BY lat_n)` and filtering for the middle row.",
@@ -8165,12 +6433,12 @@
     ]
   },
   {
-    "id": "ch17-hr-basic-join",
-    "title": "Chapter 17: HackerRank Basic Join (Q1–Q8)",
+    "id": "ch30-practice-basic-join",
+    "title": "Chapter 30: SQL Exercise Set B - Basic Joins (Questions 1\u20138)",
     "lessons": [
       {
         "id": "hr-bj-1",
-        "title": "HR 1: Asian Population",
+        "title": "Asian Population",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Given the **CITY** and **COUNTRY** tables, query the sum of the populations of all cities where the CONTINENT is `Asia`.\n\n**Hint:** Join `CITY` and `COUNTRY` on `countrycode = code` and filter on `continent = 'Asia'`.",
@@ -8238,7 +6506,7 @@
       },
       {
         "id": "hr-bj-2",
-        "title": "HR 2: African Cities",
+        "title": "African Cities",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Given the **CITY** and **COUNTRY** tables, query the names of all cities where the CONTINENT is `Africa`.\n\n**Hint:** Select `c.name` from tables join where `continent = 'Africa'`.",
@@ -8306,7 +6574,7 @@
       },
       {
         "id": "hr-bj-3",
-        "title": "HR 3: Average Population of Each Continent",
+        "title": "Average Population of Each Continent",
         "type": "coding",
         "difficulty": "Easy",
         "description": "Given the **CITY** and **COUNTRY** tables, query the names of all continents and their average city populations rounded down to the nearest integer.\n\n**Hint:** Group by `co.continent` and project `co.continent, CAST(AVG(c.population) AS INT)`.",
@@ -8374,7 +6642,7 @@
       },
       {
         "id": "hr-bj-4",
-        "title": "HR 4: The Report",
+        "title": "The Report",
         "type": "coding",
         "difficulty": "Medium",
         "description": "Generate a report containing three columns: Name, Grade and Mark. Names of students who got grades lower than 8 should be replaced with `NULL`. Sort by Grade descending, then Name ascending, then Marks ascending.\n\n**Hint:** Join students and grades where marks are between `min_mark` and `max_mark`.",
@@ -8430,7 +6698,7 @@
       },
       {
         "id": "hr-bj-5",
-        "title": "HR 5: Top Competitors",
+        "title": "Top Competitors",
         "type": "coding",
         "difficulty": "Medium",
         "description": "Write a query to print the hacker_id and name of hackers who achieved full scores for more than one challenge. Sort by counts descending, then hacker_id ascending.\n\n**Hint:** Join Hackers, Submissions, Challenges, and Difficulty tables where `Submissions.score = Difficulty.score`.",
@@ -8518,7 +6786,7 @@
       },
       {
         "id": "hr-bj-6",
-        "title": "HR 6: Ollivander's Inventory",
+        "title": "Ollivander's Inventory",
         "type": "coding",
         "difficulty": "Medium",
         "description": "Hermione wants to buy only non-evil wands with the minimum number of gold galleons needed to buy each unique wand of high power and age. Output: id, age, coins_needed, and power. Sort by power desc, then age desc.\n\n**Hint:** Use a correlated subquery checking `coins_needed` matches the minimum coins for wands with matching power and code.",
@@ -8578,7 +6846,7 @@
       },
       {
         "id": "hr-bj-7",
-        "title": "HR 7: Challenges",
+        "title": "Challenges",
         "type": "coding",
         "difficulty": "Medium",
         "description": "Query the hacker_id, name, and total challenges created. Sort by count desc, then hacker_id. If more than one hacker created the same number of challenges, and that number is less than the max number of challenges, exclude those hackers.\n\n**Hint:** Use CTEs to calculate challenge counts per hacker, count their frequencies, and filter.",
@@ -8630,7 +6898,7 @@
       },
       {
         "id": "hr-bj-8",
-        "title": "HR 8: Contest Leaderboard",
+        "title": "Contest Leaderboard",
         "type": "coding",
         "difficulty": "Medium",
         "description": "Query the hacker_id, name, and total score. The total score is the sum of maximum scores for all challenges. Sort by total score desc, then hacker_id. Exclude hackers with a score of 0.\n\n**Hint:** Create a subquery that gets `MAX(score)` grouped by challenge_id and hacker_id.",
@@ -8687,12 +6955,12 @@
     ]
   },
   {
-    "id": "ch18-hr-adv-join",
-    "title": "Chapter 18: HackerRank Advanced Join (Q1–Q2)",
+    "id": "ch31-practice-advanced-join",
+    "title": "Chapter 31: SQL Exercise Set B - Advanced Joins (Questions 1\u20132)",
     "lessons": [
       {
         "id": "hr-aj-1",
-        "title": "HR 1: SQL Project Planning",
+        "title": "SQL Project Planning",
         "type": "coding",
         "difficulty": "Medium",
         "description": "Query the start date and end date of projects, listed by the number of days it takes to complete the project in ascending order. If there is more than one project that has the same number of completion days, then order by start date.\n\n**Hint:** A start_date begins a project if it's not in the end_date column. An end_date closes it if it's not in the start_date column. Join them on `start_date < end_date` grouping by `start_date` to find `MIN(end_date)`.",
@@ -8730,7 +6998,7 @@
       },
       {
         "id": "hr-aj-2",
-        "title": "HR 2: Placements",
+        "title": "Placements",
         "type": "coding",
         "difficulty": "Medium",
         "description": "Write a query to output the names of those students whose best friends got offered a higher salary than them. Names must be ordered by the salary amount offered to the best friends.\n\n**Hint:** Join Students, Friends, and Packages (twice) to get the student's salary and their best friend's salary.",

@@ -45,7 +45,16 @@ export interface Chapter {
   lessons: Problem[];
 }
 
-import chaptersData from './problems.json';
+import basicsChapters from './problems/basics.json';
+import codechefChapters from './problems/codechef.json';
+import hackerrankChapters from './problems/hackerrank.json';
+import leetcodeChapters from './problems/leetcode.json';
 
-export const chapters: Chapter[] = chaptersData as Chapter[];
+export const chapters: Chapter[] = [
+  ...(basicsChapters as Chapter[]),
+  ...(codechefChapters as Chapter[]),
+  ...(hackerrankChapters as Chapter[]),
+  ...(leetcodeChapters as Chapter[])
+];
+
 export const problems: Problem[] = chapters.flatMap(ch => ch.lessons);
