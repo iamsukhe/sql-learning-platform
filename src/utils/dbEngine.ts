@@ -232,9 +232,10 @@ export async function evaluateSubmission(
       userDb = new sqlLib.Database();
       expectedDb = new sqlLib.Database();
 
-      // Seed databases
-      userDb.run(tc.seedSql);
-      expectedDb.run(tc.seedSql);
+      // Seed databases (fall back to problem-level seedSql if test case has none)
+      const seedSql = tc.seedSql || problem.seedSql || '';
+      userDb.run(seedSql);
+      expectedDb.run(seedSql);
 
       // Execute both
       const userResult = executeQuery(userDb, userSql);

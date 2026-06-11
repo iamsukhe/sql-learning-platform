@@ -1,7 +1,7 @@
 [
   {
     "id": "ch22-worker-basics",
-    "title": "Chapter 22: SQL Exercise Set A (Questions 1\u201310)",
+    "title": "Chapter 22: SQL Exercise Set A (Questions 1–10)",
     "lessons": [
       {
         "id": "q1-worker",
@@ -887,7 +887,7 @@
   },
   {
     "id": "ch23-worker-filtering",
-    "title": "Chapter 23: SQL Exercise Set A (Questions 11\u201320)",
+    "title": "Chapter 23: SQL Exercise Set A (Questions 11–20)",
     "lessons": [
       {
         "id": "q11-worker",
@@ -1773,7 +1773,7 @@
   },
   {
     "id": "ch24-worker-aggregations",
-    "title": "Chapter 24: SQL Exercise Set A (Questions 21\u201330)",
+    "title": "Chapter 24: SQL Exercise Set A (Questions 21–30)",
     "lessons": [
       {
         "id": "q21-worker",
@@ -2719,7 +2719,7 @@
   },
   {
     "id": "ch25-worker-dates",
-    "title": "Chapter 25: SQL Exercise Set A (Questions 31\u201340)",
+    "title": "Chapter 25: SQL Exercise Set A (Questions 31–40)",
     "lessons": [
       {
         "id": "q31-worker",
@@ -3605,7 +3605,7 @@
   },
   {
     "id": "ch26-worker-subqueries",
-    "title": "Chapter 26: SQL Exercise Set A (Questions 41\u201350)",
+    "title": "Chapter 26: SQL Exercise Set A (Questions 41–50)",
     "lessons": [
       {
         "id": "q41-worker",
@@ -4491,7 +4491,7 @@
   },
   {
     "id": "ch27-practice-basic-select",
-    "title": "Chapter 27: SQL Exercise Set B - Basic Select (Questions 1\u201320)",
+    "title": "Chapter 27: SQL Exercise Set B - Basic Select (Questions 1–20)",
     "lessons": [
       {
         "id": "hr-bs-1",
@@ -5401,7 +5401,7 @@
   },
   {
     "id": "ch28-practice-advanced-select",
-    "title": "Chapter 28: SQL Exercise Set B - Advanced Select (Questions 1\u20135)",
+    "title": "Chapter 28: SQL Exercise Set B - Advanced Select (Questions 1–5)",
     "lessons": [
       {
         "id": "hr-as-1",
@@ -5654,7 +5654,7 @@
   },
   {
     "id": "ch29-practice-aggregations",
-    "title": "Chapter 29: SQL Exercise Set B - Aggregations (Questions 1\u201317)",
+    "title": "Chapter 29: SQL Exercise Set B - Aggregations (Questions 1–17)",
     "lessons": [
       {
         "id": "hr-agg-1",
@@ -6434,7 +6434,7 @@
   },
   {
     "id": "ch30-practice-basic-join",
-    "title": "Chapter 30: SQL Exercise Set B - Basic Joins (Questions 1\u20138)",
+    "title": "Chapter 30: SQL Exercise Set B - Basic Joins (Questions 1–8)",
     "lessons": [
       {
         "id": "hr-bj-1",
@@ -6956,7 +6956,7 @@
   },
   {
     "id": "ch31-practice-advanced-join",
-    "title": "Chapter 31: SQL Exercise Set B - Advanced Joins (Questions 1\u20132)",
+    "title": "Chapter 31: SQL Exercise Set B - Advanced Joins (Questions 1–2)",
     "lessons": [
       {
         "id": "hr-aj-1",

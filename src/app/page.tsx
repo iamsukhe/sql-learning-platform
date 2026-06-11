@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
-import { Sparkles, Sun, Moon, Database, HelpCircle, AlertTriangle, ArrowRight, CheckCircle2, BookOpen, Menu } from 'lucide-react';
+import { Sparkles, Sun, Moon, Database, HelpCircle, AlertTriangle, ArrowRight, CheckCircle2, BookOpen, Menu, AlertCircle } from 'lucide-react';
 import { problems } from '../data/problems';
 import { 
   getSqlLib, 
@@ -42,6 +42,23 @@ export default function Home() {
   const [colSplitPercent, setColSplitPercent] = useState<number>(45);
   const [leftRowSplitPercent, setLeftRowSplitPercent] = useState<number>(55);
   const [rightRowSplitPercent, setRightRowSplitPercent] = useState<number>(50);
+  const [sidebarWidth, setSidebarWidth] = useState<number>(280);
+
+  // Initialize sidebar width from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('sqlquest-sidebar-width');
+    if (saved) {
+      const timer = setTimeout(() => {
+        setSidebarWidth(parseInt(saved, 10));
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleSidebarWidthChange = (newWidth: number) => {
+    setSidebarWidth(newWidth);
+    localStorage.setItem('sqlquest-sidebar-width', newWidth.toString());
+  };
 
   // References to track element dimensions during drag resizing
   const containerRef = useRef<HTMLDivElement>(null);
@@ -429,7 +446,7 @@ export default function Home() {
       // Check table rows
       if (trimmed.startsWith('|')) {
         isInsideTable = true;
-        if (trimmed.includes(':---') || trimmed.match(/^\|[\s:-|]+$/)) {
+        if (trimmed.includes(':---') || trimmed.match(/^\|[\s:|\-]+$/)) {
           continue;
         }
         const cells = line.split('|').map(c => c.trim());
@@ -607,7 +624,12 @@ export default function Home() {
         {activeView === 'notes' ? (
           <PdfViewer pdfUrl="/Full Notes.pdf" />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] h-full w-full overflow-hidden relative">
+          <div 
+            style={{
+              '--sidebar-width': `${sidebarWidth}px`
+            } as React.CSSProperties}
+            className="grid grid-cols-1 lg:grid-cols-[var(--sidebar-width)_1fr] h-full w-full overflow-hidden relative"
+          >
             {/* Sidebar */}
             <Sidebar
               problems={problems}
@@ -615,6 +637,8 @@ export default function Home() {
               solvedProblems={solvedProblems}
               onSelectProblem={handleSelectProblem}
               isOpen={isSidebarOpen}
+              width={sidebarWidth}
+              onWidthChange={handleSidebarWidthChange}
             />
 
             {/* Backdrop overlay for mobile drawer */}
@@ -667,6 +691,12 @@ export default function Home() {
                         </div>
                         <div className="p-5 flex-1 overflow-y-auto font-serif text-[13px] text-slate-300 leading-relaxed tracking-wide">
                           {renderDescription(activeProblem.description)}
+                        </div>
+                        <div className="px-5 py-2.5 bg-slate-950/30 border-t border-slate-800/60 text-[10px] text-slate-500 leading-normal flex items-start gap-2 select-none">
+                          <AlertCircle size={13} className="text-slate-500 shrink-0 mt-0.5" />
+                          <span>
+                            <strong>Disclaimer:</strong> This is a free learning platform and is not used for any monetary purposes. We compile questions from multiple platforms to streamline SQL learning.
+                          </span>
                         </div>
                       </div>
 
@@ -753,6 +783,12 @@ export default function Home() {
                       </div>
                       <div className="p-6 flex-1 overflow-y-auto">
                         {renderDescription(activeProblem.description)}
+                      </div>
+                      <div className="px-6 py-2.5 bg-slate-950/30 border-t border-slate-800/60 text-[10px] text-slate-500 leading-normal flex items-start gap-2 select-none">
+                        <AlertCircle size={13} className="text-slate-500 shrink-0 mt-0.5" />
+                        <span>
+                          <strong>Disclaimer:</strong> This is a free learning platform and is not used for any monetary purposes. We compile questions from multiple platforms to streamline SQL learning.
+                        </span>
                       </div>
                     </div>
 

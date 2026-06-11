@@ -8,6 +8,8 @@ interface SidebarProps {
   onSelectProblem: (id: string) => void;
   solvedProblems: string[];
   isOpen: boolean;
+  width: number;
+  onWidthChange: (width: number) => void;
 }
 
 export default function Sidebar({
@@ -15,9 +17,31 @@ export default function Sidebar({
   currentProblemId,
   onSelectProblem,
   solvedProblems,
-  isOpen
+  isOpen,
+  width,
+  onWidthChange
 }: SidebarProps) {
   const [searchTerm, setSearchTerm] = useState('');
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startWidth = width;
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const deltaX = moveEvent.clientX - startX;
+      const newWidth = Math.max(220, Math.min(500, startWidth + deltaX));
+      onWidthChange(newWidth);
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
   
   // Track expanded state of chapters
   const [expandedChapters, setExpandedChapters] = useState<{ [chapterId: string]: boolean }>({});
@@ -60,7 +84,12 @@ export default function Sidebar({
   const totalCount = problems.length;
 
   return (
-    <aside className={`bg-slate-900 border-r border-slate-800 flex flex-col h-full overflow-hidden shrink-0 transition-transform duration-300 ease-in-out fixed inset-y-0 left-0 z-40 w-[280px] lg:static lg:translate-x-0 ${isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}`}>
+    <aside 
+      style={{
+        '--sidebar-width': `${width}px` 
+      } as React.CSSProperties}
+      className={`bg-slate-900 border-r border-slate-800 flex flex-col h-full overflow-hidden shrink-0 transition-transform duration-300 ease-in-out fixed inset-y-0 left-0 z-40 w-[280px] lg:static lg:translate-x-0 lg:w-[var(--sidebar-width)] relative ${isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}`}
+    >
       {/* Stats Header */}
       <div className="p-4 border-b border-slate-800 bg-slate-950/15 flex flex-col gap-3.5">
         <div className="flex justify-between items-center">
@@ -118,7 +147,7 @@ export default function Sidebar({
                   <div className="flex items-center gap-1.5 min-w-0 flex-1">
                     {isOpen ? <ChevronDown size={14} className="text-slate-500 shrink-0" /> : <ChevronRight size={14} className="text-slate-500 shrink-0" />}
                     <span 
-                      className={`truncate ${isChapterCompleted ? 'text-emerald-400' : 'text-slate-200'}`}
+                      className={`break-words whitespace-normal text-left flex-1 py-0.5 leading-relaxed ${isChapterCompleted ? 'text-emerald-400' : 'text-slate-200'}`}
                     >
                       {chapter.title}
                     </span>
@@ -153,7 +182,7 @@ export default function Sidebar({
                                 <Circle size={13} className="text-slate-600 shrink-0" />
                               )}
                               <span 
-                                className={`truncate text-xs ${isSelected ? 'text-cyan-400 font-semibold' : 'text-slate-400'}`}
+                                className={`break-words whitespace-normal text-left flex-1 text-xs py-0.5 leading-relaxed ${isSelected ? 'text-cyan-400 font-semibold' : 'text-slate-400'}`}
                               >
                                 {lesson.title.split(': ')[1] || lesson.title}
                               </span>
@@ -180,6 +209,11 @@ export default function Sidebar({
           These notes are from Code Help. Special thanks to them; this platform was created solely for learning purposes. Visit <a href="https://www.codehelp.in/" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 hover:underline">Code Help</a> for more great content.
         </div>
       </div>
+      {/* Drag handle for resizing on desktop */}
+      <div 
+        className="hidden lg:block absolute top-0 right-0 w-1.5 h-full cursor-col-resize hover:bg-cyan-500/40 active:bg-cyan-500 transition-colors z-50 select-none"
+        onMouseDown={handleMouseDown}
+      />
     </aside>
   );
 }
