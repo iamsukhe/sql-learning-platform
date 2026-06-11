@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { Sparkles, Sun, Moon, Database, HelpCircle, AlertTriangle, ArrowRight, CheckCircle2, BookOpen, Menu } from 'lucide-react';
 import { problems } from '../data/problems';
@@ -36,6 +36,88 @@ export default function Home() {
   const [submissionResult, setSubmissionResult] = useState<EvaluationResult | null>(null);
   const [activeTab, setActiveTab] = useState<'input' | 'output' | 'tests'>('input');
   const [isEvaluating, setIsEvaluating] = useState(false);
+
+  // Resizing and Splitting states
+  const [colSplitPercent, setColSplitPercent] = useState<number>(45);
+  const [leftRowSplitPercent, setLeftRowSplitPercent] = useState<number>(55);
+  const [rightRowSplitPercent, setRightRowSplitPercent] = useState<number>(50);
+
+  // References to track element dimensions during drag resizing
+  const containerRef = useRef<HTMLDivElement>(null);
+  const leftColRef = useRef<HTMLDivElement>(null);
+  const rightColRef = useRef<HTMLDivElement>(null);
+
+  // Column drag split (horizontal)
+  const startColResize = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const container = containerRef.current;
+    if (!container) return;
+    const containerWidth = container.getBoundingClientRect().width;
+    const startWidthPercent = colSplitPercent;
+    
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      const deltaX = moveEvent.clientX - startX;
+      const newPercent = startWidthPercent + (deltaX / containerWidth) * 100;
+      setColSplitPercent(Math.max(20, Math.min(80, newPercent)));
+    };
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      document.body.classList.remove('select-none', 'cursor-col-resize');
+    };
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+    document.body.classList.add('select-none', 'cursor-col-resize');
+  };
+
+  // Left column drag split (vertical)
+  const startLeftRowResize = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const startY = e.clientY;
+    const column = leftColRef.current;
+    if (!column) return;
+    const columnHeight = column.getBoundingClientRect().height;
+    const startHeightPercent = leftRowSplitPercent;
+    
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      const deltaY = moveEvent.clientY - startY;
+      const newPercent = startHeightPercent + (deltaY / columnHeight) * 100;
+      setLeftRowSplitPercent(Math.max(20, Math.min(80, newPercent)));
+    };
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      document.body.classList.remove('select-none', 'cursor-row-resize');
+    };
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+    document.body.classList.add('select-none', 'cursor-row-resize');
+  };
+
+  // Right column drag split (vertical)
+  const startRightRowResize = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const startY = e.clientY;
+    const column = rightColRef.current;
+    if (!column) return;
+    const columnHeight = column.getBoundingClientRect().height;
+    const startHeightPercent = rightRowSplitPercent;
+    
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      const deltaY = moveEvent.clientY - startY;
+      const newPercent = startHeightPercent + (deltaY / columnHeight) * 100;
+      setRightRowSplitPercent(Math.max(20, Math.min(80, newPercent)));
+    };
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      document.body.classList.remove('select-none', 'cursor-row-resize');
+    };
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+    document.body.classList.add('select-none', 'cursor-row-resize');
+  };
 
 
 
@@ -508,13 +590,25 @@ export default function Home() {
                 <p className="text-xs text-slate-400 max-w-[380px] leading-relaxed">{dbError}</p>
               </div>
             ) : (
-              <div className="flex flex-col gap-4 p-3 h-full overflow-y-auto pb-12 bg-slate-950/20 w-full lg:grid lg:grid-cols-[1fr_1.25fr] lg:overflow-hidden lg:p-4 lg:pb-4">
+              <div 
+                ref={containerRef}
+                className="flex flex-col gap-4 p-3 h-full overflow-y-auto pb-12 bg-slate-950/20 w-full lg:grid lg:gap-0 lg:overflow-hidden lg:p-4 lg:pb-4"
+                style={{
+                  gridTemplateColumns: `calc(${colSplitPercent}% - 6px) 12px calc(${100 - colSplitPercent}% - 6px)`
+                }}
+              >
                 
                 {/* Coding Sandbox Workspace */}
                 {activeProblem.type === 'coding' && (
                   <>
                     {/* Left Column: Description & Schema */}
-                    <div className="flex flex-col gap-4 h-auto lg:h-full lg:overflow-hidden shrink-0 lg:shrink">
+                    <div 
+                      ref={leftColRef}
+                      className="flex flex-col gap-4 h-auto lg:h-full lg:overflow-hidden shrink-0 lg:shrink lg:grid lg:gap-0"
+                      style={{
+                        gridTemplateRows: `calc(${leftRowSplitPercent}% - 6px) 12px calc(${100 - leftRowSplitPercent}% - 6px)`
+                      }}
+                    >
                       {/* Problem Description Panel */}
                       <div className="bg-slate-900 border border-slate-800 rounded-lg shadow-lg overflow-hidden flex flex-col h-auto max-h-[400px] lg:max-h-none lg:h-full shrink-0 lg:shrink">
                         <div className="flex items-center justify-between px-4 py-3 bg-slate-950/50 border-b border-slate-800 min-h-[48px]">
@@ -528,16 +622,38 @@ export default function Home() {
                         </div>
                       </div>
 
+                      {/* Left Row Resizer (horizontal drag handle) */}
+                      <div 
+                        onMouseDown={startLeftRowResize}
+                        className="hidden lg:flex w-full h-[12px] items-center justify-center cursor-row-resize group z-10 select-none"
+                      >
+                        <div className="h-[1px] w-[20%] bg-slate-800/80 group-hover:bg-cyan-500 transition-colors group-hover:h-[2px] group-hover:shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
+                      </div>
+
                       {/* Schema Viewer Panel */}
                       <div className="h-auto max-h-[300px] lg:max-h-none lg:h-full shrink-0 lg:shrink">
                         <SchemaViewer schemas={activeProblem.schema || []} />
                       </div>
                     </div>
 
+                    {/* Column Resizer (vertical drag handle) */}
+                    <div 
+                      onMouseDown={startColResize}
+                      className="hidden lg:flex w-[12px] h-full items-center justify-center cursor-col-resize group z-10 select-none"
+                    >
+                      <div className="w-[1px] h-[30%] bg-slate-800/80 group-hover:bg-cyan-500 transition-colors group-hover:w-[2px] group-hover:shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
+                    </div>
+
                     {/* Right Column: SQL Editor & Output */}
-                    <div className="flex flex-col gap-4 h-auto lg:h-full lg:overflow-hidden shrink-0 lg:shrink">
+                    <div 
+                      ref={rightColRef}
+                      className="flex flex-col gap-4 h-auto lg:h-full lg:overflow-hidden shrink-0 lg:shrink lg:grid lg:gap-0"
+                      style={{
+                        gridTemplateRows: `calc(${rightRowSplitPercent}% - 6px) 12px calc(${100 - rightRowSplitPercent}% - 6px)`
+                      }}
+                    >
                       {/* Code Editor Panel */}
-                      <div className="flex-1 min-h-[300px] lg:min-h-0 overflow-hidden shrink-0 lg:shrink">
+                      <div className="flex-1 min-h-[300px] lg:min-h-0 overflow-hidden shrink-0 lg:shrink lg:h-full">
                         <SqlEditor
                           value={currentCode}
                           onChange={handleCodeChange}
@@ -549,8 +665,16 @@ export default function Home() {
                         />
                       </div>
 
+                      {/* Right Row Resizer (horizontal drag handle) */}
+                      <div 
+                        onMouseDown={startRightRowResize}
+                        className="hidden lg:flex w-full h-[12px] items-center justify-center cursor-row-resize group z-10 select-none"
+                      >
+                        <div className="h-[1px] w-[20%] bg-slate-800/80 group-hover:bg-cyan-500 transition-colors group-hover:h-[2px] group-hover:shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
+                      </div>
+
                       {/* Results Panel */}
-                      <div className="flex-1 min-h-[250px] lg:min-h-0 overflow-hidden shrink-0 lg:shrink">
+                      <div className="flex-1 min-h-[250px] lg:min-h-0 overflow-hidden shrink-0 lg:shrink lg:h-full">
                         <ResultsPanel
                           seedTables={seedTables}
                           runResult={runResult}
@@ -567,7 +691,7 @@ export default function Home() {
 
                 {/* Theory Conceptual Workspace */}
                 {activeProblem.type === 'theory' && (
-                  <div className="col-span-2 grid grid-cols-[1.5fr_1fr] gap-4 h-full overflow-hidden">
+                  <div className="col-span-2 lg:col-span-3 grid grid-cols-[1.5fr_1fr] gap-4 h-full overflow-hidden">
                     {/* Left Column: Reading Content */}
                     <div className="bg-slate-900 border border-slate-800 rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
                       <div className="flex items-center justify-between px-4 py-3 bg-slate-950/50 border-b border-slate-800 min-h-[48px]">
