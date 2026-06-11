@@ -367,6 +367,9 @@ export default function Home() {
     let isInsideCodeBlock = false;
     let codeBlockContent: string[] = [];
     let codeBlockLang = '';
+    let isInsideDetails = false;
+    let detailsContentLines: string[] = [];
+    let detailsSummary = '';
 
     const renderAccumulatedTable = (key: string | number) => {
       if (!isInsideTable) return null;
@@ -440,6 +443,40 @@ export default function Home() {
 
       if (isInsideCodeBlock) {
         codeBlockContent.push(line);
+        continue;
+      }
+
+      // Check details / summary blocks
+      if (trimmed.match(/^<details\b[^>]*>/i)) {
+        isInsideDetails = true;
+        detailsContentLines = [];
+        detailsSummary = '';
+        continue;
+      }
+
+      if (isInsideDetails) {
+        const summaryMatch = trimmed.match(/^<summary\b[^>]*>(.*?)<\/summary>/i);
+        if (summaryMatch) {
+          detailsSummary = summaryMatch[1];
+          continue;
+        }
+        if (trimmed.match(/^<\/details>/i)) {
+          isInsideDetails = false;
+          const subElements = renderDescription(detailsContentLines.join('\n'));
+          elements.push(
+            <details key={`details-${i}`} className="bg-slate-950/40 border border-slate-800/80 rounded-lg p-3.5 my-4 select-text group">
+              <summary className="font-semibold text-xs text-cyan-400 cursor-pointer select-none hover:text-cyan-300 transition-colors list-none [&::-webkit-details-marker]:hidden flex items-center gap-1.5 outline-none">
+                <span className="text-[9px] text-slate-500 group-open:rotate-90 transition-transform duration-200">▶</span>
+                <span>{detailsSummary || 'Reveal Answer'}</span>
+              </summary>
+              <div className="mt-3.5 pl-3.5 border-l-2 border-slate-800/80 text-xs text-slate-300 leading-relaxed flex flex-col gap-2.5">
+                {subElements}
+              </div>
+            </details>
+          );
+          continue;
+        }
+        detailsContentLines.push(line);
         continue;
       }
 
