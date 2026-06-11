@@ -6220,5 +6220,2574 @@
         "explanation": "Retrieves the second highest distinct salary value using LIMIT 1 OFFSET 1 ordered by salary DESC inside a scalar subquery. If there is no second highest salary, SQL naturally evaluates the scalar subquery output as NULL."
       }
     ]
+  },
+  {
+    "id": "ch14-hr-basic-select",
+    "title": "Chapter 14: HackerRank Basic Select (Q1–Q20)",
+    "lessons": [
+      {
+        "id": "hr-bs-1",
+        "title": "HR 1: Revising the Select Query I",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query all columns for all American cities in the **CITY** table with populations larger than 100,000. The CountryCode for America is `USA`.\n\n**Hint:** Filter by `countrycode` and `population` using the `AND` logical operator.",
+        "schema": [
+          {
+            "name": "CITY",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(17)"
+              },
+              {
+                "name": "countrycode",
+                "type": "VARCHAR(3)"
+              },
+              {
+                "name": "district",
+                "type": "VARCHAR(20)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);",
+        "expectedQuery": "SELECT * FROM CITY WHERE countrycode = 'USA' AND population > 100000;",
+        "defaultCode": "-- Query American cities population > 100,000\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);"
+          }
+        ],
+        "explanation": "Selects all columns where countrycode matches 'USA' and population is greater than 100,000."
+      },
+      {
+        "id": "hr-bs-2",
+        "title": "HR 2: Revising the Select Query II",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the **NAME** field for all American cities in the **CITY** table with populations larger than 120,000. The CountryCode for America is `USA`.\n\n**Hint:** Project only the `name` column instead of `*`.",
+        "schema": [
+          {
+            "name": "CITY",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(17)"
+              },
+              {
+                "name": "countrycode",
+                "type": "VARCHAR(3)"
+              },
+              {
+                "name": "district",
+                "type": "VARCHAR(20)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);",
+        "expectedQuery": "SELECT name FROM CITY WHERE countrycode = 'USA' AND population > 120000;",
+        "defaultCode": "-- Query American city names population > 120,000\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);"
+          }
+        ],
+        "explanation": "Selects only the name column where countrycode matches 'USA' and population is greater than 120,000."
+      },
+      {
+        "id": "hr-bs-3",
+        "title": "HR 3: Select All",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query all columns (attributes) for every row in the **CITY** table.\n\n**Hint:** Do not write any `WHERE` clause filter.",
+        "schema": [
+          {
+            "name": "CITY",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(17)"
+              },
+              {
+                "name": "countrycode",
+                "type": "VARCHAR(3)"
+              },
+              {
+                "name": "district",
+                "type": "VARCHAR(20)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);",
+        "expectedQuery": "SELECT * FROM CITY;",
+        "defaultCode": "-- Select all records\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);"
+          }
+        ],
+        "explanation": "Extracts the complete table attributes by omitting any filtering conditions."
+      },
+      {
+        "id": "hr-bs-4",
+        "title": "HR 4: Select By ID",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query all columns for a city in **CITY** with the ID `1661`.\n\n**Hint:** Use `WHERE id = 1661`.",
+        "schema": [
+          {
+            "name": "CITY",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(17)"
+              },
+              {
+                "name": "countrycode",
+                "type": "VARCHAR(3)"
+              },
+              {
+                "name": "district",
+                "type": "VARCHAR(20)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);",
+        "expectedQuery": "SELECT * FROM CITY WHERE id = 1661;",
+        "defaultCode": "-- Select by ID\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);"
+          }
+        ],
+        "explanation": "Filters for a unique record using the primary key ID constraint."
+      },
+      {
+        "id": "hr-bs-5",
+        "title": "HR 5: Japanese Cities' Attributes",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query all attributes of every Japanese city in the **CITY** table. The CountryCode for Japan is `JPN`.\n\n**Hint:** Filter by countrycode equaling 'JPN'.",
+        "schema": [
+          {
+            "name": "CITY",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(17)"
+              },
+              {
+                "name": "countrycode",
+                "type": "VARCHAR(3)"
+              },
+              {
+                "name": "district",
+                "type": "VARCHAR(20)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);",
+        "expectedQuery": "SELECT * FROM CITY WHERE countrycode = 'JPN';",
+        "defaultCode": "-- Japanese cities attributes\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);"
+          }
+        ],
+        "explanation": "Queries all columns filtering by Japan's country code."
+      },
+      {
+        "id": "hr-bs-6",
+        "title": "HR 6: Japanese Cities' Names",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the names of all the Japanese cities in the **CITY** table. The CountryCode for Japan is `JPN`.\n\n**Hint:** Project only the `name` column.",
+        "schema": [
+          {
+            "name": "CITY",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(17)"
+              },
+              {
+                "name": "countrycode",
+                "type": "VARCHAR(3)"
+              },
+              {
+                "name": "district",
+                "type": "VARCHAR(20)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);",
+        "expectedQuery": "SELECT name FROM CITY WHERE countrycode = 'JPN';",
+        "defaultCode": "-- Japanese cities names\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);"
+          }
+        ],
+        "explanation": "Selects name attribute for records matching Japanese country code."
+      },
+      {
+        "id": "hr-bs-7",
+        "title": "HR 7: Weather Observation Station 1",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query a list of **CITY** and **STATE** from the **STATION** table.\n\n**Hint:** Select two column names separated by a comma.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT city, state FROM STATION;",
+        "defaultCode": "-- Query CITY and STATE\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Retrieves the geographic details of cities and their states."
+      },
+      {
+        "id": "hr-bs-8",
+        "title": "HR 8: Weather Observation Station 3",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query a list of **CITY** names from **STATION** for stations with an even **ID** number. Exclude duplicates from your answer.\n\n**Hint:** Combine `DISTINCT` and the modulo operator `%` (`id % 2 = 0`).",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT DISTINCT city FROM STATION WHERE id % 2 = 0;",
+        "defaultCode": "-- Distinct cities with even IDs\nSELECT DISTINCT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Filters for records with even keys and removes repeating items using DISTINCT."
+      },
+      {
+        "id": "hr-bs-9",
+        "title": "HR 9: Weather Observation Station 4",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Find the difference between the total number of **CITY** entries in the table and the number of distinct **CITY** entries in the table.\n\n**Hint:** Compute the mathematical difference: `COUNT(city) - COUNT(DISTINCT city)`.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT COUNT(city) - COUNT(DISTINCT city) FROM STATION;",
+        "defaultCode": "-- Difference in total and distinct counts\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Subtracts the unique count of cities from the overall rows count to identify duplicates density."
+      },
+      {
+        "id": "hr-bs-10",
+        "title": "HR 10: Weather Observation Station 5",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the two cities in **STATION** with the shortest and longest **CITY** names, as well as their respective lengths (i.e.: number of characters in the name). If there is more than one smallest or largest city, choose the one that comes first alphabetically.\n\n**Hint:** Combine short and long query rows using `UNION ALL` with individual ordered `LIMIT 1` subqueries.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT city, LENGTH(city) FROM (SELECT city FROM STATION ORDER BY LENGTH(city) ASC, city ASC LIMIT 1) UNION ALL SELECT city, LENGTH(city) FROM (SELECT city FROM STATION ORDER BY LENGTH(city) DESC, city ASC LIMIT 1);",
+        "defaultCode": "-- Fetch min and max length city names\nSELECT city, LENGTH(city) FROM (\n  SELECT city FROM STATION ORDER BY \n) UNION ALL\nSELECT city, LENGTH(city) FROM (\n  SELECT city FROM STATION ORDER BY \n);",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Sorts city names by character lengths and alphabetically to slice out the extreme bounds using UNION."
+      },
+      {
+        "id": "hr-bs-11",
+        "title": "HR 11: Weather Observation Station 6",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the list of **CITY** names starting with vowels (i.e., `a`, `e`, `i`, `o`, or `u`) from **STATION**. Your result cannot contain duplicates.\n\n**Hint:** In SQLite, check the first letter of the city: `LOWER(SUBSTR(city, 1, 1)) IN ('a', 'e', 'i', 'o', 'u')`.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT DISTINCT city FROM STATION WHERE LOWER(SUBSTR(city, 1, 1)) IN ('a', 'e', 'i', 'o', 'u');",
+        "defaultCode": "-- Cities starting with a vowel\nSELECT DISTINCT city\nFROM STATION\nWHERE ;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Uses the SUBSTR function to isolate the first letter of the city and filters against the lowercase vowels set."
+      },
+      {
+        "id": "hr-bs-12",
+        "title": "HR 12: Weather Observation Station 7",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the list of **CITY** names ending with vowels (i.e., `a`, `e`, `i`, `o`, or `u`) from **STATION**. Your result cannot contain duplicates.\n\n**Hint:** In SQLite, use `LOWER(SUBSTR(city, -1, 1)) IN ('a', 'e', 'i', 'o', 'u')` to match trailing characters.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT DISTINCT city FROM STATION WHERE LOWER(SUBSTR(city, -1, 1)) IN ('a', 'e', 'i', 'o', 'u');",
+        "defaultCode": "-- Cities ending with a vowel\nSELECT DISTINCT city\nFROM STATION\nWHERE ;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Uses SUBSTR with negative offset to check the very last character of the city string."
+      },
+      {
+        "id": "hr-bs-13",
+        "title": "HR 13: Weather Observation Station 8",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the list of **CITY** names starting and ending with vowels (i.e., `a`, `e`, `i`, `o`, or `u`) from **STATION**. Your result cannot contain duplicates.\n\n**Hint:** Intersect both starting and ending checks with an `AND` conjunction.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT DISTINCT city FROM STATION WHERE LOWER(SUBSTR(city, 1, 1)) IN ('a', 'e', 'i', 'o', 'u') AND LOWER(SUBSTR(city, -1, 1)) IN ('a', 'e', 'i', 'o', 'u');",
+        "defaultCode": "-- Cities starting and ending with vowels\nSELECT DISTINCT city\nFROM STATION\nWHERE ;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Verifies both first and last character constraints using the AND condition."
+      },
+      {
+        "id": "hr-bs-14",
+        "title": "HR 14: Weather Observation Station 9",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the list of **CITY** names from **STATION** that do not start with vowels. Your result cannot contain duplicates.\n\n**Hint:** Negate the vowel matching check: `NOT IN ('a', 'e', 'i', 'o', 'u')`.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT DISTINCT city FROM STATION WHERE LOWER(SUBSTR(city, 1, 1)) NOT IN ('a', 'e', 'i', 'o', 'u');",
+        "defaultCode": "-- Cities not starting with a vowel\nSELECT DISTINCT city\nFROM STATION\nWHERE ;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Filters for records whose first character falls outside the defined set of vowels."
+      },
+      {
+        "id": "hr-bs-15",
+        "title": "HR 15: Weather Observation Station 10",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the list of **CITY** names from **STATION** that do not end with vowels. Your result cannot contain duplicates.\n\n**Hint:** Negate the trailing letter vowel check: `LOWER(SUBSTR(city, -1, 1)) NOT IN ('a', 'e', 'i', 'o', 'u')`.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT DISTINCT city FROM STATION WHERE LOWER(SUBSTR(city, -1, 1)) NOT IN ('a', 'e', 'i', 'o', 'u');",
+        "defaultCode": "-- Cities not ending with a vowel\nSELECT DISTINCT city\nFROM STATION\nWHERE ;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Ensures the final character is not a vowel by applying the NOT IN validation."
+      },
+      {
+        "id": "hr-bs-16",
+        "title": "HR 16: Weather Observation Station 11",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the list of **CITY** names from **STATION** that either do not start with a vowel or do not end with a vowel. Your result cannot contain duplicates.\n\n**Hint:** Connect the negated first/last character vowel matches using an `OR` logic gate.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT DISTINCT city FROM STATION WHERE LOWER(SUBSTR(city, 1, 1)) NOT IN ('a', 'e', 'i', 'o', 'u') OR LOWER(SUBSTR(city, -1, 1)) NOT IN ('a', 'e', 'i', 'o', 'u');",
+        "defaultCode": "-- Cities not starting OR not ending with vowels\nSELECT DISTINCT city\nFROM STATION\nWHERE ;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Filters columns where either the first or last letter is a non-vowel using the OR logical operator."
+      },
+      {
+        "id": "hr-bs-17",
+        "title": "HR 17: Weather Observation Station 12",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the list of **CITY** names from **STATION** that do not start with a vowel and do not end with a vowel. Your result cannot contain duplicates.\n\n**Hint:** Intersect the negated start and end checks using `AND`.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT DISTINCT city FROM STATION WHERE LOWER(SUBSTR(city, 1, 1)) NOT IN ('a', 'e', 'i', 'o', 'u') AND LOWER(SUBSTR(city, -1, 1)) NOT IN ('a', 'e', 'i', 'o', 'u');",
+        "defaultCode": "-- Cities not starting AND not ending with vowels\nSELECT DISTINCT city\nFROM STATION\nWHERE ;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Guarantees that both ends of the string are non-vowels using the AND conjunction."
+      },
+      {
+        "id": "hr-bs-18",
+        "title": "HR 18: Higher Than 75 Marks",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the Name of any student in **STUDENTS** who scored higher than `75` Marks. Order your output by the last three characters of each name. If two or more students have names ending in the same last three characters, sort them by ascending **ID**.\n\n**Hint:** Use `SUBSTR(name, -3, 3)` in the `ORDER BY` clause.",
+        "schema": [
+          {
+            "name": "STUDENTS",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(30)"
+              },
+              {
+                "name": "marks",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STUDENTS (\n  id INT PRIMARY KEY,\n  name VARCHAR(30),\n  marks INT\n);\nINSERT INTO STUDENTS VALUES (1, 'Ashley', 81);\nINSERT INTO STUDENTS VALUES (2, 'Samantha', 75);\nINSERT INTO STUDENTS VALUES (3, 'Julia', 76);\nINSERT INTO STUDENTS VALUES (4, 'Scarlet', 84);\nINSERT INTO STUDENTS VALUES (5, 'David', 68);\nINSERT INTO STUDENTS VALUES (6, 'Mary', 90);",
+        "expectedQuery": "SELECT name FROM STUDENTS WHERE marks > 75 ORDER BY SUBSTR(name, -3, 3) ASC, id ASC;",
+        "defaultCode": "-- Filter marks > 75 and sort by last 3 letters\nSELECT name\nFROM STUDENTS\nWHERE marks > 75\nORDER BY ;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STUDENTS (\n  id INT PRIMARY KEY,\n  name VARCHAR(30),\n  marks INT\n);\nINSERT INTO STUDENTS VALUES (1, 'Ashley', 81);\nINSERT INTO STUDENTS VALUES (2, 'Samantha', 75);\nINSERT INTO STUDENTS VALUES (3, 'Julia', 76);\nINSERT INTO STUDENTS VALUES (4, 'Scarlet', 84);\nINSERT INTO STUDENTS VALUES (5, 'David', 68);\nINSERT INTO STUDENTS VALUES (6, 'Mary', 90);"
+          }
+        ],
+        "explanation": "Extracts names with high marks, ordering rows based on name suffix substrings, breaking ties with id values."
+      },
+      {
+        "id": "hr-bs-19",
+        "title": "HR 19: Employee Names",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Write a query that prints a list of employee names from the **Employee** table in alphabetical order.\n\n**Hint:** Use `ORDER BY name ASC`.",
+        "schema": [
+          {
+            "name": "Employee",
+            "columns": [
+              {
+                "name": "employee_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(30)"
+              },
+              {
+                "name": "months",
+                "type": "INT"
+              },
+              {
+                "name": "salary",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Employee (\n  employee_id INT PRIMARY KEY,\n  name VARCHAR(30),\n  months INT,\n  salary INT\n);\nINSERT INTO Employee VALUES (12228, 'Rose', 15, 1968);\nINSERT INTO Employee VALUES (33645, 'Angela', 1, 3443);\nINSERT INTO Employee VALUES (45692, 'Frank', 17, 1608);\nINSERT INTO Employee VALUES (56118, 'Patrick', 7, 1345);\nINSERT INTO Employee VALUES (59725, 'Lisa', 11, 2330);\nINSERT INTO Employee VALUES (74197, 'Kimberly', 16, 4372);\nINSERT INTO Employee VALUES (78454, 'Bonnie', 8, 3071);\nINSERT INTO Employee VALUES (83565, 'Michael', 6, 2011);\nINSERT INTO Employee VALUES (98607, 'Todd', 5, 3396);\nINSERT INTO Employee VALUES (99988, 'Joe', 9, 3573);",
+        "expectedQuery": "SELECT name FROM Employee ORDER BY name ASC;",
+        "defaultCode": "-- Sort employees alphabetically\nSELECT name\nFROM Employee\nORDER BY ;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Employee (\n  employee_id INT PRIMARY KEY,\n  name VARCHAR(30),\n  months INT,\n  salary INT\n);\nINSERT INTO Employee VALUES (12228, 'Rose', 15, 1968);\nINSERT INTO Employee VALUES (33645, 'Angela', 1, 3443);\nINSERT INTO Employee VALUES (45692, 'Frank', 17, 1608);\nINSERT INTO Employee VALUES (56118, 'Patrick', 7, 1345);\nINSERT INTO Employee VALUES (59725, 'Lisa', 11, 2330);\nINSERT INTO Employee VALUES (74197, 'Kimberly', 16, 4372);\nINSERT INTO Employee VALUES (78454, 'Bonnie', 8, 3071);\nINSERT INTO Employee VALUES (83565, 'Michael', 6, 2011);\nINSERT INTO Employee VALUES (98607, 'Todd', 5, 3396);\nINSERT INTO Employee VALUES (99988, 'Joe', 9, 3573);"
+          }
+        ],
+        "explanation": "Sorts the employees dataset alphabetically by name."
+      },
+      {
+        "id": "hr-bs-20",
+        "title": "HR 20: Employee Salaries",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Write a query that prints a list of employee names for employees in **Employee** having a salary greater than `$2000` per month who have been employees for less than `10` months. Sort your result by ascending **employee_id**.\n\n**Hint:** Filter using `salary > 2000 AND months < 10`.",
+        "schema": [
+          {
+            "name": "Employee",
+            "columns": [
+              {
+                "name": "employee_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(30)"
+              },
+              {
+                "name": "months",
+                "type": "INT"
+              },
+              {
+                "name": "salary",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Employee (\n  employee_id INT PRIMARY KEY,\n  name VARCHAR(30),\n  months INT,\n  salary INT\n);\nINSERT INTO Employee VALUES (12228, 'Rose', 15, 1968);\nINSERT INTO Employee VALUES (33645, 'Angela', 1, 3443);\nINSERT INTO Employee VALUES (45692, 'Frank', 17, 1608);\nINSERT INTO Employee VALUES (56118, 'Patrick', 7, 1345);\nINSERT INTO Employee VALUES (59725, 'Lisa', 11, 2330);\nINSERT INTO Employee VALUES (74197, 'Kimberly', 16, 4372);\nINSERT INTO Employee VALUES (78454, 'Bonnie', 8, 3071);\nINSERT INTO Employee VALUES (83565, 'Michael', 6, 2011);\nINSERT INTO Employee VALUES (98607, 'Todd', 5, 3396);\nINSERT INTO Employee VALUES (99988, 'Joe', 9, 3573);",
+        "expectedQuery": "SELECT name FROM Employee WHERE salary > 2000 AND months < 10 ORDER BY employee_id ASC;",
+        "defaultCode": "-- Filter salary > 2000 and months < 10\nSELECT name\nFROM Employee\nWHERE \nORDER BY ;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Employee (\n  employee_id INT PRIMARY KEY,\n  name VARCHAR(30),\n  months INT,\n  salary INT\n);\nINSERT INTO Employee VALUES (12228, 'Rose', 15, 1968);\nINSERT INTO Employee VALUES (33645, 'Angela', 1, 3443);\nINSERT INTO Employee VALUES (45692, 'Frank', 17, 1608);\nINSERT INTO Employee VALUES (56118, 'Patrick', 7, 1345);\nINSERT INTO Employee VALUES (59725, 'Lisa', 11, 2330);\nINSERT INTO Employee VALUES (74197, 'Kimberly', 16, 4372);\nINSERT INTO Employee VALUES (78454, 'Bonnie', 8, 3071);\nINSERT INTO Employee VALUES (83565, 'Michael', 6, 2011);\nINSERT INTO Employee VALUES (98607, 'Todd', 5, 3396);\nINSERT INTO Employee VALUES (99988, 'Joe', 9, 3573);"
+          }
+        ],
+        "explanation": "Filters for short-tenured high-earning staff, sorting output records by employee ID."
+      }
+    ]
+  },
+  {
+    "id": "ch15-hr-adv-select",
+    "title": "Chapter 15: HackerRank Advanced Select (Q1–Q5)",
+    "lessons": [
+      {
+        "id": "hr-as-1",
+        "title": "HR 1: Type of Triangle",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Write an SQL query to identify the type of each record in the **TRIANGLES** table using its three side lengths. Output one of: `Equilateral`, `Isosceles`, `Scalene`, or `Not A Triangle`.\n\n**Hint:** A triangle is invalid if `a + b <= c` or `b + c <= a` or `a + c <= b`. Use a `CASE WHEN` statement.",
+        "schema": [
+          {
+            "name": "TRIANGLES",
+            "columns": [
+              {
+                "name": "a",
+                "type": "INT"
+              },
+              {
+                "name": "b",
+                "type": "INT"
+              },
+              {
+                "name": "c",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE TRIANGLES (a INT, b INT, c INT);\nINSERT INTO TRIANGLES VALUES (20, 20, 20);\nINSERT INTO TRIANGLES VALUES (20, 20, 30);\nINSERT INTO TRIANGLES VALUES (30, 40, 50);\nINSERT INTO TRIANGLES VALUES (20, 20, 40);",
+        "expectedQuery": "SELECT CASE WHEN a + b <= c OR b + c <= a OR a + c <= b THEN 'Not A Triangle' WHEN a = b AND b = c THEN 'Equilateral' WHEN a = b OR b = c OR a = c THEN 'Isosceles' ELSE 'Scalene' END FROM TRIANGLES;",
+        "defaultCode": "-- Identify triangle types\nSELECT CASE \n  WHEN \nEND\nFROM TRIANGLES;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE TRIANGLES (a INT, b INT, c INT);\nINSERT INTO TRIANGLES VALUES (20, 20, 20);\nINSERT INTO TRIANGLES VALUES (20, 20, 30);\nINSERT INTO TRIANGLES VALUES (30, 40, 50);\nINSERT INTO TRIANGLES VALUES (20, 20, 40);"
+          }
+        ],
+        "explanation": "Uses conditional CASE checking triangle validity first, then side equality constraints."
+      },
+      {
+        "id": "hr-as-2",
+        "title": "HR 2: The PADS",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "Query an alphabetically ordered list of all names in **OCCUPATIONS**, immediately followed by the first letter of each occupation as a parenthetical (e.g.: `Aniket(D)`). Then, query the number of occurrences of each occupation. Sort the occurrences in ascending order, formatted as: `There are a total of [occupation_count] [occupation]s.`\n\n**Hint:** In SQLite, combine lists using `UNION ALL` wrapping sorting structures.",
+        "schema": [
+          {
+            "name": "OCCUPATIONS",
+            "columns": [
+              {
+                "name": "name",
+                "type": "VARCHAR(30)"
+              },
+              {
+                "name": "occupation",
+                "type": "VARCHAR(30)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE OCCUPATIONS (name VARCHAR(30), occupation VARCHAR(30));\nINSERT INTO OCCUPATIONS VALUES ('Ashley', 'Professor');\nINSERT INTO OCCUPATIONS VALUES ('Samantha', 'Actor');\nINSERT INTO OCCUPATIONS VALUES ('Julia', 'Doctor');\nINSERT INTO OCCUPATIONS VALUES ('Jane', 'Singer');\nINSERT INTO OCCUPATIONS VALUES ('Maria', 'Actor');\nINSERT INTO OCCUPATIONS VALUES ('Meera', 'Singer');\nINSERT INTO OCCUPATIONS VALUES ('Ashely', 'Professor');\nINSERT INTO OCCUPATIONS VALUES ('Ketty', 'Actor');\nINSERT INTO OCCUPATIONS VALUES ('Christeen', 'Singer');\nINSERT INTO OCCUPATIONS VALUES ('Eve', 'Actor');\nINSERT INTO OCCUPATIONS VALUES ('Aamina', 'Doctor');",
+        "expectedQuery": "SELECT res FROM (\n  SELECT name || '(' || SUBSTR(occupation, 1, 1) || ')' AS res, 1 AS grp, name AS sort_val FROM OCCUPATIONS\n  UNION ALL\n  SELECT 'There are a total of ' || COUNT(*) || ' ' || LOWER(occupation) || 's.' AS res, 2 AS grp, COUNT(*) || '_' || occupation AS sort_val FROM OCCUPATIONS GROUP BY occupation\n) ORDER BY grp, sort_val;",
+        "defaultCode": "-- Union names and formatted counts\nSELECT res FROM (\n  SELECT name || '(' || SUBSTR(occupation, 1, 1) || ')' AS res, 1 AS grp, name AS sort_val FROM OCCUPATIONS\n  UNION ALL\n  SELECT 'There are a total of ' || COUNT(*) || ' ' || LOWER(occupation) || 's.' AS res, 2 AS grp, COUNT(*) || '_' || occupation AS sort_val FROM OCCUPATIONS GROUP BY occupation\n) ORDER BY ;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE OCCUPATIONS (name VARCHAR(30), occupation VARCHAR(30));\nINSERT INTO OCCUPATIONS VALUES ('Ashley', 'Professor');\nINSERT INTO OCCUPATIONS VALUES ('Samantha', 'Actor');\nINSERT INTO OCCUPATIONS VALUES ('Julia', 'Doctor');\nINSERT INTO OCCUPATIONS VALUES ('Jane', 'Singer');\nINSERT INTO OCCUPATIONS VALUES ('Maria', 'Actor');\nINSERT INTO OCCUPATIONS VALUES ('Meera', 'Singer');\nINSERT INTO OCCUPATIONS VALUES ('Ashely', 'Professor');\nINSERT INTO OCCUPATIONS VALUES ('Ketty', 'Actor');\nINSERT INTO OCCUPATIONS VALUES ('Christeen', 'Singer');\nINSERT INTO OCCUPATIONS VALUES ('Eve', 'Actor');\nINSERT INTO OCCUPATIONS VALUES ('Aamina', 'Doctor');"
+          }
+        ],
+        "explanation": "Combines a name listing query with an aggregated count query, sorting distinct groups using subquery sorting tags."
+      },
+      {
+        "id": "hr-as-3",
+        "title": "HR 3: Occupations",
+        "type": "coding",
+        "difficulty": "Hard",
+        "description": "Pivot the **OCCUPATIONS** table so that each Name is sorted alphabetically and displayed under its corresponding Occupation. The column headers should be `Doctor`, `Professor`, `Singer`, and `Actor` in order.\n\n**Hint:** Use the window function `ROW_NUMBER() OVER(PARTITION BY occupation ORDER BY name)` to assign sequential row indices before grouping.",
+        "schema": [
+          {
+            "name": "OCCUPATIONS",
+            "columns": [
+              {
+                "name": "name",
+                "type": "VARCHAR(30)"
+              },
+              {
+                "name": "occupation",
+                "type": "VARCHAR(30)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE OCCUPATIONS (name VARCHAR(30), occupation VARCHAR(30));\nINSERT INTO OCCUPATIONS VALUES ('Ashley', 'Professor');\nINSERT INTO OCCUPATIONS VALUES ('Samantha', 'Actor');\nINSERT INTO OCCUPATIONS VALUES ('Julia', 'Doctor');\nINSERT INTO OCCUPATIONS VALUES ('Jane', 'Singer');\nINSERT INTO OCCUPATIONS VALUES ('Maria', 'Actor');\nINSERT INTO OCCUPATIONS VALUES ('Meera', 'Singer');\nINSERT INTO OCCUPATIONS VALUES ('Ashely', 'Professor');\nINSERT INTO OCCUPATIONS VALUES ('Ketty', 'Actor');\nINSERT INTO OCCUPATIONS VALUES ('Christeen', 'Singer');\nINSERT INTO OCCUPATIONS VALUES ('Eve', 'Actor');\nINSERT INTO OCCUPATIONS VALUES ('Aamina', 'Doctor');",
+        "expectedQuery": "WITH Ranked AS (\n  SELECT name, occupation,\n         ROW_NUMBER() OVER(PARTITION BY occupation ORDER BY name) as rn\n  FROM OCCUPATIONS\n)\nSELECT\n  MAX(CASE WHEN occupation = 'Doctor' THEN name END) AS Doctor,\n  MAX(CASE WHEN occupation = 'Professor' THEN name END) AS Professor,\n  MAX(CASE WHEN occupation = 'Singer' THEN name END) AS Singer,\n  MAX(CASE WHEN occupation = 'Actor' THEN name END) AS Actor\nFROM Ranked\nGROUP BY rn\nORDER BY rn;",
+        "defaultCode": "-- Pivot occupations table\nWITH Ranked AS (\n  SELECT name, occupation,\n         ROW_NUMBER() OVER(PARTITION BY occupation ORDER BY name) as rn\n  FROM OCCUPATIONS\n)\nSELECT\n  MAX(CASE WHEN occupation = 'Doctor' THEN name END) AS Doctor\n  -- Add other columns here...\nFROM Ranked\nGROUP BY rn\nORDER BY rn;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE OCCUPATIONS (name VARCHAR(30), occupation VARCHAR(30));\nINSERT INTO OCCUPATIONS VALUES ('Ashley', 'Professor');\nINSERT INTO OCCUPATIONS VALUES ('Samantha', 'Actor');\nINSERT INTO OCCUPATIONS VALUES ('Julia', 'Doctor');\nINSERT INTO OCCUPATIONS VALUES ('Jane', 'Singer');\nINSERT INTO OCCUPATIONS VALUES ('Maria', 'Actor');\nINSERT INTO OCCUPATIONS VALUES ('Meera', 'Singer');\nINSERT INTO OCCUPATIONS VALUES ('Ashely', 'Professor');\nINSERT INTO OCCUPATIONS VALUES ('Ketty', 'Actor');\nINSERT INTO OCCUPATIONS VALUES ('Christeen', 'Singer');\nINSERT INTO OCCUPATIONS VALUES ('Eve', 'Actor');\nINSERT INTO OCCUPATIONS VALUES ('Aamina', 'Doctor');"
+          }
+        ],
+        "explanation": "Pivots dynamic names into static columns by grouping row-number partitioned indexes for each occupation category."
+      },
+      {
+        "id": "hr-as-4",
+        "title": "HR 4: Binary Tree Nodes",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "Write a query to find the node type of *Binary Tree* in **BST** table ordered by the value of the node. Output `Root`, `Inner`, or `Leaf`.\n\n**Hint:** A node is 'Root' if its parent `P` is NULL, 'Inner' if its ID `N` exists in the parent column, and 'Leaf' otherwise.",
+        "schema": [
+          {
+            "name": "BST",
+            "columns": [
+              {
+                "name": "n",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "p",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE BST (n INT PRIMARY KEY, p INT);\nINSERT INTO BST VALUES (1, 2);\nINSERT INTO BST VALUES (3, 2);\nINSERT INTO BST VALUES (6, 8);\nINSERT INTO BST VALUES (9, 8);\nINSERT INTO BST VALUES (2, 5);\nINSERT INTO BST VALUES (8, 5);\nINSERT INTO BST VALUES (5, NULL);",
+        "expectedQuery": "SELECT n, CASE WHEN p IS NULL THEN 'Root' WHEN n IN (SELECT DISTINCT p FROM BST WHERE p IS NOT NULL) THEN 'Inner' ELSE 'Leaf' END FROM BST ORDER BY n;",
+        "defaultCode": "-- Classify tree nodes\nSELECT n, CASE \n  WHEN p IS NULL THEN 'Root'\n  -- Complete classification logic\nEND \nFROM BST \nORDER BY n;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE BST (n INT PRIMARY KEY, p INT);\nINSERT INTO BST VALUES (1, 2);\nINSERT INTO BST VALUES (3, 2);\nINSERT INTO BST VALUES (6, 8);\nINSERT INTO BST VALUES (9, 8);\nINSERT INTO BST VALUES (2, 5);\nINSERT INTO BST VALUES (8, 5);\nINSERT INTO BST VALUES (5, NULL);"
+          }
+        ],
+        "explanation": "Identifies hierarchy nodes using root checking and nested subquery lookups to find inner parents."
+      },
+      {
+        "id": "hr-as-5",
+        "title": "HR 5: New Companies",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "For each company, query the company_code, founder name, and count of distinct lead managers, senior managers, managers, and employees. Sort by company_code ascending.\n\n**Hint:** Join the hierarchy tables on company_code and query `COUNT(DISTINCT ...)` groups.",
+        "schema": [
+          {
+            "name": "Company",
+            "columns": [
+              {
+                "name": "company_code",
+                "type": "VARCHAR(10)",
+                "key": "PK"
+              },
+              {
+                "name": "founder",
+                "type": "VARCHAR(30)"
+              }
+            ]
+          },
+          {
+            "name": "Lead_Manager",
+            "columns": [
+              {
+                "name": "lead_manager_code",
+                "type": "VARCHAR(10)"
+              },
+              {
+                "name": "company_code",
+                "type": "VARCHAR(10)"
+              }
+            ]
+          },
+          {
+            "name": "Senior_Manager",
+            "columns": [
+              {
+                "name": "senior_manager_code",
+                "type": "VARCHAR(10)"
+              },
+              {
+                "name": "lead_manager_code",
+                "type": "VARCHAR(10)"
+              },
+              {
+                "name": "company_code",
+                "type": "VARCHAR(10)"
+              }
+            ]
+          },
+          {
+            "name": "Manager",
+            "columns": [
+              {
+                "name": "manager_code",
+                "type": "VARCHAR(10)"
+              },
+              {
+                "name": "senior_manager_code",
+                "type": "VARCHAR(10)"
+              },
+              {
+                "name": "lead_manager_code",
+                "type": "VARCHAR(10)"
+              },
+              {
+                "name": "company_code",
+                "type": "VARCHAR(10)"
+              }
+            ]
+          },
+          {
+            "name": "Employee",
+            "columns": [
+              {
+                "name": "employee_id",
+                "type": "VARCHAR(10)"
+              },
+              {
+                "name": "manager_code",
+                "type": "VARCHAR(10)"
+              },
+              {
+                "name": "senior_manager_code",
+                "type": "VARCHAR(10)"
+              },
+              {
+                "name": "lead_manager_code",
+                "type": "VARCHAR(10)"
+              },
+              {
+                "name": "company_code",
+                "type": "VARCHAR(10)"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Company (company_code VARCHAR(10) PRIMARY KEY, founder VARCHAR(30));\nCREATE TABLE Lead_Manager (lead_manager_code VARCHAR(10), company_code VARCHAR(10));\nCREATE TABLE Senior_Manager (senior_manager_code VARCHAR(10), lead_manager_code VARCHAR(10), company_code VARCHAR(10));\nCREATE TABLE Manager (manager_code VARCHAR(10), senior_manager_code VARCHAR(10), lead_manager_code VARCHAR(10), company_code VARCHAR(10));\nCREATE TABLE Employee (employee_id VARCHAR(10), manager_code VARCHAR(10), senior_manager_code VARCHAR(10), lead_manager_code VARCHAR(10), company_code VARCHAR(10));\nINSERT INTO Company VALUES ('C1', 'Monika');\nINSERT INTO Company VALUES ('C2', 'Samantha');\nINSERT INTO Lead_Manager VALUES ('LM1', 'C1');\nINSERT INTO Lead_Manager VALUES ('LM2', 'C2');\nINSERT INTO Senior_Manager VALUES ('SM1', 'LM1', 'C1');\nINSERT INTO Senior_Manager VALUES ('SM2', 'LM2', 'C2');\nINSERT INTO Manager VALUES ('M1', 'SM1', 'LM1', 'C1');\nINSERT INTO Manager VALUES ('M2', 'SM2', 'LM2', 'C2');\nINSERT INTO Employee VALUES ('E1', 'M1', 'SM1', 'LM1', 'C1');\nINSERT INTO Employee VALUES ('E2', 'M1', 'SM1', 'LM1', 'C1');\nINSERT INTO Employee VALUES ('E3', 'M2', 'SM2', 'LM2', 'C2');",
+        "expectedQuery": "SELECT c.company_code, c.founder,\n       COUNT(DISTINCT lm.lead_manager_code),\n       COUNT(DISTINCT sm.senior_manager_code),\n       COUNT(DISTINCT m.manager_code),\n       COUNT(DISTINCT e.employee_id)\nFROM Company c\nLEFT JOIN Lead_Manager lm ON c.company_code = lm.company_code\nLEFT JOIN Senior_Manager sm ON c.company_code = sm.company_code\nLEFT JOIN Manager m ON c.company_code = m.company_code\nLEFT JOIN Employee e ON c.company_code = e.company_code\nGROUP BY c.company_code, c.founder\nORDER BY c.company_code ASC;",
+        "defaultCode": "-- Join and aggregate company hierarchies\nSELECT c.company_code, c.founder\nFROM Company c\n-- Join other tables here...\nGROUP BY c.company_code, c.founder\nORDER BY c.company_code ASC;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Company (company_code VARCHAR(10) PRIMARY KEY, founder VARCHAR(30));\nCREATE TABLE Lead_Manager (lead_manager_code VARCHAR(10), company_code VARCHAR(10));\nCREATE TABLE Senior_Manager (senior_manager_code VARCHAR(10), lead_manager_code VARCHAR(10), company_code VARCHAR(10));\nCREATE TABLE Manager (manager_code VARCHAR(10), senior_manager_code VARCHAR(10), lead_manager_code VARCHAR(10), company_code VARCHAR(10));\nCREATE TABLE Employee (employee_id VARCHAR(10), manager_code VARCHAR(10), senior_manager_code VARCHAR(10), lead_manager_code VARCHAR(10), company_code VARCHAR(10));\nINSERT INTO Company VALUES ('C1', 'Monika');\nINSERT INTO Company VALUES ('C2', 'Samantha');\nINSERT INTO Lead_Manager VALUES ('LM1', 'C1');\nINSERT INTO Lead_Manager VALUES ('LM2', 'C2');\nINSERT INTO Senior_Manager VALUES ('SM1', 'LM1', 'C1');\nINSERT INTO Senior_Manager VALUES ('SM2', 'LM2', 'C2');\nINSERT INTO Manager VALUES ('M1', 'SM1', 'LM1', 'C1');\nINSERT INTO Manager VALUES ('M2', 'SM2', 'LM2', 'C2');\nINSERT INTO Employee VALUES ('E1', 'M1', 'SM1', 'LM1', 'C1');\nINSERT INTO Employee VALUES ('E2', 'M1', 'SM1', 'LM1', 'C1');\nINSERT INTO Employee VALUES ('E3', 'M2', 'SM2', 'LM2', 'C2');"
+          }
+        ],
+        "explanation": "Consolidates organizational totals by left-joining company nodes and counting unique IDs."
+      }
+    ]
+  },
+  {
+    "id": "ch16-hr-aggregations",
+    "title": "Chapter 16: HackerRank Aggregations (Q1–Q17)",
+    "lessons": [
+      {
+        "id": "hr-agg-1",
+        "title": "HR 1: Revising Aggregations - Count",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query a count of the number of cities in **CITY** having a population greater than 100,000.\n\n**Hint:** Use `COUNT(*)` with the population threshold filter.",
+        "schema": [
+          {
+            "name": "CITY",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(17)"
+              },
+              {
+                "name": "countrycode",
+                "type": "VARCHAR(3)"
+              },
+              {
+                "name": "district",
+                "type": "VARCHAR(20)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);",
+        "expectedQuery": "SELECT COUNT(*) FROM CITY WHERE population > 100000;",
+        "defaultCode": "-- Count cities\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);"
+          }
+        ],
+        "explanation": "Calculates the total row matches satisfying the population filter."
+      },
+      {
+        "id": "hr-agg-2",
+        "title": "HR 2: Revising Aggregations - Sum",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the total population of all cities in **CITY** where District is `California`.\n\n**Hint:** Sum the population values: `SUM(population)` where `district = 'California'`.",
+        "schema": [
+          {
+            "name": "CITY",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(17)"
+              },
+              {
+                "name": "countrycode",
+                "type": "VARCHAR(3)"
+              },
+              {
+                "name": "district",
+                "type": "VARCHAR(20)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);",
+        "expectedQuery": "SELECT SUM(population) FROM CITY WHERE district = 'California';",
+        "defaultCode": "-- Sum population\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);"
+          }
+        ],
+        "explanation": "Summarizes the total population of California cities."
+      },
+      {
+        "id": "hr-agg-3",
+        "title": "HR 3: Revising Aggregations - Averages",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the average population of all cities in **CITY** where District is `California`.\n\n**Hint:** Use the aggregate function `AVG(population)`.",
+        "schema": [
+          {
+            "name": "CITY",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(17)"
+              },
+              {
+                "name": "countrycode",
+                "type": "VARCHAR(3)"
+              },
+              {
+                "name": "district",
+                "type": "VARCHAR(20)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);",
+        "expectedQuery": "SELECT AVG(population) FROM CITY WHERE district = 'California';",
+        "defaultCode": "-- Average population\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);"
+          }
+        ],
+        "explanation": "Calculates the mean population value of all matching rows."
+      },
+      {
+        "id": "hr-agg-4",
+        "title": "HR 4: Average Population",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the average population for all cities in **CITY**, rounded down to the nearest integer.\n\n**Hint:** In SQL, cast the output average as an integer: `CAST(AVG(population) AS INT)`.",
+        "schema": [
+          {
+            "name": "CITY",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(17)"
+              },
+              {
+                "name": "countrycode",
+                "type": "VARCHAR(3)"
+              },
+              {
+                "name": "district",
+                "type": "VARCHAR(20)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);",
+        "expectedQuery": "SELECT CAST(AVG(population) AS INT) FROM CITY;",
+        "defaultCode": "-- Average rounded down\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);"
+          }
+        ],
+        "explanation": "Truncates the fractional parts of the overall average population."
+      },
+      {
+        "id": "hr-agg-5",
+        "title": "HR 5: Japan Population",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the sum of the populations for all Japanese cities in **CITY**.\n\n**Hint:** Filter by countrycode equaling 'JPN'.",
+        "schema": [
+          {
+            "name": "CITY",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(17)"
+              },
+              {
+                "name": "countrycode",
+                "type": "VARCHAR(3)"
+              },
+              {
+                "name": "district",
+                "type": "VARCHAR(20)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);",
+        "expectedQuery": "SELECT SUM(population) FROM CITY WHERE countrycode = 'JPN';",
+        "defaultCode": "-- Japan total population\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);"
+          }
+        ],
+        "explanation": "Extracts the aggregate population of JPN entries."
+      },
+      {
+        "id": "hr-agg-6",
+        "title": "HR 6: Population Density Difference",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the difference between the maximum and minimum populations in the **CITY** table.\n\n**Hint:** Use `MAX(population) - MIN(population)`.",
+        "schema": [
+          {
+            "name": "CITY",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(17)"
+              },
+              {
+                "name": "countrycode",
+                "type": "VARCHAR(3)"
+              },
+              {
+                "name": "district",
+                "type": "VARCHAR(20)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);",
+        "expectedQuery": "SELECT MAX(population) - MIN(population) FROM CITY;",
+        "defaultCode": "-- Population difference\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);"
+          }
+        ],
+        "explanation": "Computes the range span between the smallest and largest city populations."
+      },
+      {
+        "id": "hr-agg-7",
+        "title": "HR 7: The Blunder",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Samantha was tasked with calculating the average salary of all employees in the **Employee** table, but key '0' on her keyboard broke. Write a query calculating the amount of error (i.e.: actual average minus miscalculated average), rounded up to the next integer.\n\n**Hint:** Cast to string and replace zero characters: `REPLACE(CAST(salary AS VARCHAR), '0', '')`. Wrap the calculation in `ROUND(...)` or `CAST(val + 0.999 AS INT)` to round up.",
+        "schema": [
+          {
+            "name": "Employee",
+            "columns": [
+              {
+                "name": "employee_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(30)"
+              },
+              {
+                "name": "months",
+                "type": "INT"
+              },
+              {
+                "name": "salary",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Employee (\n  employee_id INT PRIMARY KEY,\n  name VARCHAR(30),\n  months INT,\n  salary INT\n);\nINSERT INTO Employee VALUES (12228, 'Rose', 15, 1968);\nINSERT INTO Employee VALUES (33645, 'Angela', 1, 3443);\nINSERT INTO Employee VALUES (45692, 'Frank', 17, 1608);\nINSERT INTO Employee VALUES (56118, 'Patrick', 7, 1345);\nINSERT INTO Employee VALUES (59725, 'Lisa', 11, 2330);\nINSERT INTO Employee VALUES (74197, 'Kimberly', 16, 4372);\nINSERT INTO Employee VALUES (78454, 'Bonnie', 8, 3071);\nINSERT INTO Employee VALUES (83565, 'Michael', 6, 2011);\nINSERT INTO Employee VALUES (98607, 'Todd', 5, 3396);\nINSERT INTO Employee VALUES (99988, 'Joe', 9, 3573);",
+        "expectedQuery": "SELECT CAST((AVG(salary) - AVG(CAST(REPLACE(CAST(salary AS VARCHAR), '0', '') AS INT))) + 0.999 AS INT) FROM Employee;",
+        "defaultCode": "-- Calculate actual vs error average difference\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Employee (\n  employee_id INT PRIMARY KEY,\n  name VARCHAR(30),\n  months INT,\n  salary INT\n);\nINSERT INTO Employee VALUES (12228, 'Rose', 15, 1968);\nINSERT INTO Employee VALUES (33645, 'Angela', 1, 3443);\nINSERT INTO Employee VALUES (45692, 'Frank', 17, 1608);\nINSERT INTO Employee VALUES (56118, 'Patrick', 7, 1345);\nINSERT INTO Employee VALUES (59725, 'Lisa', 11, 2330);\nINSERT INTO Employee VALUES (74197, 'Kimberly', 16, 4372);\nINSERT INTO Employee VALUES (78454, 'Bonnie', 8, 3071);\nINSERT INTO Employee VALUES (83565, 'Michael', 6, 2011);\nINSERT INTO Employee VALUES (98607, 'Todd', 5, 3396);\nINSERT INTO Employee VALUES (99988, 'Joe', 9, 3573);"
+          }
+        ],
+        "explanation": "Calculates the average deviation caused by replacing zero digits in the salaries."
+      },
+      {
+        "id": "hr-agg-8",
+        "title": "HR 8: Top Earners",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "We define an employee's total earnings to be their monthly salary multiplied by months worked. Write a query to find the maximum total earnings for any employee in the **Employee** table as well as the total number of employees who have maximum earnings.\n\n**Hint:** Group by `salary * months`, sort descending, and use `LIMIT 1`.",
+        "schema": [
+          {
+            "name": "Employee",
+            "columns": [
+              {
+                "name": "employee_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(30)"
+              },
+              {
+                "name": "months",
+                "type": "INT"
+              },
+              {
+                "name": "salary",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Employee (\n  employee_id INT PRIMARY KEY,\n  name VARCHAR(30),\n  months INT,\n  salary INT\n);\nINSERT INTO Employee VALUES (12228, 'Rose', 15, 1968);\nINSERT INTO Employee VALUES (33645, 'Angela', 1, 3443);\nINSERT INTO Employee VALUES (45692, 'Frank', 17, 1608);\nINSERT INTO Employee VALUES (56118, 'Patrick', 7, 1345);\nINSERT INTO Employee VALUES (59725, 'Lisa', 11, 2330);\nINSERT INTO Employee VALUES (74197, 'Kimberly', 16, 4372);\nINSERT INTO Employee VALUES (78454, 'Bonnie', 8, 3071);\nINSERT INTO Employee VALUES (83565, 'Michael', 6, 2011);\nINSERT INTO Employee VALUES (98607, 'Todd', 5, 3396);\nINSERT INTO Employee VALUES (99988, 'Joe', 9, 3573);",
+        "expectedQuery": "SELECT salary * months AS earnings, COUNT(*) FROM Employee GROUP BY earnings ORDER BY earnings DESC LIMIT 1;",
+        "defaultCode": "-- Earnings and count of top earners\nSELECT salary * months AS earnings, COUNT(*)\nFROM Employee\nGROUP BY \nORDER BY \nLIMIT 1;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Employee (\n  employee_id INT PRIMARY KEY,\n  name VARCHAR(30),\n  months INT,\n  salary INT\n);\nINSERT INTO Employee VALUES (12228, 'Rose', 15, 1968);\nINSERT INTO Employee VALUES (33645, 'Angela', 1, 3443);\nINSERT INTO Employee VALUES (45692, 'Frank', 17, 1608);\nINSERT INTO Employee VALUES (56118, 'Patrick', 7, 1345);\nINSERT INTO Employee VALUES (59725, 'Lisa', 11, 2330);\nINSERT INTO Employee VALUES (74197, 'Kimberly', 16, 4372);\nINSERT INTO Employee VALUES (78454, 'Bonnie', 8, 3071);\nINSERT INTO Employee VALUES (83565, 'Michael', 6, 2011);\nINSERT INTO Employee VALUES (98607, 'Todd', 5, 3396);\nINSERT INTO Employee VALUES (99988, 'Joe', 9, 3573);"
+          }
+        ],
+        "explanation": "Calculates earnings per staff, groups them, and isolates the largest bracket with its occurrence count."
+      },
+      {
+        "id": "hr-agg-9",
+        "title": "HR 9: Weather Observation Station 2",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the sum of Northern Latitudes (**LAT_N**) and sum of Western Longitudes (**LONG_W**) from **STATION**, rounded to `2` decimal places.\n\n**Hint:** Project `ROUND(SUM(lat_n), 2), ROUND(SUM(long_w), 2)`.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT ROUND(SUM(lat_n), 2), ROUND(SUM(long_w), 2) FROM STATION;",
+        "defaultCode": "-- Round sum of coordinates\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Summarizes the coordinate values and applies rounding constraints."
+      },
+      {
+        "id": "hr-agg-10",
+        "title": "HR 10: Weather Observation Station 13",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the sum of Northern Latitudes (**LAT_N**) from **STATION** having values greater than `38.7880` and less than `137.2345`, rounded to `4` decimal places.\n\n**Hint:** Filter using `WHERE lat_n BETWEEN 38.7880 AND 137.2345`.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT ROUND(SUM(lat_n), 4) FROM STATION WHERE lat_n > 38.7880 AND lat_n < 137.2345;",
+        "defaultCode": "-- Sum latitudes in range\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Summarizes latitudes matching range thresholds and rounds to 4 decimals."
+      },
+      {
+        "id": "hr-agg-11",
+        "title": "HR 11: Weather Observation Station 14",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the greatest value of Northern Latitude (**LAT_N**) from **STATION** that is less than `137.2345`, rounded to `4` decimal places.\n\n**Hint:** Use `ROUND(MAX(lat_n), 4)`.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT ROUND(MAX(lat_n), 4) FROM STATION WHERE lat_n < 137.2345;",
+        "defaultCode": "-- Max latitude under limit\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Identifies the highest Northern coordinate value below the threshold."
+      },
+      {
+        "id": "hr-agg-12",
+        "title": "HR 12: Weather Observation Station 15",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the Western Longitude (**LONG_W**) for the largest Northern Latitude (**LAT_N**) in **STATION** that is less than `137.2345`. Round your answer to `4` decimal places.\n\n**Hint:** Sort by `lat_n DESC` and apply `LIMIT 1`.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT ROUND(long_w, 4) FROM STATION WHERE lat_n < 137.2345 ORDER BY lat_n DESC LIMIT 1;",
+        "defaultCode": "-- Longitude corresponding to max latitude\nSELECT ROUND(long_w, 4)\nFROM STATION\nWHERE lat_n < 137.2345\nORDER BY \nLIMIT 1;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Selects longitude values ordering by latitudes descending to isolate the topmost record."
+      },
+      {
+        "id": "hr-agg-13",
+        "title": "HR 13: Weather Observation Station 16",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the smallest Northern Latitude (**LAT_N**) from **STATION** that is greater than `38.7780`. Round your answer to `4` decimal places.\n\n**Hint:** Use `ROUND(MIN(lat_n), 4)`.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT ROUND(MIN(lat_n), 4) FROM STATION WHERE lat_n > 38.7780;",
+        "defaultCode": "-- Min latitude above limit\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Finds the lowest Northern coordinate value exceeding the threshold."
+      },
+      {
+        "id": "hr-agg-14",
+        "title": "HR 14: Weather Observation Station 17",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Query the Western Longitude (**LONG_W**) for the smallest Northern Latitude (**LAT_N**) in **STATION** that is greater than `38.7780`. Round your answer to `4` decimal places.\n\n**Hint:** Sort by `lat_n ASC` and apply `LIMIT 1`.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT ROUND(long_w, 4) FROM STATION WHERE lat_n > 38.7780 ORDER BY lat_n ASC LIMIT 1;",
+        "defaultCode": "-- Longitude corresponding to min latitude\nSELECT ROUND(long_w, 4)\nFROM STATION\nWHERE lat_n > 38.7780\nORDER BY \nLIMIT 1;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Queries the longitude of the southernmost station exceeding 38.7780."
+      },
+      {
+        "id": "hr-agg-15",
+        "title": "HR 15: Weather Observation Station 18",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "Consider $P_1(a, c)$ and $P_2(b, d)$ to be two points on a 2D plane where $a$ is the minimum value of Northern Latitude, $b$ is the maximum value of Northern Latitude, $c$ is the minimum value of Western Longitude, and $d$ is the maximum value of Western Longitude. Query the *Manhattan Distance* between points $P_1$ and $P_2$, rounded to `4` decimal places.\n\n**Hint:** Manhattan distance formula is: `|a - b| + |c - d|` which maps to `ABS(MIN(lat_n) - MAX(lat_n)) + ABS(MIN(long_w) - MAX(long_w))`.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT ROUND(ABS(MIN(lat_n) - MAX(lat_n)) + ABS(MIN(long_w) - MAX(long_w)), 4) FROM STATION;",
+        "defaultCode": "-- Calculate Manhattan distance\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Calculates grid distance using coordinate extrema differences and absolute values."
+      },
+      {
+        "id": "hr-agg-16",
+        "title": "HR 16: Weather Observation Station 19",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "Consider $P_1(a, c)$ and $P_2(b, d)$ to be two points on a 2D plane where $a$ is the minimum Northern Latitude, $b$ is the maximum Northern Latitude, $c$ is the minimum Western Longitude, and $d$ is the maximum Western Longitude. Query the *Euclidean Distance* between points $P_1$ and $P_2$, rounded to `4` decimal places.\n\n**Hint:** Euclidean distance formula is: `sqrt((a - b)^2 + (c - d)^2)`. Use `SQRT` and `POWER`.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "SELECT ROUND(SQRT(POWER(MIN(lat_n) - MAX(lat_n), 2) + POWER(MIN(long_w) - MAX(long_w), 2)), 4) FROM STATION;",
+        "defaultCode": "-- Calculate Euclidean distance\nSELECT ",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Calculates direct linear distance using standard coordinate square roots."
+      },
+      {
+        "id": "hr-agg-17",
+        "title": "HR 17: Weather Observation Station 20",
+        "type": "coding",
+        "difficulty": "Hard",
+        "description": "Query the *Median* of the Northern Latitudes (**LAT_N**) from **STATION** and round your answer to `4` decimal places.\n\n**Hint:** Calculate the median index using window function `ROW_NUMBER() OVER(ORDER BY lat_n)` and filtering for the middle row.",
+        "schema": [
+          {
+            "name": "STATION",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "city",
+                "type": "VARCHAR(21)"
+              },
+              {
+                "name": "state",
+                "type": "VARCHAR(2)"
+              },
+              {
+                "name": "lat_n",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "long_w",
+                "type": "DOUBLE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);",
+        "expectedQuery": "WITH Sorted AS (\n  SELECT lat_n,\n         ROW_NUMBER() OVER(ORDER BY lat_n) as rn,\n         COUNT(*) OVER() as cnt\n  FROM STATION\n)\nSELECT ROUND(AVG(lat_n), 4) FROM Sorted\nWHERE rn BETWEEN cnt/2.0 AND cnt/2.0 + 1;",
+        "defaultCode": "-- Median calculation\nWITH Sorted AS (\n  SELECT lat_n,\n         ROW_NUMBER() OVER(ORDER BY lat_n) as rn,\n         COUNT(*) OVER() as cnt\n  FROM STATION\n)\nSELECT ROUND(AVG(lat_n), 4)\nFROM Sorted\nWHERE rn BETWEEN ;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STATION (\n  id INT PRIMARY KEY,\n  city VARCHAR(21),\n  state VARCHAR(2),\n  lat_n DOUBLE,\n  long_w DOUBLE\n);\nINSERT INTO STATION VALUES (1, 'Acme', 'AZ', 33.0, 112.0);\nINSERT INTO STATION VALUES (2, 'Addison', 'TX', 32.9, 96.8);\nINSERT INTO STATION VALUES (3, 'Agency', 'MO', 39.5, 94.6);\nINSERT INTO STATION VALUES (4, 'Albertson', 'NY', 40.7, 73.6);\nINSERT INTO STATION VALUES (5, 'Amanda', 'OH', 39.6, 82.7);\nINSERT INTO STATION VALUES (6, 'Brownsville', 'TX', 25.9, 97.4);\nINSERT INTO STATION VALUES (7, 'Denver', 'CO', 39.7, 104.9);\nINSERT INTO STATION VALUES (8, 'El Paso', 'TX', 31.7, 106.4);\nINSERT INTO STATION VALUES (9, 'Oma', 'NE', 41.2, 95.9);\nINSERT INTO STATION VALUES (10, 'Urbana', 'IL', 40.1, 88.2);"
+          }
+        ],
+        "explanation": "Assigns ranks to sorted latitudes and identifies/averages the median elements."
+      }
+    ]
+  },
+  {
+    "id": "ch17-hr-basic-join",
+    "title": "Chapter 17: HackerRank Basic Join (Q1–Q8)",
+    "lessons": [
+      {
+        "id": "hr-bj-1",
+        "title": "HR 1: Asian Population",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Given the **CITY** and **COUNTRY** tables, query the sum of the populations of all cities where the CONTINENT is `Asia`.\n\n**Hint:** Join `CITY` and `COUNTRY` on `countrycode = code` and filter on `continent = 'Asia'`.",
+        "schema": [
+          {
+            "name": "CITY",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(17)"
+              },
+              {
+                "name": "countrycode",
+                "type": "VARCHAR(3)"
+              },
+              {
+                "name": "district",
+                "type": "VARCHAR(20)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          },
+          {
+            "name": "COUNTRY",
+            "columns": [
+              {
+                "name": "code",
+                "type": "VARCHAR(3)",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(44)"
+              },
+              {
+                "name": "continent",
+                "type": "VARCHAR(13)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);\nCREATE TABLE COUNTRY (\n  code VARCHAR(3) PRIMARY KEY,\n  name VARCHAR(44),\n  continent VARCHAR(13),\n  population INT\n);\nINSERT INTO COUNTRY VALUES ('USA', 'United States', 'North America', 320000000);\nINSERT INTO COUNTRY VALUES ('JPN', 'Japan', 'Asia', 127000000);\nINSERT INTO COUNTRY VALUES ('NLD', 'Netherlands', 'Europe', 17000000);\nINSERT INTO COUNTRY VALUES ('KEN', 'Kenya', 'Africa', 45000000);\nINSERT INTO COUNTRY VALUES ('EGY', 'Egypt', 'Africa', 90000000);",
+        "expectedQuery": "SELECT SUM(c.population) FROM CITY c JOIN COUNTRY co ON c.countrycode = co.code WHERE co.continent = 'Asia';",
+        "defaultCode": "-- Asian cities population sum\nSELECT SUM(c.population)\nFROM CITY c\nJOIN COUNTRY co ON \nWHERE ;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);\nCREATE TABLE COUNTRY (\n  code VARCHAR(3) PRIMARY KEY,\n  name VARCHAR(44),\n  continent VARCHAR(13),\n  population INT\n);\nINSERT INTO COUNTRY VALUES ('USA', 'United States', 'North America', 320000000);\nINSERT INTO COUNTRY VALUES ('JPN', 'Japan', 'Asia', 127000000);\nINSERT INTO COUNTRY VALUES ('NLD', 'Netherlands', 'Europe', 17000000);\nINSERT INTO COUNTRY VALUES ('KEN', 'Kenya', 'Africa', 45000000);\nINSERT INTO COUNTRY VALUES ('EGY', 'Egypt', 'Africa', 90000000);"
+          }
+        ],
+        "explanation": "Joins coordinates and continent fields, summarizing population values for JPN."
+      },
+      {
+        "id": "hr-bj-2",
+        "title": "HR 2: African Cities",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Given the **CITY** and **COUNTRY** tables, query the names of all cities where the CONTINENT is `Africa`.\n\n**Hint:** Select `c.name` from tables join where `continent = 'Africa'`.",
+        "schema": [
+          {
+            "name": "CITY",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(17)"
+              },
+              {
+                "name": "countrycode",
+                "type": "VARCHAR(3)"
+              },
+              {
+                "name": "district",
+                "type": "VARCHAR(20)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          },
+          {
+            "name": "COUNTRY",
+            "columns": [
+              {
+                "name": "code",
+                "type": "VARCHAR(3)",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(44)"
+              },
+              {
+                "name": "continent",
+                "type": "VARCHAR(13)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);\nCREATE TABLE COUNTRY (\n  code VARCHAR(3) PRIMARY KEY,\n  name VARCHAR(44),\n  continent VARCHAR(13),\n  population INT\n);\nINSERT INTO COUNTRY VALUES ('USA', 'United States', 'North America', 320000000);\nINSERT INTO COUNTRY VALUES ('JPN', 'Japan', 'Asia', 127000000);\nINSERT INTO COUNTRY VALUES ('NLD', 'Netherlands', 'Europe', 17000000);\nINSERT INTO COUNTRY VALUES ('KEN', 'Kenya', 'Africa', 45000000);\nINSERT INTO COUNTRY VALUES ('EGY', 'Egypt', 'Africa', 90000000);\nINSERT INTO CITY VALUES (5000, 'Nairobi', 'KEN', 'Nairobi', 3138369);\nINSERT INTO CITY VALUES (5001, 'Cairo', 'EGY', 'Cairo', 9500000);",
+        "expectedQuery": "SELECT c.name FROM CITY c JOIN COUNTRY co ON c.countrycode = co.code WHERE co.continent = 'Africa';",
+        "defaultCode": "-- African city names\nSELECT c.name\nFROM CITY c\nJOIN COUNTRY co ON \nWHERE ;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);\nCREATE TABLE COUNTRY (\n  code VARCHAR(3) PRIMARY KEY,\n  name VARCHAR(44),\n  continent VARCHAR(13),\n  population INT\n);\nINSERT INTO COUNTRY VALUES ('USA', 'United States', 'North America', 320000000);\nINSERT INTO COUNTRY VALUES ('JPN', 'Japan', 'Asia', 127000000);\nINSERT INTO COUNTRY VALUES ('NLD', 'Netherlands', 'Europe', 17000000);\nINSERT INTO COUNTRY VALUES ('KEN', 'Kenya', 'Africa', 45000000);\nINSERT INTO COUNTRY VALUES ('EGY', 'Egypt', 'Africa', 90000000);\nINSERT INTO CITY VALUES (5000, 'Nairobi', 'KEN', 'Nairobi', 3138369);\nINSERT INTO CITY VALUES (5001, 'Cairo', 'EGY', 'Cairo', 9500000);"
+          }
+        ],
+        "explanation": "Selects names of cities located on the African continent."
+      },
+      {
+        "id": "hr-bj-3",
+        "title": "HR 3: Average Population of Each Continent",
+        "type": "coding",
+        "difficulty": "Easy",
+        "description": "Given the **CITY** and **COUNTRY** tables, query the names of all continents and their average city populations rounded down to the nearest integer.\n\n**Hint:** Group by `co.continent` and project `co.continent, CAST(AVG(c.population) AS INT)`.",
+        "schema": [
+          {
+            "name": "CITY",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(17)"
+              },
+              {
+                "name": "countrycode",
+                "type": "VARCHAR(3)"
+              },
+              {
+                "name": "district",
+                "type": "VARCHAR(20)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          },
+          {
+            "name": "COUNTRY",
+            "columns": [
+              {
+                "name": "code",
+                "type": "VARCHAR(3)",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(44)"
+              },
+              {
+                "name": "continent",
+                "type": "VARCHAR(13)"
+              },
+              {
+                "name": "population",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);\nCREATE TABLE COUNTRY (\n  code VARCHAR(3) PRIMARY KEY,\n  name VARCHAR(44),\n  continent VARCHAR(13),\n  population INT\n);\nINSERT INTO COUNTRY VALUES ('USA', 'United States', 'North America', 320000000);\nINSERT INTO COUNTRY VALUES ('JPN', 'Japan', 'Asia', 127000000);\nINSERT INTO COUNTRY VALUES ('NLD', 'Netherlands', 'Europe', 17000000);\nINSERT INTO COUNTRY VALUES ('KEN', 'Kenya', 'Africa', 45000000);\nINSERT INTO COUNTRY VALUES ('EGY', 'Egypt', 'Africa', 90000000);",
+        "expectedQuery": "SELECT co.continent, CAST(AVG(c.population) AS INT) FROM CITY c JOIN COUNTRY co ON c.countrycode = co.code GROUP BY co.continent;",
+        "defaultCode": "-- Continent populations averages\nSELECT co.continent, CAST(AVG(c.population) AS INT)\nFROM CITY c\nJOIN COUNTRY co ON \nGROUP BY ;",
+        "ordered": false,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE CITY (\n  id INT PRIMARY KEY,\n  name VARCHAR(17),\n  countrycode VARCHAR(3),\n  district VARCHAR(20),\n  population INT\n);\nINSERT INTO CITY VALUES (1661, 'Sayama', 'JPN', 'Saitama', 162472);\nINSERT INTO CITY VALUES (1613, 'Hiroshima', 'JPN', 'Hiroshima', 1111604);\nINSERT INTO CITY VALUES (3878, 'Scottsdale', 'USA', 'Arizona', 202705);\nINSERT INTO CITY VALUES (3965, 'Corona', 'USA', 'California', 124966);\nINSERT INTO CITY VALUES (4000, 'New York', 'USA', 'New York', 8175133);\nINSERT INTO CITY VALUES (4001, 'Los Angeles', 'USA', 'California', 3792621);\nINSERT INTO CITY VALUES (4002, 'Osaka', 'JPN', 'Osaka', 2665314);\nCREATE TABLE COUNTRY (\n  code VARCHAR(3) PRIMARY KEY,\n  name VARCHAR(44),\n  continent VARCHAR(13),\n  population INT\n);\nINSERT INTO COUNTRY VALUES ('USA', 'United States', 'North America', 320000000);\nINSERT INTO COUNTRY VALUES ('JPN', 'Japan', 'Asia', 127000000);\nINSERT INTO COUNTRY VALUES ('NLD', 'Netherlands', 'Europe', 17000000);\nINSERT INTO COUNTRY VALUES ('KEN', 'Kenya', 'Africa', 45000000);\nINSERT INTO COUNTRY VALUES ('EGY', 'Egypt', 'Africa', 90000000);"
+          }
+        ],
+        "explanation": "Aggregates average populations grouping by matching continent values."
+      },
+      {
+        "id": "hr-bj-4",
+        "title": "HR 4: The Report",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "Generate a report containing three columns: Name, Grade and Mark. Names of students who got grades lower than 8 should be replaced with `NULL`. Sort by Grade descending, then Name ascending, then Marks ascending.\n\n**Hint:** Join students and grades where marks are between `min_mark` and `max_mark`.",
+        "schema": [
+          {
+            "name": "STUDENTS",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(30)"
+              },
+              {
+                "name": "marks",
+                "type": "INT"
+              }
+            ]
+          },
+          {
+            "name": "Grades",
+            "columns": [
+              {
+                "name": "grade",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "min_mark",
+                "type": "INT"
+              },
+              {
+                "name": "max_mark",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE STUDENTS (\n  id INT PRIMARY KEY,\n  name VARCHAR(30),\n  marks INT\n);\nINSERT INTO STUDENTS VALUES (1, 'Ashley', 81);\nINSERT INTO STUDENTS VALUES (2, 'Samantha', 75);\nINSERT INTO STUDENTS VALUES (3, 'Julia', 76);\nINSERT INTO STUDENTS VALUES (4, 'Scarlet', 84);\nINSERT INTO STUDENTS VALUES (5, 'David', 68);\nINSERT INTO STUDENTS VALUES (6, 'Mary', 90);\nCREATE TABLE Grades (grade INT PRIMARY KEY, min_mark INT, max_mark INT);\nINSERT INTO Grades VALUES (1, 0, 9);\nINSERT INTO Grades VALUES (2, 10, 19);\nINSERT INTO Grades VALUES (3, 20, 29);\nINSERT INTO Grades VALUES (4, 30, 39);\nINSERT INTO Grades VALUES (5, 40, 49);\nINSERT INTO Grades VALUES (6, 50, 59);\nINSERT INTO Grades VALUES (7, 60, 69);\nINSERT INTO Grades VALUES (8, 70, 79);\nINSERT INTO Grades VALUES (9, 80, 89);\nINSERT INTO Grades VALUES (10, 90, 100);",
+        "expectedQuery": "SELECT CASE WHEN g.grade >= 8 THEN s.name ELSE NULL END AS name_or_null, g.grade, s.marks\nFROM STUDENTS s\nJOIN Grades g ON s.marks BETWEEN g.min_mark AND g.max_mark\nORDER BY g.grade DESC,\n         CASE WHEN g.grade >= 8 THEN s.name END ASC,\n         CASE WHEN g.grade < 8 THEN s.marks END ASC;",
+        "defaultCode": "-- Student grades report\nSELECT CASE WHEN g.grade >= 8 THEN s.name ELSE NULL END, g.grade, s.marks\nFROM STUDENTS s\nJOIN Grades g ON s.marks BETWEEN \nORDER BY ;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE STUDENTS (\n  id INT PRIMARY KEY,\n  name VARCHAR(30),\n  marks INT\n);\nINSERT INTO STUDENTS VALUES (1, 'Ashley', 81);\nINSERT INTO STUDENTS VALUES (2, 'Samantha', 75);\nINSERT INTO STUDENTS VALUES (3, 'Julia', 76);\nINSERT INTO STUDENTS VALUES (4, 'Scarlet', 84);\nINSERT INTO STUDENTS VALUES (5, 'David', 68);\nINSERT INTO STUDENTS VALUES (6, 'Mary', 90);\nCREATE TABLE Grades (grade INT PRIMARY KEY, min_mark INT, max_mark INT);\nINSERT INTO Grades VALUES (1, 0, 9);\nINSERT INTO Grades VALUES (2, 10, 19);\nINSERT INTO Grades VALUES (3, 20, 29);\nINSERT INTO Grades VALUES (4, 30, 39);\nINSERT INTO Grades VALUES (5, 40, 49);\nINSERT INTO Grades VALUES (6, 50, 59);\nINSERT INTO Grades VALUES (7, 60, 69);\nINSERT INTO Grades VALUES (8, 70, 79);\nINSERT INTO Grades VALUES (9, 80, 89);\nINSERT INTO Grades VALUES (10, 90, 100);"
+          }
+        ],
+        "explanation": "Matches student marks to boundary grades and uses conditional aliases to protect low scoring student names."
+      },
+      {
+        "id": "hr-bj-5",
+        "title": "HR 5: Top Competitors",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "Write a query to print the hacker_id and name of hackers who achieved full scores for more than one challenge. Sort by counts descending, then hacker_id ascending.\n\n**Hint:** Join Hackers, Submissions, Challenges, and Difficulty tables where `Submissions.score = Difficulty.score`.",
+        "schema": [
+          {
+            "name": "Hackers",
+            "columns": [
+              {
+                "name": "hacker_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(30)"
+              }
+            ]
+          },
+          {
+            "name": "Difficulty",
+            "columns": [
+              {
+                "name": "difficulty_level",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "score",
+                "type": "INT"
+              }
+            ]
+          },
+          {
+            "name": "Challenges",
+            "columns": [
+              {
+                "name": "challenge_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "hacker_id",
+                "type": "INT"
+              },
+              {
+                "name": "difficulty_level",
+                "type": "INT"
+              }
+            ]
+          },
+          {
+            "name": "Submissions",
+            "columns": [
+              {
+                "name": "submission_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "hacker_id",
+                "type": "INT"
+              },
+              {
+                "name": "challenge_id",
+                "type": "INT"
+              },
+              {
+                "name": "score",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Hackers (hacker_id INT PRIMARY KEY, name VARCHAR(30));\nCREATE TABLE Difficulty (difficulty_level INT PRIMARY KEY, score INT);\nCREATE TABLE Challenges (challenge_id INT PRIMARY KEY, hacker_id INT, difficulty_level INT);\nCREATE TABLE Submissions (submission_id INT PRIMARY KEY, hacker_id INT, challenge_id INT, score INT);\nINSERT INTO Hackers VALUES (1, 'Angela');\nINSERT INTO Hackers VALUES (2, 'Michael');\nINSERT INTO Hackers VALUES (3, 'Frank');\nINSERT INTO Difficulty VALUES (1, 20);\nINSERT INTO Difficulty VALUES (2, 50);\nINSERT INTO Difficulty VALUES (3, 100);\nINSERT INTO Challenges VALUES (101, 1, 1);\nINSERT INTO Challenges VALUES (102, 2, 2);\nINSERT INTO Challenges VALUES (103, 3, 3);\nINSERT INTO Submissions VALUES (1, 1, 101, 20);\nINSERT INTO Submissions VALUES (2, 1, 102, 50);\nINSERT INTO Submissions VALUES (3, 2, 102, 50);\nINSERT INTO Submissions VALUES (4, 3, 103, 90);",
+        "expectedQuery": "SELECT h.hacker_id, h.name\nFROM Hackers h\nJOIN Submissions s ON h.hacker_id = s.hacker_id\nJOIN Challenges c ON s.challenge_id = c.challenge_id\nJOIN Difficulty d ON c.difficulty_level = d.difficulty_level\nWHERE s.score = d.score\nGROUP BY h.hacker_id, h.name\nHAVING COUNT(s.challenge_id) > 1\nORDER BY COUNT(s.challenge_id) DESC, h.hacker_id ASC;",
+        "defaultCode": "-- Find hackers with multiple full scores\nSELECT h.hacker_id, h.name\nFROM Hackers h\nJOIN Submissions s ON h.hacker_id = s.hacker_id\n-- Join challenges and difficulty\nWHERE s.score = d.score\nGROUP BY h.hacker_id, h.name\nHAVING COUNT(s.challenge_id) > 1\nORDER BY ;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Hackers (hacker_id INT PRIMARY KEY, name VARCHAR(30));\nCREATE TABLE Difficulty (difficulty_level INT PRIMARY KEY, score INT);\nCREATE TABLE Challenges (challenge_id INT PRIMARY KEY, hacker_id INT, difficulty_level INT);\nCREATE TABLE Submissions (submission_id INT PRIMARY KEY, hacker_id INT, challenge_id INT, score INT);\nINSERT INTO Hackers VALUES (1, 'Angela');\nINSERT INTO Hackers VALUES (2, 'Michael');\nINSERT INTO Hackers VALUES (3, 'Frank');\nINSERT INTO Difficulty VALUES (1, 20);\nINSERT INTO Difficulty VALUES (2, 50);\nINSERT INTO Difficulty VALUES (3, 100);\nINSERT INTO Challenges VALUES (101, 1, 1);\nINSERT INTO Challenges VALUES (102, 2, 2);\nINSERT INTO Challenges VALUES (103, 3, 3);\nINSERT INTO Submissions VALUES (1, 1, 101, 20);\nINSERT INTO Submissions VALUES (2, 1, 102, 50);\nINSERT INTO Submissions VALUES (3, 2, 102, 50);\nINSERT INTO Submissions VALUES (4, 3, 103, 90);"
+          }
+        ],
+        "explanation": "Finds competitive submissions where the user's score matches maximum difficulty points."
+      },
+      {
+        "id": "hr-bj-6",
+        "title": "HR 6: Ollivander's Inventory",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "Hermione wants to buy only non-evil wands with the minimum number of gold galleons needed to buy each unique wand of high power and age. Output: id, age, coins_needed, and power. Sort by power desc, then age desc.\n\n**Hint:** Use a correlated subquery checking `coins_needed` matches the minimum coins for wands with matching power and code.",
+        "schema": [
+          {
+            "name": "Wands",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "code",
+                "type": "INT"
+              },
+              {
+                "name": "coins_needed",
+                "type": "INT"
+              },
+              {
+                "name": "power",
+                "type": "INT"
+              }
+            ]
+          },
+          {
+            "name": "Wands_Property",
+            "columns": [
+              {
+                "name": "code",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "age",
+                "type": "INT"
+              },
+              {
+                "name": "is_evil",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Wands (id INT PRIMARY KEY, code INT, coins_needed INT, power INT);\nCREATE TABLE Wands_Property (code INT PRIMARY KEY, age INT, is_evil INT);\nINSERT INTO Wands VALUES (1, 10, 1000, 5);\nINSERT INTO Wands VALUES (2, 10, 800, 5);\nINSERT INTO Wands VALUES (3, 20, 1500, 8);\nINSERT INTO Wands VALUES (4, 20, 2000, 8);\nINSERT INTO Wands_Property VALUES (10, 100, 0);\nINSERT INTO Wands_Property VALUES (20, 250, 0);",
+        "expectedQuery": "SELECT w.id, wp.age, w.coins_needed, w.power\nFROM Wands w\nJOIN Wands_Property wp ON w.code = wp.code\nWHERE wp.is_evil = 0 AND w.coins_needed = (\n  SELECT MIN(w2.coins_needed)\n  FROM Wands w2\n  JOIN Wands_Property wp2 ON w2.code = wp2.code\n  WHERE w2.power = w.power AND wp2.age = wp.age\n)\nORDER BY w.power DESC, wp.age DESC;",
+        "defaultCode": "-- Cheapest high-power non-evil wands\nSELECT w.id, wp.age, w.coins_needed, w.power\nFROM Wands w\nJOIN Wands_Property wp ON w.code = wp.code\nWHERE wp.is_evil = 0 AND w.coins_needed = (\n  -- Subquery minimum coins\n)\nORDER BY w.power DESC, wp.age DESC;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Wands (id INT PRIMARY KEY, code INT, coins_needed INT, power INT);\nCREATE TABLE Wands_Property (code INT PRIMARY KEY, age INT, is_evil INT);\nINSERT INTO Wands VALUES (1, 10, 1000, 5);\nINSERT INTO Wands VALUES (2, 10, 800, 5);\nINSERT INTO Wands VALUES (3, 20, 1500, 8);\nINSERT INTO Wands VALUES (4, 20, 2000, 8);\nINSERT INTO Wands_Property VALUES (10, 100, 0);\nINSERT INTO Wands_Property VALUES (20, 250, 0);"
+          }
+        ],
+        "explanation": "Uses a correlated lookup to filter out wands with higher costs for each power-age pairing."
+      },
+      {
+        "id": "hr-bj-7",
+        "title": "HR 7: Challenges",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "Query the hacker_id, name, and total challenges created. Sort by count desc, then hacker_id. If more than one hacker created the same number of challenges, and that number is less than the max number of challenges, exclude those hackers.\n\n**Hint:** Use CTEs to calculate challenge counts per hacker, count their frequencies, and filter.",
+        "schema": [
+          {
+            "name": "Hackers",
+            "columns": [
+              {
+                "name": "hacker_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(30)"
+              }
+            ]
+          },
+          {
+            "name": "Challenges",
+            "columns": [
+              {
+                "name": "challenge_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "hacker_id",
+                "type": "INT"
+              },
+              {
+                "name": "difficulty_level",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Hackers (hacker_id INT PRIMARY KEY, name VARCHAR(30));\nCREATE TABLE Difficulty (difficulty_level INT PRIMARY KEY, score INT);\nCREATE TABLE Challenges (challenge_id INT PRIMARY KEY, hacker_id INT, difficulty_level INT);\nCREATE TABLE Submissions (submission_id INT PRIMARY KEY, hacker_id INT, challenge_id INT, score INT);\nINSERT INTO Hackers VALUES (1, 'Angela');\nINSERT INTO Hackers VALUES (2, 'Michael');\nINSERT INTO Hackers VALUES (3, 'Frank');\nINSERT INTO Difficulty VALUES (1, 20);\nINSERT INTO Difficulty VALUES (2, 50);\nINSERT INTO Difficulty VALUES (3, 100);\nINSERT INTO Challenges VALUES (101, 1, 1);\nINSERT INTO Challenges VALUES (102, 2, 2);\nINSERT INTO Challenges VALUES (103, 3, 3);\nINSERT INTO Submissions VALUES (1, 1, 101, 20);\nINSERT INTO Submissions VALUES (2, 1, 102, 50);\nINSERT INTO Submissions VALUES (3, 2, 102, 50);\nINSERT INTO Submissions VALUES (4, 3, 103, 90);",
+        "expectedQuery": "WITH ChallengeCounts AS (\n  SELECT hacker_id, COUNT(*) as cnt\n  FROM Challenges\n  GROUP BY hacker_id\n),\nGroupedCounts AS (\n  SELECT cnt, COUNT(*) as cnt_of_cnt\n  FROM ChallengeCounts\n  GROUP BY cnt\n)\nSELECT h.hacker_id, h.name, cc.cnt\nFROM Hackers h\nJOIN ChallengeCounts cc ON h.hacker_id = cc.hacker_id\nWHERE cc.cnt = (SELECT MAX(cnt) FROM ChallengeCounts)\n   OR cc.cnt IN (SELECT cnt FROM GroupedCounts WHERE cnt_of_cnt = 1)\nORDER BY cc.cnt DESC, h.hacker_id ASC;",
+        "defaultCode": "-- CTE calculation of challenge statistics\nWITH ChallengeCounts AS (\n  SELECT hacker_id, COUNT(*) as cnt\n  FROM Challenges\n  GROUP BY hacker_id\n)\nSELECT h.hacker_id, h.name, cc.cnt\nFROM Hackers h\nJOIN ChallengeCounts cc ON h.hacker_id = cc.hacker_id\nWHERE -- Filter constraints\nORDER BY cc.cnt DESC, h.hacker_id ASC;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Hackers (hacker_id INT PRIMARY KEY, name VARCHAR(30));\nCREATE TABLE Difficulty (difficulty_level INT PRIMARY KEY, score INT);\nCREATE TABLE Challenges (challenge_id INT PRIMARY KEY, hacker_id INT, difficulty_level INT);\nCREATE TABLE Submissions (submission_id INT PRIMARY KEY, hacker_id INT, challenge_id INT, score INT);\nINSERT INTO Hackers VALUES (1, 'Angela');\nINSERT INTO Hackers VALUES (2, 'Michael');\nINSERT INTO Hackers VALUES (3, 'Frank');\nINSERT INTO Difficulty VALUES (1, 20);\nINSERT INTO Difficulty VALUES (2, 50);\nINSERT INTO Difficulty VALUES (3, 100);\nINSERT INTO Challenges VALUES (101, 1, 1);\nINSERT INTO Challenges VALUES (102, 2, 2);\nINSERT INTO Challenges VALUES (103, 3, 3);\nINSERT INTO Submissions VALUES (1, 1, 101, 20);\nINSERT INTO Submissions VALUES (2, 1, 102, 50);\nINSERT INTO Submissions VALUES (3, 2, 102, 50);\nINSERT INTO Submissions VALUES (4, 3, 103, 90);"
+          }
+        ],
+        "explanation": "Calculates challenge distributions and filters out duplicate count rows unless they are the absolute maximum."
+      },
+      {
+        "id": "hr-bj-8",
+        "title": "HR 8: Contest Leaderboard",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "Query the hacker_id, name, and total score. The total score is the sum of maximum scores for all challenges. Sort by total score desc, then hacker_id. Exclude hackers with a score of 0.\n\n**Hint:** Create a subquery that gets `MAX(score)` grouped by challenge_id and hacker_id.",
+        "schema": [
+          {
+            "name": "Hackers",
+            "columns": [
+              {
+                "name": "hacker_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(30)"
+              }
+            ]
+          },
+          {
+            "name": "Submissions",
+            "columns": [
+              {
+                "name": "submission_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "hacker_id",
+                "type": "INT"
+              },
+              {
+                "name": "challenge_id",
+                "type": "INT"
+              },
+              {
+                "name": "score",
+                "type": "INT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Hackers (hacker_id INT PRIMARY KEY, name VARCHAR(30));\nCREATE TABLE Difficulty (difficulty_level INT PRIMARY KEY, score INT);\nCREATE TABLE Challenges (challenge_id INT PRIMARY KEY, hacker_id INT, difficulty_level INT);\nCREATE TABLE Submissions (submission_id INT PRIMARY KEY, hacker_id INT, challenge_id INT, score INT);\nINSERT INTO Hackers VALUES (1, 'Angela');\nINSERT INTO Hackers VALUES (2, 'Michael');\nINSERT INTO Hackers VALUES (3, 'Frank');\nINSERT INTO Difficulty VALUES (1, 20);\nINSERT INTO Difficulty VALUES (2, 50);\nINSERT INTO Difficulty VALUES (3, 100);\nINSERT INTO Challenges VALUES (101, 1, 1);\nINSERT INTO Challenges VALUES (102, 2, 2);\nINSERT INTO Challenges VALUES (103, 3, 3);\nINSERT INTO Submissions VALUES (1, 1, 101, 20);\nINSERT INTO Submissions VALUES (2, 1, 102, 50);\nINSERT INTO Submissions VALUES (3, 2, 102, 50);\nINSERT INTO Submissions VALUES (4, 3, 103, 90);",
+        "expectedQuery": "SELECT h.hacker_id, h.name, SUM(max_score) AS total_score\nFROM Hackers h\nJOIN (\n  SELECT hacker_id, MAX(score) AS max_score\n  FROM Submissions\n  GROUP BY hacker_id, challenge_id\n) s ON h.hacker_id = s.hacker_id\nGROUP BY h.hacker_id, h.name\nHAVING total_score > 0\nORDER BY total_score DESC, h.hacker_id ASC;",
+        "defaultCode": "-- Aggregate maximum scores sum\nSELECT h.hacker_id, h.name, SUM(max_score) AS total_score\nFROM Hackers h\nJOIN (\n  -- Max score grouped by challenge\n) s ON \nGROUP BY h.hacker_id, h.name\nHAVING total_score > 0\nORDER BY ;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Hackers (hacker_id INT PRIMARY KEY, name VARCHAR(30));\nCREATE TABLE Difficulty (difficulty_level INT PRIMARY KEY, score INT);\nCREATE TABLE Challenges (challenge_id INT PRIMARY KEY, hacker_id INT, difficulty_level INT);\nCREATE TABLE Submissions (submission_id INT PRIMARY KEY, hacker_id INT, challenge_id INT, score INT);\nINSERT INTO Hackers VALUES (1, 'Angela');\nINSERT INTO Hackers VALUES (2, 'Michael');\nINSERT INTO Hackers VALUES (3, 'Frank');\nINSERT INTO Difficulty VALUES (1, 20);\nINSERT INTO Difficulty VALUES (2, 50);\nINSERT INTO Difficulty VALUES (3, 100);\nINSERT INTO Challenges VALUES (101, 1, 1);\nINSERT INTO Challenges VALUES (102, 2, 2);\nINSERT INTO Challenges VALUES (103, 3, 3);\nINSERT INTO Submissions VALUES (1, 1, 101, 20);\nINSERT INTO Submissions VALUES (2, 1, 102, 50);\nINSERT INTO Submissions VALUES (3, 2, 102, 50);\nINSERT INTO Submissions VALUES (4, 3, 103, 90);"
+          }
+        ],
+        "explanation": "Calculates distinct challenge peaks for each user, summing their scores and filtering out zero entries."
+      }
+    ]
+  },
+  {
+    "id": "ch18-hr-adv-join",
+    "title": "Chapter 18: HackerRank Advanced Join (Q1–Q2)",
+    "lessons": [
+      {
+        "id": "hr-aj-1",
+        "title": "HR 1: SQL Project Planning",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "Query the start date and end date of projects, listed by the number of days it takes to complete the project in ascending order. If there is more than one project that has the same number of completion days, then order by start date.\n\n**Hint:** A start_date begins a project if it's not in the end_date column. An end_date closes it if it's not in the start_date column. Join them on `start_date < end_date` grouping by `start_date` to find `MIN(end_date)`.",
+        "schema": [
+          {
+            "name": "Projects",
+            "columns": [
+              {
+                "name": "task_id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "start_date",
+                "type": "DATE"
+              },
+              {
+                "name": "end_date",
+                "type": "DATE"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Projects (task_id INT PRIMARY KEY, start_date DATE, end_date DATE);\nINSERT INTO Projects VALUES (1, '2015-10-01', '2015-10-02');\nINSERT INTO Projects VALUES (2, '2015-10-02', '2015-10-03');\nINSERT INTO Projects VALUES (3, '2015-10-03', '2015-10-04');\nINSERT INTO Projects VALUES (4, '2015-10-13', '2015-10-14');\nINSERT INTO Projects VALUES (5, '2015-10-14', '2015-10-15');\nINSERT INTO Projects VALUES (6, '2015-10-25', '2015-10-26');",
+        "expectedQuery": "SELECT s.start_date, MIN(e.end_date) AS end_date\nFROM (\n  SELECT start_date FROM Projects WHERE start_date NOT IN (SELECT end_date FROM Projects)\n) s\nJOIN (\n  SELECT end_date FROM Projects WHERE end_date NOT IN (SELECT start_date FROM Projects)\n) e ON s.start_date < e.end_date\nGROUP BY s.start_date\nORDER BY (JULIANDAY(MIN(e.end_date)) - JULIANDAY(s.start_date)) ASC, s.start_date ASC;",
+        "defaultCode": "-- SQL project planning date intervals\nSELECT s.start_date, MIN(e.end_date) AS end_date\nFROM (\n  -- Filter start dates\n) s\nJOIN (\n  -- Filter end dates\n) e ON s.start_date < e.end_date\nGROUP BY s.start_date\nORDER BY (JULIANDAY(end_date) - JULIANDAY(s.start_date)) ASC, s.start_date ASC;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Projects (task_id INT PRIMARY KEY, start_date DATE, end_date DATE);\nINSERT INTO Projects VALUES (1, '2015-10-01', '2015-10-02');\nINSERT INTO Projects VALUES (2, '2015-10-02', '2015-10-03');\nINSERT INTO Projects VALUES (3, '2015-10-03', '2015-10-04');\nINSERT INTO Projects VALUES (4, '2015-10-13', '2015-10-14');\nINSERT INTO Projects VALUES (5, '2015-10-14', '2015-10-15');\nINSERT INTO Projects VALUES (6, '2015-10-25', '2015-10-26');"
+          }
+        ],
+        "explanation": "Filters project bounds using sets inclusions, counting completed interval duration using julian days subtraction."
+      },
+      {
+        "id": "hr-aj-2",
+        "title": "HR 2: Placements",
+        "type": "coding",
+        "difficulty": "Medium",
+        "description": "Write a query to output the names of those students whose best friends got offered a higher salary than them. Names must be ordered by the salary amount offered to the best friends.\n\n**Hint:** Join Students, Friends, and Packages (twice) to get the student's salary and their best friend's salary.",
+        "schema": [
+          {
+            "name": "Students",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT",
+                "key": "PK"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(30)"
+              }
+            ]
+          },
+          {
+            "name": "Friends",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT"
+              },
+              {
+                "name": "friend_id",
+                "type": "INT"
+              }
+            ]
+          },
+          {
+            "name": "Packages",
+            "columns": [
+              {
+                "name": "id",
+                "type": "INT"
+              },
+              {
+                "name": "salary",
+                "type": "FLOAT"
+              }
+            ]
+          }
+        ],
+        "seedSql": "CREATE TABLE Students (id INT PRIMARY KEY, name VARCHAR(30));\nCREATE TABLE Friends (id INT, friend_id INT);\nCREATE TABLE Packages (id INT, salary FLOAT);\nINSERT INTO Students VALUES (1, 'Ashley');\nINSERT INTO Students VALUES (2, 'Samantha');\nINSERT INTO Students VALUES (3, 'Julia');\nINSERT INTO Students VALUES (4, 'Scarlet');\nINSERT INTO Friends VALUES (1, 2);\nINSERT INTO Friends VALUES (2, 3);\nINSERT INTO Friends VALUES (3, 4);\nINSERT INTO Friends VALUES (4, 1);\nINSERT INTO Packages VALUES (1, 15.2);\nINSERT INTO Packages VALUES (2, 10.06);\nINSERT INTO Packages VALUES (3, 11.55);\nINSERT INTO Packages VALUES (4, 12.12);",
+        "expectedQuery": "SELECT s.name\nFROM Students s\nJOIN Friends f ON s.id = f.id\nJOIN Packages p1 ON s.id = p1.id\nJOIN Packages p2 ON f.friend_id = p2.id\nWHERE p2.salary > p1.salary\nORDER BY p2.salary ASC;",
+        "defaultCode": "-- Friend salaries comparison\nSELECT s.name\nFROM Students s\nJOIN Friends f ON s.id = f.id\n-- Join packages for self and friend\nWHERE \nORDER BY ;",
+        "ordered": true,
+        "testCases": [
+          {
+            "name": "Base Test",
+            "seedSql": "CREATE TABLE Students (id INT PRIMARY KEY, name VARCHAR(30));\nCREATE TABLE Friends (id INT, friend_id INT);\nCREATE TABLE Packages (id INT, salary FLOAT);\nINSERT INTO Students VALUES (1, 'Ashley');\nINSERT INTO Students VALUES (2, 'Samantha');\nINSERT INTO Students VALUES (3, 'Julia');\nINSERT INTO Students VALUES (4, 'Scarlet');\nINSERT INTO Friends VALUES (1, 2);\nINSERT INTO Friends VALUES (2, 3);\nINSERT INTO Friends VALUES (3, 4);\nINSERT INTO Friends VALUES (4, 1);\nINSERT INTO Packages VALUES (1, 15.2);\nINSERT INTO Packages VALUES (2, 10.06);\nINSERT INTO Packages VALUES (3, 11.55);\nINSERT INTO Packages VALUES (4, 12.12);"
+          }
+        ],
+        "explanation": "Joins salary packages for students and their friends, filtering for records where friend earnings exceed self earnings."
+      }
+    ]
   }
 ]

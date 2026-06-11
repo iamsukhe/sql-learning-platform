@@ -43,7 +43,7 @@ export default function Home() {
 
   // 1. Initialize Theme
   useEffect(() => {
-    const savedTheme = localStorage.getItem('leetsql-theme') as 'dark' | 'light' || 'dark';
+    const savedTheme = (localStorage.getItem('leetdbms-theme') || localStorage.getItem('leetsql-theme')) as 'dark' | 'light' || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
     
     const timer = setTimeout(() => {
@@ -56,13 +56,13 @@ export default function Home() {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
     document.documentElement.setAttribute('data-theme', nextTheme);
-    localStorage.setItem('leetsql-theme', nextTheme);
+    localStorage.setItem('leetdbms-theme', nextTheme);
   };
 
   // 2. Load progress from localStorage
   useEffect(() => {
-    const solved = localStorage.getItem('leetsql-solved');
-    const savedCodes = localStorage.getItem('leetsql-codes');
+    const solved = localStorage.getItem('leetdbms-solved') || localStorage.getItem('leetsql-solved');
+    const savedCodes = localStorage.getItem('leetdbms-codes') || localStorage.getItem('leetsql-codes');
     
     const timer = setTimeout(() => {
       if (solved) {
@@ -120,7 +120,7 @@ export default function Home() {
   const handleCodeChange = (newCode: string) => {
     const nextCodes = { ...userCodes, [currentProblemId]: newCode };
     setUserCodes(nextCodes);
-    localStorage.setItem('leetsql-codes', JSON.stringify(nextCodes));
+    localStorage.setItem('leetdbms-codes', JSON.stringify(nextCodes));
   };
 
   const handleResetCode = () => {
@@ -205,7 +205,7 @@ export default function Home() {
     if (!solvedProblems.includes(problemId)) {
       const nextSolved = [...solvedProblems, problemId];
       setSolvedProblems(nextSolved);
-      localStorage.setItem('leetsql-solved', JSON.stringify(nextSolved));
+      localStorage.setItem('leetdbms-solved', JSON.stringify(nextSolved));
     }
   };
 
@@ -353,10 +353,10 @@ export default function Home() {
               {parseInlineCode(trimmed.slice(2, -2))}
             </h4>
           );
-        } else if (trimmed.startsWith('-') || trimmed.startsWith('*')) {
+        } else if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
           elements.push(
             <li key={i} className="ml-4 mb-1.5 text-slate-400 text-xs list-disc leading-relaxed pl-1.5">
-              {parseInlineCode(trimmed.slice(1).trim())}
+              {parseInlineCode(trimmed.slice(2).trim())}
             </li>
           );
         } else if (trimmed.match(/^\d+\.\s/)) {
@@ -423,7 +423,7 @@ export default function Home() {
           )}
           <div className="flex items-center gap-2 text-base font-bold tracking-tight text-slate-100">
             <Database size={18} className="text-cyan-400" />
-            <span>Leet<span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">SQL</span></span>
+            <span>Leet<span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">DBMS</span></span>
           </div>
         </div>
 

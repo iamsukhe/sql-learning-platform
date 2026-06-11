@@ -171,9 +171,14 @@ export default function Sidebar({
       </div>
       
       {/* Footer */}
-      <div className="p-3 border-t border-slate-800 bg-slate-950/15 text-[10px] text-slate-500 flex items-center gap-1.5 shrink-0">
-        <Sparkles size={13} className="text-cyan-400" />
-        <span>Unified Coding & Conceptual Platform</span>
+      <div className="p-3.5 border-t border-slate-800 bg-slate-950/15 text-[10px] text-slate-500 flex flex-col gap-2 shrink-0 leading-normal">
+        <div className="flex items-center gap-1.5">
+          <Sparkles size={13} className="text-cyan-400 shrink-0" />
+          <span className="font-semibold">Unified Coding & Learning Platform</span>
+        </div>
+        <div className="text-[9px] text-slate-500 border-t border-slate-800/50 pt-1.5 leading-relaxed font-normal">
+          These notes are from Code Help. Special thanks to them; this platform was created solely for learning purposes. Visit <a href="https://www.codehelp.in/" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 hover:underline">Code Help</a> for more great content.
+        </div>
       </div>
     </aside>
   );

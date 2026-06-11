@@ -135,6 +135,7 @@ interface PdfViewerProps {
 }
 
 export default function PdfViewer({ pdfUrl }: PdfViewerProps) {
+  const [activePdfUrl, setActivePdfUrl] = useState<string>(pdfUrl);
   const [pdfDoc, setPdfDoc] = useState<PDFDocumentProxy | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [numPages, setNumPages] = useState<number>(1);
@@ -151,7 +152,7 @@ export default function PdfViewer({ pdfUrl }: PdfViewerProps) {
     const initPdf = async () => {
       try {
         if (!window.pdfjsLib) return;
-        const loadingTask = window.pdfjsLib.getDocument(pdfUrl);
+        const loadingTask = window.pdfjsLib.getDocument(activePdfUrl);
         const pdf = await loadingTask.promise;
         if (!active) return;
         setPdfDoc(pdf);
@@ -186,7 +187,7 @@ export default function PdfViewer({ pdfUrl }: PdfViewerProps) {
     return () => {
       active = false;
     };
-  }, [pdfUrl]);
+  }, [activePdfUrl]);
 
   // Keep input in sync with currentPage, unless currently editing
   useEffect(() => {
@@ -326,9 +327,21 @@ export default function PdfViewer({ pdfUrl }: PdfViewerProps) {
           </button>
         </div>
 
-        {/* Toolbar Title */}
-        <div className="hidden sm:block text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-slate-950/40 border border-slate-800 px-3 py-1 rounded">
-          Continuous Scroll Reader
+        {/* PDF Document Selection */}
+        <div className="flex items-center gap-2 text-xs font-semibold">
+          <span className="hidden md:inline text-[10px] font-bold uppercase tracking-wider text-slate-500">Document:</span>
+          <select
+            value={activePdfUrl}
+            onChange={(e) => {
+              setActivePdfUrl(e.target.value);
+              setIsLoading(true);
+              setCurrentPage(1);
+            }}
+            className="bg-slate-950 border border-slate-800 text-slate-300 text-xs font-semibold px-2.5 py-1.5 rounded outline-none focus:border-cyan-500 cursor-pointer transition-all"
+          >
+            <option value="/Full Notes.pdf">Class Textbook (Full Notes)</option>
+            <option value="/50 SQL Queries.pdf">50 SQL Practice Queries (Code Help)</option>
+          </select>
         </div>
 
         {/* Zoom & Utility Controls */}
@@ -378,6 +391,10 @@ export default function PdfViewer({ pdfUrl }: PdfViewerProps) {
           </div>
         ) : (
           <div className="w-full max-w-4xl flex flex-col gap-6">
+            {/* Learning Disclaimer Banner */}
+            <div className="p-3.5 bg-slate-900 border border-slate-800 rounded shadow-md text-xs text-slate-400 leading-relaxed text-center">
+              These notes are from Code Help. Special thanks to them; this platform was created solely for learning purposes. Visit <a href="https://www.codehelp.in/" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 hover:underline font-semibold">Code Help</a> for more great content.
+            </div>
             {Array.from({ length: numPages }, (_, i) => i + 1).map((pageNum) => (
               pdfDoc && (
                 <PdfPageItem 
