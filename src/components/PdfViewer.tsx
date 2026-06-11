@@ -139,11 +139,13 @@ export default function PdfViewer({ pdfUrl }: PdfViewerProps) {
   const [pdfDoc, setPdfDoc] = useState<PDFDocumentProxy | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [numPages, setNumPages] = useState<number>(1);
-  const [scale, setScale] = useState<number>(1.2);
+  const [scale, setScale] = useState<number>(1.4);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [inputVal, setInputVal] = useState<string>('1');
   
   const containerRef = useRef<HTMLDivElement | null>(null);
+
+
 
   // 1. Asynchronously load PDF.js from CDN
   useEffect(() => {
@@ -340,6 +342,7 @@ export default function PdfViewer({ pdfUrl }: PdfViewerProps) {
             className="bg-slate-950 border border-slate-800 text-slate-300 text-xs font-semibold px-2.5 py-1.5 rounded outline-none focus:border-cyan-500 cursor-pointer transition-all"
           >
             <option value="/Full Notes.pdf">Class Textbook (Full Notes)</option>
+            <option value="/sql_cheatersheet.pdf">SQL Cheat Sheet</option>
             <option value="/50 SQL Queries.pdf">50 SQL Practice Queries (Code Help)</option>
           </select>
         </div>

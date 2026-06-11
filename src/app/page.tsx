@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
-import { Sparkles, Sun, Moon, Database, HelpCircle, AlertTriangle, ArrowRight, CheckCircle2, BookOpen, Menu, AlertCircle } from 'lucide-react';
+import { Sparkles, Sun, Moon, Database, HelpCircle, AlertTriangle, ArrowRight, CheckCircle2, BookOpen, Menu, AlertCircle, FileText, FileCode } from 'lucide-react';
 import { problems } from '../data/problems';
 import { 
   getSqlLib, 
@@ -20,7 +20,7 @@ import PdfViewer from '../components/PdfViewer';
 import ErdViewer from '../components/ErdViewer';
 
 export default function Home() {
-  const [activeView, setActiveView] = useState<'notes' | 'sql'>('notes');
+  const [activeView, setActiveView] = useState<'sql' | 'notes' | 'cheatsheet' | 'queries50'>('sql');
   const [currentProblemId, setCurrentProblemId] = useState<string>(problems[0].id);
   const [userCodes, setUserCodes] = useState<{ [problemId: string]: string }>({});
   const [solvedProblems, setSolvedProblems] = useState<string[]>([]);
@@ -381,7 +381,7 @@ export default function Home() {
 
       return (
         <div key={key} className="overflow-x-auto border border-slate-800 rounded my-4 max-w-full">
-          <table className="w-full border-collapse text-xs text-left">
+          <table className="w-full border-collapse text-sm text-left">
             {headers && (
               <thead>
                 <tr className="bg-slate-950/60 border-b border-slate-800">
@@ -426,7 +426,7 @@ export default function Home() {
           } else {
             const codeText = codeBlockContent.join('\n');
             elements.push(
-              <pre key={`code-${i}`} className="bg-slate-950/80 border border-slate-800/80 rounded-lg p-4 font-mono text-xs text-cyan-400 my-4 overflow-x-auto select-text leading-relaxed">
+              <pre key={`code-${i}`} className="bg-slate-950/80 border border-slate-800/80 rounded-lg p-4 font-mono text-sm text-cyan-400 my-4 overflow-x-auto select-text leading-relaxed">
                 <code>{codeText}</code>
               </pre>
             );
@@ -469,7 +469,7 @@ export default function Home() {
                 <span className="text-[9px] text-slate-500 group-open:rotate-90 transition-transform duration-200">▶</span>
                 <span>{detailsSummary || 'Reveal Answer'}</span>
               </summary>
-              <div className="mt-3.5 pl-3.5 border-l-2 border-slate-800/80 text-xs text-slate-300 leading-relaxed flex flex-col gap-2.5">
+              <div className="mt-3.5 pl-3.5 border-l-2 border-slate-800/80 text-sm text-slate-300 leading-relaxed flex flex-col gap-2.5">
                 {subElements}
               </div>
             </details>
@@ -507,31 +507,31 @@ export default function Home() {
 
         if (trimmed.startsWith('### ')) {
           elements.push(
-            <h4 key={i} className="mt-5 mb-2.5 text-slate-200 text-sm font-semibold tracking-wide border-b border-slate-800/40 pb-1">
+            <h4 key={i} className="mt-5 mb-2.5 text-slate-200 text-base font-semibold tracking-wide border-b border-slate-800/40 pb-1">
               {parseInlineCode(trimmed.slice(4))}
             </h4>
           );
         } else if (trimmed.startsWith('## ')) {
           elements.push(
-            <h3 key={i} className="mt-6 mb-3 text-slate-100 text-base font-bold tracking-tight border-b border-slate-800 pb-1.5">
+            <h3 key={i} className="mt-6 mb-3 text-slate-100 text-lg font-bold tracking-tight border-b border-slate-800 pb-1.5">
               {parseInlineCode(trimmed.slice(3))}
             </h3>
           );
         } else if (trimmed.startsWith('# ')) {
           elements.push(
-            <h2 key={i} className="mt-8 mb-4 text-slate-100 text-lg font-extrabold tracking-tight border-b border-slate-800 pb-2">
+            <h2 key={i} className="mt-8 mb-4 text-slate-100 text-xl font-extrabold tracking-tight border-b border-slate-800 pb-2">
               {parseInlineCode(trimmed.slice(2))}
             </h2>
           );
         } else if (trimmed.startsWith('**') && trimmed.endsWith('**')) {
           elements.push(
-            <h4 key={i} className="mt-4 mb-2 text-slate-200 text-xs font-semibold uppercase tracking-wider text-cyan-400">
+            <h4 key={i} className="mt-4 mb-2 text-slate-200 text-sm font-semibold uppercase tracking-wider text-cyan-400">
               {parseInlineCode(trimmed.slice(2, -2))}
             </h4>
           );
         } else if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
           elements.push(
-            <li key={i} className="ml-4 mb-1.5 text-slate-400 text-xs list-disc leading-relaxed pl-1.5">
+            <li key={i} className="ml-4 mb-1.5 text-slate-400 text-sm list-disc leading-relaxed pl-1.5">
               {parseInlineCode(trimmed.slice(2).trim())}
             </li>
           );
@@ -540,7 +540,7 @@ export default function Home() {
           const num = match ? match[1] : '1';
           const content = match ? match[2] : trimmed;
           elements.push(
-            <div key={i} className="ml-2 mb-2 text-slate-400 text-xs leading-relaxed flex items-start gap-2">
+            <div key={i} className="ml-2 mb-2 text-slate-400 text-sm leading-relaxed flex items-start gap-2">
               <span className="text-cyan-500 font-semibold font-mono">{num}.</span>
               <span className="flex-1">{parseInlineCode(content)}</span>
             </div>
@@ -550,7 +550,7 @@ export default function Home() {
           const char = match ? match[1] : 'a';
           const content = match ? match[2] : trimmed;
           elements.push(
-            <div key={i} className="ml-6 mb-1.5 text-slate-400 text-xs leading-relaxed flex items-start gap-2">
+            <div key={i} className="ml-6 mb-1.5 text-slate-400 text-sm leading-relaxed flex items-start gap-2">
               <span className="text-slate-500 font-semibold font-mono">{char}.</span>
               <span className="flex-1">{parseInlineCode(content)}</span>
             </div>
@@ -560,14 +560,14 @@ export default function Home() {
           const roman = match ? match[1] : 'i';
           const content = match ? match[2] : trimmed;
           elements.push(
-            <div key={i} className="ml-10 mb-1.5 text-slate-500 text-xs leading-relaxed flex items-start gap-2">
+            <div key={i} className="ml-10 mb-1.5 text-slate-500 text-sm leading-relaxed flex items-start gap-2">
               <span className="text-slate-600 font-mono">{roman}.</span>
               <span className="flex-1">{parseInlineCode(content)}</span>
             </div>
           );
         } else {
           elements.push(
-            <p key={i} className="mb-3 text-slate-400 text-xs leading-relaxed">
+            <p key={i} className="mb-3 text-slate-400 text-sm leading-relaxed">
               {parseInlineCode(trimmed)}
             </p>
           );
@@ -581,7 +581,7 @@ export default function Home() {
 
     if (isInsideCodeBlock && codeBlockContent.length > 0) {
       elements.push(
-        <pre key="code-end" className="bg-slate-950/80 border border-slate-800/80 rounded-lg p-4 font-mono text-xs text-cyan-400 my-4 overflow-x-auto select-text leading-relaxed">
+        <pre key="code-end" className="bg-slate-950/80 border border-slate-800/80 rounded-lg p-4 font-mono text-sm text-cyan-400 my-4 overflow-x-auto select-text leading-relaxed">
           <code>{codeBlockContent.join('\n')}</code>
         </pre>
       );
@@ -611,11 +611,23 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Navigation Tabs (Notes vs SQL Practice) */}
-        <div className="flex bg-slate-950/80 p-0.5 sm:p-1 rounded-lg border border-slate-800 shrink-0">
+        {/* Navigation Tabs (SQL Practice, Lecture Notes, Cheat Sheet, 50 Queries) */}
+        <div className="flex bg-slate-950/80 p-0.5 sm:p-1 rounded-lg border border-slate-800 shrink-0 gap-1 overflow-x-auto max-w-[50vw] sm:max-w-none no-scrollbar">
+          <button
+            onClick={() => setActiveView('sql')}
+            className={`px-2 py-1.5 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer shrink-0 ${
+              activeView === 'sql'
+                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-[0_0_12px_rgba(34,211,238,0.2)] font-extrabold'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <Database size={13} />
+            <span className="hidden sm:inline">SQL Problems</span>
+            <span className="sm:hidden">SQL</span>
+          </button>
           <button
             onClick={() => setActiveView('notes')}
-            className={`px-2 py-1.5 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
+            className={`px-2 py-1.5 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer shrink-0 ${
               activeView === 'notes'
                 ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-[0_0_12px_rgba(34,211,238,0.2)] font-extrabold'
                 : 'text-slate-400 hover:text-slate-200'
@@ -626,16 +638,28 @@ export default function Home() {
             <span className="sm:hidden">Notes</span>
           </button>
           <button
-            onClick={() => setActiveView('sql')}
-            className={`px-2 py-1.5 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
-              activeView === 'sql'
+            onClick={() => setActiveView('cheatsheet')}
+            className={`px-2 py-1.5 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer shrink-0 ${
+              activeView === 'cheatsheet'
                 ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-[0_0_12px_rgba(34,211,238,0.2)] font-extrabold'
                 : 'text-slate-400 hover:text-slate-200'
             }`}
           >
-            <Database size={13} />
-            <span className="hidden sm:inline">SQL Problems</span>
-            <span className="sm:hidden">SQL</span>
+            <FileText size={13} />
+            <span className="hidden sm:inline">SQL Cheat Sheet</span>
+            <span className="sm:hidden">Cheat Sheet</span>
+          </button>
+          <button
+            onClick={() => setActiveView('queries50')}
+            className={`px-2 py-1.5 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer shrink-0 ${
+              activeView === 'queries50'
+                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-[0_0_12px_rgba(34,211,238,0.2)] font-extrabold'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <FileCode size={13} />
+            <span className="hidden sm:inline">50 SQL Queries</span>
+            <span className="sm:hidden">50 Queries</span>
           </button>
         </div>
 
@@ -659,7 +683,11 @@ export default function Home() {
       {/* Main Content Area */}
       <main className="h-full w-full overflow-hidden select-none">
         {activeView === 'notes' ? (
-          <PdfViewer pdfUrl="/Full Notes.pdf" />
+          <PdfViewer key="notes" pdfUrl="/Full Notes.pdf" />
+        ) : activeView === 'cheatsheet' ? (
+          <PdfViewer key="cheatsheet" pdfUrl="/sql_cheatersheet.pdf" />
+        ) : activeView === 'queries50' ? (
+          <PdfViewer key="queries50" pdfUrl="/50 SQL Queries.pdf" />
         ) : (
           <div 
             style={{
