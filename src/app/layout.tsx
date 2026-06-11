@@ -5,6 +5,9 @@ import "@/styles/globals.css";
 export const metadata: Metadata = {
   title: "SQLQuest - Interactive SQL Learning Platform",
   description: "Master SQL interactively with hands-on practice problems running fully inside your browser, completely free.",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
