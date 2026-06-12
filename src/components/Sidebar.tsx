@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Problem, chapters } from '../data/problems';
 import { Search, CheckCircle2, Circle, Sparkles, ChevronDown, ChevronRight } from 'lucide-react';
 
@@ -46,22 +46,67 @@ export default function Sidebar({
   // Track expanded state of chapters
   const [expandedChapters, setExpandedChapters] = useState<{ [chapterId: string]: boolean }>({});
 
+  const activeLessonRef = useRef<HTMLDivElement | null>(null);
+
+  // Scroll active lesson into view when it changes or when the active chapter is expanded
+  const activeChapterId = useMemo(() => {
+    const parentCh = chapters.find(ch => ch.lessons.some(l => l.id === currentProblemId));
+    return parentCh?.id || '';
+  }, [currentProblemId]);
+
+  const isActiveChapterExpanded = expandedChapters[activeChapterId];
+
+  useEffect(() => {
+    if (activeLessonRef.current && isActiveChapterExpanded) {
+      const timer = setTimeout(() => {
+        activeLessonRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest'
+        });
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [currentProblemId, isActiveChapterExpanded]);
+
+  // Load expanded chapters from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('sqlquest-expanded-chapters');
+    if (saved) {
+      const timer = setTimeout(() => {
+        try {
+          setExpandedChapters(JSON.parse(saved));
+        } catch (e) {
+          console.error(e);
+        }
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   // Auto-expand active chapter on mount or active change
   useEffect(() => {
     const parentCh = chapters.find(ch => ch.lessons.some(l => l.id === currentProblemId));
     if (parentCh) {
       const timer = setTimeout(() => {
-        setExpandedChapters(prev => ({ ...prev, [parentCh.id]: true }));
+        setExpandedChapters(prev => {
+          const next = { ...prev, [parentCh.id]: true };
+          localStorage.setItem('sqlquest-expanded-chapters', JSON.stringify(next));
+          return next;
+        });
       }, 0);
       return () => clearTimeout(timer);
     }
   }, [currentProblemId]);
 
   const toggleChapter = (chapterId: string) => {
-    setExpandedChapters(prev => ({
-      ...prev,
-      [chapterId]: !prev[chapterId]
-    }));
+    setExpandedChapters(prev => {
+      const next = {
+        ...prev,
+        [chapterId]: !prev[chapterId]
+      };
+      localStorage.setItem('sqlquest-expanded-chapters', JSON.stringify(next));
+      return next;
+    });
   };
 
   // Filter lessons inside chapters
@@ -172,6 +217,7 @@ export default function Sidebar({
                         return (
                           <div
                             key={lesson.id}
+                            ref={isSelected ? activeLessonRef : null}
                             className={`px-3.5 py-2 flex items-center justify-between cursor-pointer border-l-2 border-transparent hover:bg-slate-900/30 transition-colors ${isSelected ? 'bg-slate-900/50 border-cyan-500' : ''}`}
                             onClick={() => onSelectProblem(lesson.id)}
                           >

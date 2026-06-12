@@ -21,6 +21,10 @@ import ErdViewer from '../components/ErdViewer';
 
 export default function Home() {
   const [activeView, setActiveView] = useState<'sql' | 'notes' | 'cheatsheet' | 'queries50'>('sql');
+  const handleSelectView = (view: 'sql' | 'notes' | 'cheatsheet' | 'queries50') => {
+    setActiveView(view);
+    localStorage.setItem('sqlquest-active-view', view);
+  };
   const [currentProblemId, setCurrentProblemId] = useState<string>(problems[0].id);
   const [userCodes, setUserCodes] = useState<{ [problemId: string]: string }>({});
   const [solvedProblems, setSolvedProblems] = useState<string[]>([]);
@@ -163,6 +167,8 @@ export default function Home() {
   useEffect(() => {
     const solved = localStorage.getItem('sqlquest-solved') || localStorage.getItem('leetdbms-solved') || localStorage.getItem('leetsql-solved');
     const savedCodes = localStorage.getItem('sqlquest-codes') || localStorage.getItem('leetdbms-codes') || localStorage.getItem('leetsql-codes');
+    const savedProblemId = localStorage.getItem('sqlquest-current-problem');
+    const savedView = localStorage.getItem('sqlquest-active-view');
     
     const timer = setTimeout(() => {
       if (solved) {
@@ -170,6 +176,17 @@ export default function Home() {
       }
       if (savedCodes) {
         setUserCodes(JSON.parse(savedCodes));
+      }
+      if (savedProblemId) {
+        const exists = problems.some(p => p.id === savedProblemId);
+        if (exists) {
+          setCurrentProblemId(savedProblemId);
+        }
+      }
+      if (savedView) {
+        if (['sql', 'notes', 'cheatsheet', 'queries50'].includes(savedView)) {
+          setActiveView(savedView as 'sql' | 'notes' | 'cheatsheet' | 'queries50');
+        }
       }
     }, 0);
     
@@ -311,6 +328,7 @@ export default function Home() {
 
   const handleSelectProblem = (id: string) => {
     setCurrentProblemId(id);
+    localStorage.setItem('sqlquest-current-problem', id);
     setIsSidebarOpen(false); // Close sidebar drawer on mobile
     
     // Reset coding states
@@ -658,7 +676,7 @@ export default function Home() {
         {/* Navigation Tabs (SQL Practice, Lecture Notes, Cheat Sheet, 50 Queries) */}
         <div className="flex bg-slate-950/80 p-0.5 sm:p-1 rounded-lg border border-slate-800 shrink-0 gap-1 overflow-x-auto max-w-[50vw] sm:max-w-none no-scrollbar">
           <button
-            onClick={() => setActiveView('sql')}
+            onClick={() => handleSelectView('sql')}
             className={`px-2 py-1.5 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer shrink-0 ${
               activeView === 'sql'
                 ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-[0_0_12px_rgba(34,211,238,0.2)] font-extrabold'
@@ -670,7 +688,7 @@ export default function Home() {
             <span className="sm:hidden">SQL</span>
           </button>
           <button
-            onClick={() => setActiveView('notes')}
+            onClick={() => handleSelectView('notes')}
             className={`px-2 py-1.5 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer shrink-0 ${
               activeView === 'notes'
                 ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-[0_0_12px_rgba(34,211,238,0.2)] font-extrabold'
@@ -682,7 +700,7 @@ export default function Home() {
             <span className="sm:hidden">Notes</span>
           </button>
           <button
-            onClick={() => setActiveView('cheatsheet')}
+            onClick={() => handleSelectView('cheatsheet')}
             className={`px-2 py-1.5 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer shrink-0 ${
               activeView === 'cheatsheet'
                 ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-[0_0_12px_rgba(34,211,238,0.2)] font-extrabold'
@@ -694,7 +712,7 @@ export default function Home() {
             <span className="sm:hidden">Cheat Sheet</span>
           </button>
           <button
-            onClick={() => setActiveView('queries50')}
+            onClick={() => handleSelectView('queries50')}
             className={`px-2 py-1.5 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer shrink-0 ${
               activeView === 'queries50'
                 ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-[0_0_12px_rgba(34,211,238,0.2)] font-extrabold'
