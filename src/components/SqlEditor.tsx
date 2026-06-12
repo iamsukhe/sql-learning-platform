@@ -1,6 +1,56 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Play, CheckSquare, RotateCcw, Code } from 'lucide-react';
 import { TableSchema } from '../data/problems';
+
+// SQL Syntax Highlighter helper
+const highlightSql = (code: string): React.ReactNode[] => {
+  const tokenRegex = /(--.*|\/\*[\s\S]*?\*\/|'[^']*'|"[^"]*"|\b(?:SELECT|FROM|WHERE|JOIN|LEFT|RIGHT|INNER|ON|GROUP|ORDER|BY|HAVING|LIMIT|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE|DROP|ALTER|ADD|PRIMARY|KEY|FOREIGN|REFERENCES|AS|AND|OR|NOT|IN|LIKE|IS|NULL|COUNT|SUM|AVG|MIN|MAX|BEGIN|TRANSACTION|COMMIT|ROLLBACK|AUTO_INCREMENT|UNIQUE|DEFAULT|CHECK|INT|INTEGER|TEXT|VARCHAR|DATE|REAL)\b|[-+*/%=<>&|!]+|\b\d+(?:\.\d+)?\b|\w+|[^\s\w]+|\s+)/gi;
+
+  const tokens = code.match(tokenRegex) || [code];
+  
+  return tokens.map((token, idx) => {
+    const lower = token.toLowerCase();
+    
+    // 1. Comments
+    if (token.startsWith('--') || token.startsWith('/*')) {
+      return <span key={idx} className="text-slate-500 italic">{token}</span>;
+    }
+    
+    // 2. Strings
+    if ((token.startsWith("'") && token.endsWith("'")) || (token.startsWith('"') && token.endsWith('"'))) {
+      return <span key={idx} className="text-emerald-400 font-semibold">{token}</span>;
+    }
+    
+    // 3. SQL Keywords
+    const keywordsSet = new Set([
+      'select', 'from', 'where', 'join', 'on', 'left', 'right', 'inner', 
+      'group', 'order', 'by', 'having', 'limit', 'insert', 'into', 'values', 
+      'update', 'set', 'delete', 'create', 'table', 'drop', 'alter', 'add', 
+      'primary', 'key', 'foreign', 'references', 'as', 'and', 'or', 'not', 
+      'in', 'like', 'is', 'null', 'count', 'sum', 'avg', 'min', 'max', 
+      'begin', 'transaction', 'commit', 'rollback', 'auto_increment', 
+      'unique', 'default', 'check', 'int', 'integer', 'text', 'varchar', 
+      'date', 'real'
+    ]);
+    
+    if (keywordsSet.has(lower)) {
+      return <span key={idx} className="text-cyan-400 font-bold">{token}</span>;
+    }
+    
+    // 4. Numbers
+    if (/^\b\d+(?:\.\d+)?\b$/.test(token)) {
+      return <span key={idx} className="text-amber-400">{token}</span>;
+    }
+    
+    // 5. Operators
+    if (/^[-+*/%=<>&|!]+$/.test(token)) {
+      return <span key={idx} className="text-pink-400 font-semibold">{token}</span>;
+    }
+    
+    // Default
+    return <span key={idx}>{token}</span>;
+  });
+};
 
 interface SqlEditorProps {
   value: string;
@@ -22,6 +72,26 @@ export default function SqlEditor({
   isEvaluating
 }: SqlEditorProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
+
+  // Sync scroll offsets
+  const handleScroll = (e: React.UIEvent<HTMLTextAreaElement>) => {
+    const textarea = e.currentTarget;
+    const backdrop = backdropRef.current;
+    if (backdrop) {
+      backdrop.scrollTop = textarea.scrollTop;
+      backdrop.scrollLeft = textarea.scrollLeft;
+    }
+  };
+
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    const backdrop = backdropRef.current;
+    if (textarea && backdrop) {
+      backdrop.scrollTop = textarea.scrollTop;
+      backdrop.scrollLeft = textarea.scrollLeft;
+    }
+  }, [value]);
 
   // Compute line numbers
   const lines = value.split('\n');
@@ -112,22 +182,36 @@ export default function SqlEditor({
       {/* Editor Main Content Area */}
       <div className="flex flex-1 font-mono text-sm bg-slate-950/40 relative overflow-hidden">
         {/* Line Numbers */}
-        <div className="py-4 px-3 text-right text-slate-600 bg-slate-900/40 border-r border-slate-800 select-none min-w-[42px]">
+        <div className="py-4 px-3 text-right text-slate-600 bg-slate-900/40 border-r border-slate-800 select-none min-w-[42px] z-20">
           {lineNumbers.map((num) => (
             <div key={num} className="h-[22.4px] leading-[22.4px] text-xs font-mono">{num}</div>
           ))}
         </div>
         
-        {/* SQL Text Input */}
-        <textarea
-          ref={textareaRef}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="flex-1 p-4 bg-transparent border-0 resize-none outline-none text-slate-200 leading-[22.4px] font-mono overflow-auto"
-          spellCheck="false"
-          placeholder="-- Write your SQL query here"
-        />
+        {/* Wrapper for superimposing Textarea & Highlight backdrop */}
+        <div className="relative flex-1 h-full overflow-hidden">
+          {/* Backdrop container showing syntax-highlighted text */}
+          <div 
+            ref={backdropRef}
+            className="absolute inset-0 p-4 font-mono text-sm leading-[22.4px] text-slate-300 pointer-events-none overflow-hidden whitespace-pre border-0 m-0 z-0 select-none"
+            aria-hidden="true"
+          >
+            {highlightSql(value)}
+          </div>
+          
+          {/* Transparent Input Textarea */}
+          <textarea
+            ref={textareaRef}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onScroll={handleScroll}
+            wrap="off"
+            className="absolute inset-0 p-4 bg-transparent border-0 resize-none outline-none text-transparent caret-slate-200 leading-[22.4px] font-mono overflow-auto whitespace-pre z-10 selection:bg-slate-800/80"
+            spellCheck="false"
+            placeholder="-- Write your SQL query here"
+          />
+        </div>
       </div>
 
       {/* Autocomplete Helper chips bar (Func/Helpful design) */}
