@@ -335,7 +335,8 @@ export default function Home() {
 
   // Description Parser & formatter (simple but highly styled markdown subset)
   const parseInlineCode = (text: string): React.ReactNode[] => {
-    const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*)/);
+    // Regex matches `code`, **bold**, $math$, *italic*, or _italic_ (excluding prices starting with a digit)
+    const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*|\$[^$0-9][^$]*?\$|\*[^*]+\*|_[^_]+_)/);
     return parts.map((part, idx) => {
       if (part.startsWith('`') && part.endsWith('`')) {
         return (
@@ -352,6 +353,38 @@ export default function Home() {
           <strong key={idx} className="font-bold text-slate-200">
             {part.slice(2, -2)}
           </strong>
+        );
+      }
+      if (part.startsWith('$') && part.endsWith('$')) {
+        const mathContent = part.slice(1, -1);
+        const formatted = mathContent
+          .replace(/\\rightarrow/g, '→')
+          .replace(/\\cap/g, '∩')
+          .replace(/\\emptyset/g, '∅')
+          .replace(/\\subseteq/g, '⊆')
+          .replace(/\\log/g, 'log')
+          .replace(/\\/g, ''); // strip out any raw backslashes
+        return (
+          <span 
+            key={idx} 
+            className="font-serif italic text-cyan-300 font-semibold px-1 py-0.5 bg-slate-950/60 border border-slate-900 rounded mx-0.5 text-xs whitespace-nowrap"
+          >
+            {formatted}
+          </span>
+        );
+      }
+      if (part.startsWith('*') && part.endsWith('*') && !part.startsWith('**')) {
+        return (
+          <em key={idx} className="italic text-slate-300 font-medium">
+            {part.slice(1, -1)}
+          </em>
+        );
+      }
+      if (part.startsWith('_') && part.endsWith('_') && !part.startsWith('__')) {
+        return (
+          <em key={idx} className="italic text-slate-300 font-medium">
+            {part.slice(1, -1)}
+          </em>
         );
       }
       return part;
@@ -505,7 +538,18 @@ export default function Home() {
           continue;
         }
 
-        if (trimmed.startsWith('### ')) {
+        if (trimmed === '---' || trimmed === '***') {
+          elements.push(<hr key={i} className="my-5 border-slate-800" />);
+          continue;
+        }
+
+        if (trimmed.startsWith('#### ')) {
+          elements.push(
+            <h5 key={i} className="mt-4 mb-2 text-slate-200 text-sm font-semibold tracking-wide pb-0.5">
+              {parseInlineCode(trimmed.slice(5))}
+            </h5>
+          );
+        } else if (trimmed.startsWith('### ')) {
           elements.push(
             <h4 key={i} className="mt-5 mb-2.5 text-slate-200 text-base font-semibold tracking-wide border-b border-slate-800/40 pb-1">
               {parseInlineCode(trimmed.slice(4))}
