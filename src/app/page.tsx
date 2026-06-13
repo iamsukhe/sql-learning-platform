@@ -674,10 +674,10 @@ export default function Home() {
               <Menu size={16} />
             </button>
           )}
-          <div className="flex items-center gap-2 text-base font-bold tracking-tight text-slate-100">
+          <h1 className="flex items-center gap-2 text-base font-bold tracking-tight text-slate-100">
             <Database size={18} className="text-cyan-400" />
             <span>DBMS<span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Quest</span></span>
-          </div>
+          </h1>
         </div>
 
         {/* Navigation Tabs (SQL Practice, Lecture Notes, Cheat Sheet, 50 Queries) */}
