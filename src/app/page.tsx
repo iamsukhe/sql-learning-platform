@@ -314,6 +314,24 @@ export default function Home() {
     }
   };
 
+  const handleToggleSolve = (problemId: string) => {
+    if (solvedProblems.includes(problemId)) {
+      const nextSolved = solvedProblems.filter(id => id !== problemId);
+      setSolvedProblems(nextSolved);
+      localStorage.setItem('sqlquest-solved', JSON.stringify(nextSolved));
+    } else {
+      const nextSolved = [...solvedProblems, problemId];
+      setSolvedProblems(nextSolved);
+      localStorage.setItem('sqlquest-solved', JSON.stringify(nextSolved));
+    }
+  };
+
+  const handleUncompleteProblem = (problemId: string) => {
+    const nextSolved = solvedProblems.filter(id => id !== problemId);
+    setSolvedProblems(nextSolved);
+    localStorage.setItem('sqlquest-solved', JSON.stringify(nextSolved));
+  };
+
   const handleSelectProblem = (id: string) => {
     setCurrentProblemId(id);
     localStorage.setItem('sqlquest-current-problem', id);
@@ -754,6 +772,7 @@ export default function Home() {
               isOpen={isSidebarOpen}
               width={sidebarWidth}
               onWidthChange={handleSidebarWidthChange}
+              onToggleSolve={handleToggleSolve}
             />
 
             {/* Backdrop overlay for mobile drawer */}
@@ -803,6 +822,17 @@ export default function Home() {
                             <HelpCircle size={16} className="text-cyan-400" />
                             <span>{activeProblem.title}</span>
                           </div>
+                          {solvedProblems.includes(activeProblem.id) && (
+                            <button
+                              onClick={() => handleUncompleteProblem(activeProblem.id)}
+                              className="px-2 py-1 bg-emerald-950/40 border border-emerald-500/30 hover:border-red-500/40 hover:bg-red-950/20 text-emerald-400 hover:text-red-400 rounded text-[10px] font-semibold flex items-center gap-1 transition-all cursor-pointer group shrink-0"
+                              title="Mark as Incomplete"
+                            >
+                              <CheckCircle2 size={12} className="group-hover:hidden" />
+                              <span className="group-hover:hidden">Completed</span>
+                              <span className="hidden group-hover:inline">Mark Incomplete</span>
+                            </button>
+                          )}
                         </div>
                         <div className="p-5 flex-1 overflow-y-auto font-serif text-[13px] text-slate-300 leading-relaxed tracking-wide">
                           {renderDescription(activeProblem.description)}
@@ -892,9 +922,22 @@ export default function Home() {
                           <BookOpen size={16} className="text-cyan-400" />
                           <span>{activeProblem.title} - Study Notes</span>
                         </div>
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-cyan-400 bg-cyan-950/40 border border-cyan-500/20 px-2 py-0.5 rounded">
-                          THEORY
-                        </span>
+                        <div className="flex items-center gap-2 shrink-0">
+                          {solvedProblems.includes(activeProblem.id) && (
+                            <button
+                              onClick={() => handleUncompleteProblem(activeProblem.id)}
+                              className="px-2 py-1 bg-emerald-950/40 border border-emerald-500/30 hover:border-red-500/40 hover:bg-red-950/20 text-emerald-400 hover:text-red-400 rounded text-[10px] font-semibold flex items-center gap-1 transition-all cursor-pointer group"
+                              title="Mark as Incomplete"
+                            >
+                              <CheckCircle2 size={12} className="group-hover:hidden" />
+                              <span className="group-hover:hidden">Completed</span>
+                              <span className="hidden group-hover:inline">Mark Incomplete</span>
+                            </button>
+                          )}
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-cyan-400 bg-cyan-950/40 border border-cyan-500/20 px-2 py-0.5 rounded">
+                            THEORY
+                          </span>
+                        </div>
                       </div>
                       <div className="p-6 flex-1 overflow-y-auto">
                         {renderDescription(activeProblem.description)}
@@ -968,15 +1011,23 @@ export default function Home() {
                                   <div className="text-slate-400 mt-0.5">You have read and mastered these study notes.</div>
                                 </div>
                               </div>
-                              {hasNextLesson() && (
+                              <div className="flex gap-2">
                                 <button
-                                  onClick={handleNextLesson}
-                                  className="w-full py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 rounded font-semibold text-xs hover:from-cyan-400 hover:to-blue-500 transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-[0_0_15px_rgba(34,211,238,0.1)]"
+                                  onClick={() => handleUncompleteProblem(activeProblem.id)}
+                                  className="flex-1 py-2 bg-slate-800 hover:bg-slate-700 hover:text-red-400 text-slate-300 rounded font-semibold text-xs transition-colors cursor-pointer border border-slate-750"
                                 >
-                                  Next Lesson
-                                  <ArrowRight size={14} />
+                                  Mark Incomplete
                                 </button>
-                              )}
+                                {hasNextLesson() && (
+                                  <button
+                                    onClick={handleNextLesson}
+                                    className="flex-1 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 rounded font-semibold text-xs hover:from-cyan-400 hover:to-blue-500 transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-[0_0_15px_rgba(34,211,238,0.1)]"
+                                  >
+                                    Next Lesson
+                                    <ArrowRight size={14} />
+                                  </button>
+                                )}
+                              </div>
                             </div>
                           ) : (
                             <button

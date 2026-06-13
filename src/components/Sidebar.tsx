@@ -10,6 +10,7 @@ interface SidebarProps {
   isOpen: boolean;
   width: number;
   onWidthChange: (width: number) => void;
+  onToggleSolve: (id: string) => void;
 }
 
 export default function Sidebar({
@@ -19,7 +20,8 @@ export default function Sidebar({
   solvedProblems,
   isOpen,
   width,
-  onWidthChange
+  onWidthChange,
+  onToggleSolve
 }: SidebarProps) {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -235,11 +237,20 @@ export default function Sidebar({
                             onClick={() => onSelectProblem(lesson.id)}
                           >
                             <div className="flex items-center gap-2 overflow-hidden min-w-0 flex-1">
-                              {isSolved ? (
-                                <CheckCircle2 size={13} className="text-emerald-400 fill-emerald-500/10 shrink-0" />
-                              ) : (
-                                <Circle size={13} className="text-slate-600 shrink-0" />
-                              )}
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onToggleSolve(lesson.id);
+                                }}
+                                className="p-0.5 rounded hover:bg-slate-800/80 text-slate-500 hover:text-cyan-400 transition-colors shrink-0 cursor-pointer"
+                                title={isSolved ? "Mark as Incomplete" : "Mark as Completed"}
+                              >
+                                {isSolved ? (
+                                  <CheckCircle2 size={13} className="text-emerald-400 fill-emerald-500/10" />
+                                ) : (
+                                  <Circle size={13} className="text-slate-600" />
+                                )}
+                              </button>
                               <span 
                                 className={`break-words whitespace-normal text-left flex-1 text-xs py-0.5 leading-relaxed ${isSelected ? 'text-cyan-400 font-semibold' : 'text-slate-400'}`}
                               >
