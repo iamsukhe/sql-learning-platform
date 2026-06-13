@@ -69,7 +69,7 @@
         "title": "DBMS Application Architectures",
         "type": "theory",
         "difficulty": "Easy",
-        "description": "### Client-Server Tiers\nDatabase applications are typically partitioned into tiers based on client and server roles:\n\n#### 1. 1-Tier Architecture\n- The client, application logic, and database server are all present on the same machine.\n- Used mainly for local database design and testing.\n\n#### 2. 2-Tier Architecture\n- The application is partitioned into two components:\n  1. **Client Machine**: Runs the user interface and application programs. It directly invokes database commands on the server using APIs like JDBC/ODBC.\n  2. **Server Machine**: Hosts the DBMS and processes database queries sent by the client.\n\n#### 3. 3-Tier Architecture\n- The application is partitioned into three logical components:\n  1. **Client Interface**: The frontend (e.g., web browser) which displays the UI. It contains no direct database calls.\n  2. **Application Server (Web Server)**: Hosts the business logic. It interprets client requests, queries the database server, and returns the response.\n  3. **Database Server**: Stores and manages the data, executing queries sent by the Application Server.\n- **Advantages**:\n  - **Scalability**: Multiple app servers can be added to balance loads.\n  - **Data Integrity**: The middle layer prevents clients from directly corrupting the DB.\n  - **Security**: The database server is protected behind firewalls, invisible to the client.",
+        "description": "### Client-Server Tiers\nDatabase applications are typically partitioned into tiers based on client and server roles:\n\n#### 1. 1-Tier Architecture\n- The client, application logic, and database server are all present on the same machine.\n- Used mainly for local database design and testing.\n\n```\n                  +-----------------------------+\n                  |      1-Tier (Local PC)      |\n                  |                             |\n                  |  +-----------------------+  |\n                  |  |    User Interface     |  |\n                  |  +-----------+-----------+  |\n                  |              |              |\n                  |  +-----------v-----------+  |\n                  |  |   Application Logic   |  |\n                  |  +-----------+-----------+  |\n                  |              |              |\n                  |  +-----------v-----------+  |\n                  |  |     Database DBMS     |  |\n                  |  +-----------------------+  |\n                  +-----------------------------+\n```\n\n#### 2. 2-Tier Architecture\n- The application is partitioned into two components:\n  1. **Client Machine**: Runs the user interface and application programs. It directly invokes database commands on the server using APIs like JDBC/ODBC.\n  2. **Server Machine**: Hosts the DBMS and processes database queries sent by the client.\n\n```\n                  +-----------------------------+\n                  |        Client Machine       |\n                  |  +-----------------------+  |\n                  |  |    User Interface     |  |\n                  |  +-----------+-----------+  |\n                  |              |              |\n                  |  +-----------v-----------+  |\n                  |  |   Application Logic   |  |\n                  |  +-----------------------+  |\n                  +--------------+--------------+\n                                 |\n                                 |  Network Connection\n                                 |  (JDBC/ODBC API)\n                                 |\n                  +--------------v--------------+\n                  |       Database Server       |\n                  |  +-----------------------+  |\n                  |  |     Database DBMS     |  |\n                  |  +-----------------------+  |\n                  +-----------------------------+\n```\n\n#### 3. 3-Tier Architecture\n- The application is partitioned into three logical components:\n  1. **Client Interface**: The frontend (e.g., web browser) which displays the UI. It contains no direct database calls.\n  2. **Application Server (Web Server)**: Hosts the business logic. It interprets client requests, queries the database server, and returns the response.\n  3. **Database Server**: Stores and manages the data, executing queries sent by the Application Server.\n\n```\n                  +-----------------------------+\n                  |         Client Tier         |\n                  |  +-----------------------+  |\n                  |  |     Web Browser       |  |\n                  |  +-----------------------+  |\n                  +--------------+--------------+\n                                 |\n                                 |  Network Call\n                                 |  (HTTP/HTTPS)\n                                 |\n                  +--------------v--------------+\n                  |      Application Tier       |\n                  |  +-----------------------+  |\n                  |  |   Application Server  |  |\n                  |  +-----------------------+  |\n                  +--------------+--------------+\n                                 |\n                                 |  DB Connection / SQL\n                                 |  (JDBC/ODBC API)\n                                 |\n                                ====[ Firewall ]====\n                                 |\n                  +--------------v--------------+\n                  |        Database Tier        |\n                  |  +-----------------------+  |\n                  |  |    Database Server    |  |\n                  |  +-----------------------+  |\n                  +-----------------------------+\n```\n\n- **Advantages**:\n  - **Scalability**: Multiple app servers can be added to balance loads.\n  - **Data Integrity**: The middle layer prevents clients from directly corrupting the DB.\n  - **Security**: The database server is protected behind firewalls, invisible to the client.",
         "takeaways": [
           "1-Tier Architecture: UI, logic, and DB exist on a single machine.",
           "2-Tier Architecture: Client handles UI & query calls; Server hosts the database.",
@@ -313,11 +313,7 @@
         "type": "theory",
         "difficulty": "Easy",
         "description": "## Primary Key  \nA **Primary Key** is a column (or a set of columns) in a database table that uniquely identifies each row. It enforces **uniqueness** and **non-nullability**, meaning no two rows can have the same primary key value, and it cannot be NULL.\n\n## Other Terms:\n\n### Unique  \n- Ensures that all values in a column are distinct.  \n- Unlike a primary key, a column with a **UNIQUE** constraint can have **NULL** values (unless explicitly marked as NOT NULL).\n  ```sql\n  title VARCHAR(255) UNIQUE\n\n### Not Null  \n- Prevents a column from having NULL values.  \n- Ensures that every row must have a valid (non-null) value for the specified column.\n  ```sql\n  id INT NOT NULL\n\n### Default  \n- Assigns a default value to a column when no value is provided during an **INSERT** operation.  \n- Example:  \n  ```sql\n  age INT DEFAULT 18\n\n### Auto Increment  \n- Automatically generates a unique sequential value for a column (usually for primary keys).  \n- Commonly used with **INTEGER** primary keys.  \n- Example:  \n  ```sql\n  CREATE TABLE users (\n      id INT AUTO_INCREMENT PRIMARY KEY,\n  );\n\n### Points to remember\n\n- No two rows can have the same primary key\u2014it must be unique.\n- A primary key cannot contain null values (it can't be empty).\n- Each table can have only one primary key.\n\n### Here's a quick question for you: If you were making a table of movies, what would be a good primary key?",
-        "takeaways": [
-          "Primary Key",
-          "non-nullability",
-          "Other Terms:"
-        ],
+        "takeaways": ["Primary Key", "non-nullability", "Other Terms:"],
         "selfCheck": [
           "What is the main concept of Primary Key?",
           "How would you explain this topic to another SQL beginner?"
@@ -3096,9 +3092,7 @@
           "Crash recovery ensures partial transactions are rolled back.",
           "Atomicity prevents partial writes during failures."
         ],
-        "selfCheck": [
-          "What state is the database left in after a rollback?"
-        ]
+        "selfCheck": ["What state is the database left in after a rollback?"]
       },
       {
         "id": "cc-tra01c",
@@ -3124,9 +3118,7 @@
           "SAVEPOINT sets bookmarks within a transaction context.",
           "ROLLBACK TO SAVEPOINT allows selective partial transaction rollbacks."
         ],
-        "selfCheck": [
-          "How does a savepoint differ from a standard commit?"
-        ]
+        "selfCheck": ["How does a savepoint differ from a standard commit?"]
       },
       {
         "id": "cc-tra01e",
@@ -3232,9 +3224,7 @@
           "Durability implies committed data is saved to non-volatile disk/storage.",
           "Committed updates survive crashes."
         ],
-        "selfCheck": [
-          "How does durability help in crash recovery?"
-        ]
+        "selfCheck": ["How does durability help in crash recovery?"]
       },
       {
         "id": "cc-acid2",
@@ -3246,9 +3236,7 @@
           "Atomicity ensures partial actions are completely undone if a crash occurs.",
           "Transactions are binary: either 100% complete or 0% complete."
         ],
-        "selfCheck": [
-          "What is another name for Atomicity?"
-        ]
+        "selfCheck": ["What is another name for Atomicity?"]
       },
       {
         "id": "cc-acid3",
@@ -3274,9 +3262,7 @@
           "Isolation guards against race conditions and concurrent reading anomalies.",
           "Different levels of isolation offer trade-offs between speed and lock safety."
         ],
-        "selfCheck": [
-          "What database feature enforces isolation?"
-        ]
+        "selfCheck": ["What database feature enforces isolation?"]
       },
       {
         "id": "cc-tra03",
@@ -3288,9 +3274,7 @@
           "Row-level locking offers high concurrency but has more overhead.",
           "Table-level locking offers simple management but blocks concurrent updates."
         ],
-        "selfCheck": [
-          "Why would you choose a row lock over a table lock?"
-        ]
+        "selfCheck": ["Why would you choose a row lock over a table lock?"]
       },
       {
         "id": "cc-lockm1",
@@ -3302,9 +3286,7 @@
           "Row locks enable concurrent non-overlapping row modifications.",
           "Lock granularity directly affects system concurrency levels."
         ],
-        "selfCheck": [
-          "What is lock granularity?"
-        ]
+        "selfCheck": ["What is lock granularity?"]
       },
       {
         "id": "cc-tra04",
@@ -3316,9 +3298,7 @@
           "Deadlock occurs when circular wait conditions lock resources.",
           "Isolation levels include Read Uncommitted, Read Committed, Repeatable Read, and Serializable."
         ],
-        "selfCheck": [
-          "What is a dirty read?"
-        ]
+        "selfCheck": ["What is a dirty read?"]
       },
       {
         "id": "cc-dlil2",
@@ -3330,9 +3310,7 @@
           "Deadlocks require mutual exclusion, hold and wait, no preemption, and circular wait.",
           "Preemption breaks lock loops and avoids deadlocks."
         ],
-        "selfCheck": [
-          "How can circular wait be prevented?"
-        ]
+        "selfCheck": ["How can circular wait be prevented?"]
       },
       {
         "id": "cc-dlil1",
