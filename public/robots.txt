@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sql-learning-platform-phi.vercel.app/sitemap.xml
+Sitemap: https://dbms-quest.vercel.app/sitemap.xml

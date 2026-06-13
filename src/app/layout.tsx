@@ -11,14 +11,14 @@ export const metadata: Metadata = {
     "SQLite compiler", "Database tutorials", "SQL questions", "dbmsQuest"
   ],
   authors: [{ name: "dbmsQuest Team" }],
-  metadataBase: new URL("https://sql-learning-platform-phi.vercel.app"),
+  metadataBase: new URL("https://dbms-quest.vercel.app"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "dbmsQuest | Interactive SQL & DBMS Learning Platform",
     description: "Learn and practice SQL/DBMS queries directly in your browser with zero latency. Hands-on coding exercises, theory guides, cheatsheets, and more.",
-    url: "https://sql-learning-platform-phi.vercel.app",
+    url: "https://dbms-quest.vercel.app",
     siteName: "dbmsQuest",
     locale: "en_US",
     type: "website",
