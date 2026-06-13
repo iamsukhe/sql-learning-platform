@@ -3,7 +3,7 @@ import Script from "next/script";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
-  title: "SQLQuest - Interactive SQL Learning Platform",
+  title: "dbmsQuest - Interactive SQL Learning Platform",
   description: "Master SQL interactively with hands-on practice problems running fully inside your browser, completely free.",
   icons: {
     icon: "/favicon.png",

@@ -24,7 +24,7 @@ export default function Home() {
   const [activeView, setActiveView] = useState<'sql' | 'notes' | 'cheatsheet' | 'queries50'>('sql');
   const handleSelectView = (view: 'sql' | 'notes' | 'cheatsheet' | 'queries50') => {
     setActiveView(view);
-    localStorage.setItem('sqlquest-active-view', view);
+    localStorage.setItem('dbmsquest-active-view', view);
   };
   const [currentProblemId, setCurrentProblemId] = useState<string>(problems[0].id);
   const [userCodes, setUserCodes] = useState<{ [problemId: string]: string }>({});
@@ -51,7 +51,7 @@ export default function Home() {
 
   // Initialize sidebar width from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem('sqlquest-sidebar-width');
+    const saved = localStorage.getItem('dbmsquest-sidebar-width') || localStorage.getItem('sqlquest-sidebar-width');
     if (saved) {
       const timer = setTimeout(() => {
         setSidebarWidth(parseInt(saved, 10));
@@ -62,7 +62,7 @@ export default function Home() {
 
   const handleSidebarWidthChange = (newWidth: number) => {
     setSidebarWidth(newWidth);
-    localStorage.setItem('sqlquest-sidebar-width', newWidth.toString());
+    localStorage.setItem('dbmsquest-sidebar-width', newWidth.toString());
   };
 
   // References to track element dimensions during drag resizing
@@ -148,7 +148,7 @@ export default function Home() {
 
   // 1. Initialize Theme
   useEffect(() => {
-    const savedTheme = (localStorage.getItem('sqlquest-theme') || localStorage.getItem('leetdbms-theme') || localStorage.getItem('leetsql-theme')) as 'dark' | 'light' || 'dark';
+    const savedTheme = (localStorage.getItem('dbmsquest-theme') || localStorage.getItem('sqlquest-theme') || localStorage.getItem('leetdbms-theme') || localStorage.getItem('leetsql-theme')) as 'dark' | 'light' || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
     
     const timer = setTimeout(() => {
@@ -161,15 +161,15 @@ export default function Home() {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
     document.documentElement.setAttribute('data-theme', nextTheme);
-    localStorage.setItem('sqlquest-theme', nextTheme);
+    localStorage.setItem('dbmsquest-theme', nextTheme);
   };
 
   // 2. Load progress from localStorage
   useEffect(() => {
-    const solved = localStorage.getItem('sqlquest-solved') || localStorage.getItem('leetdbms-solved') || localStorage.getItem('leetsql-solved');
-    const savedCodes = localStorage.getItem('sqlquest-codes') || localStorage.getItem('leetdbms-codes') || localStorage.getItem('leetsql-codes');
-    const savedProblemId = localStorage.getItem('sqlquest-current-problem');
-    const savedView = localStorage.getItem('sqlquest-active-view');
+    const solved = localStorage.getItem('dbmsquest-solved') || localStorage.getItem('sqlquest-solved') || localStorage.getItem('leetdbms-solved') || localStorage.getItem('leetsql-solved');
+    const savedCodes = localStorage.getItem('dbmsquest-codes') || localStorage.getItem('sqlquest-codes') || localStorage.getItem('leetdbms-codes') || localStorage.getItem('leetsql-codes');
+    const savedProblemId = localStorage.getItem('dbmsquest-current-problem') || localStorage.getItem('sqlquest-current-problem');
+    const savedView = localStorage.getItem('dbmsquest-active-view') || localStorage.getItem('sqlquest-active-view');
     
     const timer = setTimeout(() => {
       if (solved) {
@@ -238,7 +238,7 @@ export default function Home() {
   const handleCodeChange = (newCode: string) => {
     const nextCodes = { ...userCodes, [currentProblemId]: newCode };
     setUserCodes(nextCodes);
-    localStorage.setItem('sqlquest-codes', JSON.stringify(nextCodes));
+    localStorage.setItem('dbmsquest-codes', JSON.stringify(nextCodes));
   };
 
   const handleResetCode = () => {
@@ -311,7 +311,7 @@ export default function Home() {
     if (!solvedProblems.includes(problemId)) {
       const nextSolved = [...solvedProblems, problemId];
       setSolvedProblems(nextSolved);
-      localStorage.setItem('sqlquest-solved', JSON.stringify(nextSolved));
+      localStorage.setItem('dbmsquest-solved', JSON.stringify(nextSolved));
     }
   };
 
@@ -319,23 +319,23 @@ export default function Home() {
     if (solvedProblems.includes(problemId)) {
       const nextSolved = solvedProblems.filter(id => id !== problemId);
       setSolvedProblems(nextSolved);
-      localStorage.setItem('sqlquest-solved', JSON.stringify(nextSolved));
+      localStorage.setItem('dbmsquest-solved', JSON.stringify(nextSolved));
     } else {
       const nextSolved = [...solvedProblems, problemId];
       setSolvedProblems(nextSolved);
-      localStorage.setItem('sqlquest-solved', JSON.stringify(nextSolved));
+      localStorage.setItem('dbmsquest-solved', JSON.stringify(nextSolved));
     }
   };
 
   const handleUncompleteProblem = (problemId: string) => {
     const nextSolved = solvedProblems.filter(id => id !== problemId);
     setSolvedProblems(nextSolved);
-    localStorage.setItem('sqlquest-solved', JSON.stringify(nextSolved));
+    localStorage.setItem('dbmsquest-solved', JSON.stringify(nextSolved));
   };
 
   const handleSelectProblem = (id: string) => {
     setCurrentProblemId(id);
-    localStorage.setItem('sqlquest-current-problem', id);
+    localStorage.setItem('dbmsquest-current-problem', id);
     setIsSidebarOpen(false); // Close sidebar drawer on mobile
     
     // Reset coding states
@@ -676,7 +676,7 @@ export default function Home() {
           )}
           <div className="flex items-center gap-2 text-base font-bold tracking-tight text-slate-100">
             <Database size={18} className="text-cyan-400" />
-            <span>SQL<span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Quest</span></span>
+            <span>DBMS<span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Quest</span></span>
           </div>
         </div>
 

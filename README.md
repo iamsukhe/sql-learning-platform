@@ -1,6 +1,6 @@
-# SQLQuest 📚💻
+# dbmsQuest 📚💻
 
-SQLQuest is a premium, client-side interactive learning platform designed to help students master SQL and database management. Powered by client-side SQLite (via `sql.js` WebAssembly), it compiles and tests queries with zero latency.
+dbmsQuest is a premium, client-side interactive learning platform designed to help students master SQL and database management. Powered by client-side SQLite (via `sql.js` WebAssembly), it compiles and tests queries with zero latency.
 
 ---
 

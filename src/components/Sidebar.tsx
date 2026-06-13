@@ -72,7 +72,7 @@ export default function Sidebar({
 
   // Load expanded chapters from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem('sqlquest-expanded-chapters');
+    const saved = localStorage.getItem('dbmsquest-expanded-chapters') || localStorage.getItem('sqlquest-expanded-chapters');
     if (saved) {
       const timer = setTimeout(() => {
         try {
@@ -92,7 +92,7 @@ export default function Sidebar({
       const timer = setTimeout(() => {
         setExpandedChapters(prev => {
           const next = { ...prev, [parentCh.id]: true };
-          localStorage.setItem('sqlquest-expanded-chapters', JSON.stringify(next));
+          localStorage.setItem('dbmsquest-expanded-chapters', JSON.stringify(next));
           return next;
         });
       }, 0);
@@ -106,14 +106,14 @@ export default function Sidebar({
         ...prev,
         [chapterId]: !prev[chapterId]
       };
-      localStorage.setItem('sqlquest-expanded-chapters', JSON.stringify(next));
+      localStorage.setItem('dbmsquest-expanded-chapters', JSON.stringify(next));
       return next;
     });
   };
 
   const collapseAll = () => {
     setExpandedChapters({});
-    localStorage.setItem('sqlquest-expanded-chapters', JSON.stringify({}));
+    localStorage.setItem('dbmsquest-expanded-chapters', JSON.stringify({}));
   };
 
   // Filter lessons inside chapters
