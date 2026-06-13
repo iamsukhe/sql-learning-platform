@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import confetti from 'canvas-confetti';
+
 import { Sparkles, Sun, Moon, Database, HelpCircle, AlertTriangle, ArrowRight, CheckCircle2, BookOpen, Menu, AlertCircle, FileText, FileCode } from 'lucide-react';
 import { problems } from '../data/problems';
 import { 
@@ -289,13 +289,6 @@ export default function Home() {
       setSubmissionResult(evaluation);
       
       if (evaluation.success) {
-        // Confetti!
-        confetti({
-          particleCount: 150,
-          spread: 80,
-          origin: { y: 0.6 }
-        });
-        
         // Add to solved list
         markProblemSolved(currentProblemId);
       }
@@ -310,11 +303,6 @@ export default function Home() {
 
   // Theory completion handler
   const handleCompleteTheory = () => {
-    confetti({
-      particleCount: 80,
-      spread: 50,
-      origin: { y: 0.7 }
-    });
     markProblemSolved(currentProblemId);
   };
 
