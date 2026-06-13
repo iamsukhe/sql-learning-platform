@@ -33,6 +33,7 @@ export interface SqliteDatabase {
   prepare(sql: string): SqliteStatement;
   run(sql: string): void;
   close(): void;
+  create_function?(name: string, fn: (...args: never[]) => unknown): void;
 }
 
 export interface SqlJsLib {
@@ -69,6 +70,29 @@ export async function getSqlLib(): Promise<SqlJsLib> {
     locateFile: (file: string) => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.12.0/${file}`
   });
   return SQL;
+}
+
+/**
+ * Create a new database instance and register the regexp function
+ */
+export function createDatabase(sqlLib: SqlJsLib): SqliteDatabase {
+  const db = new sqlLib.Database();
+  try {
+    if (db.create_function) {
+      db.create_function('regexp', (pattern: string, value: unknown) => {
+        if (pattern === null || value === null) return 0;
+        try {
+          const re = new RegExp(pattern, 'i');
+          return re.test(String(value)) ? 1 : 0;
+        } catch {
+          return 0;
+        }
+      });
+    }
+  } catch (e) {
+    console.error("Failed to register REGEXP function:", e);
+  }
+  return db;
 }
 
 /**
@@ -229,8 +253,8 @@ export async function evaluateSubmission(
     let userDb: SqliteDatabase | null = null;
     let expectedDb: SqliteDatabase | null = null;
     try {
-      userDb = new sqlLib.Database();
-      expectedDb = new sqlLib.Database();
+      userDb = createDatabase(sqlLib);
+      expectedDb = createDatabase(sqlLib);
 
       // Seed databases (fall back to problem-level seedSql if test case has none)
       const seedSql = tc.seedSql || problem.seedSql || '';
@@ -283,7 +307,7 @@ export async function fetchSeedTables(problem: Problem): Promise<{ [tableName: s
   const sqlLib = await getSqlLib();
   if (!sqlLib) return {};
 
-  const db = new sqlLib.Database();
+  const db = createDatabase(sqlLib);
   try {
     if (problem.seedSql) {
       db.run(problem.seedSql);

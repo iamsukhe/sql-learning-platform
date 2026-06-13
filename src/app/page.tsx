@@ -6,6 +6,7 @@ import { Sparkles, Sun, Moon, Database, HelpCircle, AlertTriangle, ArrowRight, C
 import { problems } from '../data/problems';
 import { 
   getSqlLib, 
+  createDatabase,
   executeQuery, 
   evaluateSubmission, 
   fetchSeedTables, 
@@ -255,7 +256,7 @@ export default function Home() {
     
     try {
       const sqlLib = await getSqlLib();
-      const db = new sqlLib.Database();
+      const db = createDatabase(sqlLib);
       
       // Seed database
       if (activeProblem.seedSql) {
