@@ -41,6 +41,7 @@ function PdfPageItem({ pageNum, pdfDoc, scale }: PdfPageItemProps) {
   const renderTaskRef = useRef<PDFRenderTask | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const renderedScaleRef = useRef<number | null>(null);
+  const [dimensions, setDimensions] = useState<{ width: number; height: number } | null>(null);
 
   // Intersection observer to lazy render
   useEffect(() => {
@@ -61,7 +62,6 @@ function PdfPageItem({ pageNum, pdfDoc, scale }: PdfPageItemProps) {
   // Trigger render when visible, doc is loaded, scale is set, and scale changed
   useEffect(() => {
     if (!isVisible || !pdfDoc) return;
-    if (renderedScaleRef.current === scale) return;
 
     let active = true;
 
@@ -70,13 +70,17 @@ function PdfPageItem({ pageNum, pdfDoc, scale }: PdfPageItemProps) {
         const page = await pdfDoc.getPage(pageNum);
         if (!active) return;
         
+        const viewport = page.getViewport({ scale });
+        setDimensions({ width: viewport.width, height: viewport.height });
+
+        if (renderedScaleRef.current === scale) return;
+
         const canvas = canvasRef.current;
         if (!canvas) return;
 
         const context = canvas.getContext('2d');
         if (!context) return;
 
-        const viewport = page.getViewport({ scale });
         canvas.height = viewport.height;
         canvas.width = viewport.width;
 
@@ -119,10 +123,21 @@ function PdfPageItem({ pageNum, pdfDoc, scale }: PdfPageItemProps) {
     <div 
       ref={containerRef}
       id={`pdf-page-${pageNum}`}
-      className="flex flex-col items-center justify-center bg-white border border-slate-800 rounded shadow-md overflow-hidden select-none mx-auto max-w-full"
-      style={{ minHeight: '450px' }} // placeholder before loading page
+      className="flex flex-col items-center justify-center bg-white border border-slate-800 rounded shadow-md overflow-hidden select-none mx-auto"
+      style={{ 
+        minHeight: '450px',
+        width: dimensions ? `${dimensions.width}px` : '100%',
+        maxWidth: dimensions ? 'none' : '100%'
+      }}
     >
-      <canvas ref={canvasRef} className="max-w-full h-auto block" />
+      <canvas 
+        ref={canvasRef} 
+        style={{
+          width: dimensions ? `${dimensions.width}px` : '100%',
+          height: dimensions ? `${dimensions.height}px` : 'auto',
+          display: 'block'
+        }}
+      />
       <div className="py-2 text-[10px] text-slate-500 font-bold bg-slate-900 border-t border-slate-800 w-full text-center">
         Page {pageNum}
       </div>
@@ -144,9 +159,60 @@ export default function PdfViewer({ pdfUrl }: PdfViewerProps) {
   const [inputVal, setInputVal] = useState<string>('1');
   
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const scrollFractionsRef = useRef<{ x: number; y: number } | null>(null);
 
+  const preserveScrollPosition = () => {
+    const container = containerRef.current;
+    if (!container) return;
 
+    const scrollWidth = container.scrollWidth;
+    const scrollHeight = container.scrollHeight;
+    const scrollLeft = container.scrollLeft;
+    const scrollTop = container.scrollTop;
+    const clientWidth = container.clientWidth;
+    const clientHeight = container.clientHeight;
 
+    // Calculate fractions from the center of the viewport
+    const xFraction = scrollWidth > 0 ? (scrollLeft + clientWidth / 2) / scrollWidth : 0.5;
+    const yFraction = scrollHeight > 0 ? (scrollTop + clientHeight / 2) / scrollHeight : 0.5;
+
+    scrollFractionsRef.current = { x: xFraction, y: yFraction };
+  };
+
+  // Restore scroll position after scale change to zoom centered relative to the viewport
+  useEffect(() => {
+    if (!scrollFractionsRef.current) return;
+    const container = containerRef.current;
+    if (!container) return;
+
+    const fractions = scrollFractionsRef.current;
+    scrollFractionsRef.current = null; // Clear so it only runs once per zoom action
+
+    // Wait for the child pages to render and the container's scrollWidth/scrollHeight to update
+    const timer = setTimeout(() => {
+      const scrollWidth = container.scrollWidth;
+      const scrollHeight = container.scrollHeight;
+      const clientWidth = container.clientWidth;
+      const clientHeight = container.clientHeight;
+
+      const targetScrollLeft = fractions.x * scrollWidth - clientWidth / 2;
+      const targetScrollTop = fractions.y * scrollHeight - clientHeight / 2;
+
+      const originalScrollBehavior = container.style.scrollBehavior;
+      container.style.scrollBehavior = 'auto';
+      container.scrollLeft = targetScrollLeft;
+      container.scrollTop = targetScrollTop;
+
+      // Restore scroll behavior
+      requestAnimationFrame(() => {
+        if (container) {
+          container.style.scrollBehavior = originalScrollBehavior;
+        }
+      });
+    }, 60);
+
+    return () => clearTimeout(timer);
+  }, [scale]);
   // 1. Asynchronously load PDF.js from CDN
   useEffect(() => {
     let active = true;
@@ -279,12 +345,22 @@ export default function PdfViewer({ pdfUrl }: PdfViewerProps) {
     setInputVal(e.target.value);
   };
 
-  const handleZoomIn = () => setScale(prev => Math.min(prev + 0.1, 2.5));
-  const handleZoomOut = () => setScale(prev => Math.max(prev - 0.1, 0.7));
-  const handleResetZoom = () => setScale(1.2);
+  const handleZoomIn = () => {
+    preserveScrollPosition();
+    setScale(prev => Math.min(prev + 0.1, 2.5));
+  };
+  const handleZoomOut = () => {
+    preserveScrollPosition();
+    setScale(prev => Math.max(prev - 0.1, 0.7));
+  };
+  const handleResetZoom = () => {
+    preserveScrollPosition();
+    setScale(1.2);
+  };
   
   const handleFitWidth = () => {
     if (!containerRef.current || !pdfDoc) return;
+    preserveScrollPosition();
     pdfDoc.getPage(currentPage).then((page) => {
       const containerWidth = containerRef.current!.clientWidth - 48; // padding
       const unscaledViewport = page.getViewport({ scale: 1.0 });
@@ -385,7 +461,7 @@ export default function PdfViewer({ pdfUrl }: PdfViewerProps) {
       <div 
         ref={containerRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6 flex flex-col items-center bg-slate-950/40 select-none custom-scroll scroll-smooth"
+        className="flex-1 overflow-auto p-3 sm:p-4 lg:p-6 flex flex-col bg-slate-950/40 select-none custom-scroll scroll-smooth"
       >
         {isLoading ? (
           <div className="flex flex-col items-center justify-center gap-3 py-24 text-slate-400">
@@ -393,9 +469,9 @@ export default function PdfViewer({ pdfUrl }: PdfViewerProps) {
             <p className="text-xs text-slate-500 font-semibold tracking-wider uppercase">Loading PDF slides reader...</p>
           </div>
         ) : (
-          <div className="w-full max-w-4xl flex flex-col gap-6">
+          <div className="flex flex-col gap-6 mx-auto w-fit min-w-full items-center">
             {/* Learning Disclaimer Banner */}
-            <div className="p-3.5 bg-slate-900 border border-slate-800 rounded shadow-md text-xs text-slate-400 leading-relaxed text-center">
+            <div className="w-full max-w-4xl p-3.5 bg-slate-900 border border-slate-800 rounded shadow-md text-xs text-slate-400 leading-relaxed text-center">
               These notes are from Code Help. Special thanks to them; this platform was created solely for learning purposes. Visit <a href="https://www.codehelp.in/" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 hover:underline font-semibold">Code Help</a> for more great content.
             </div>
             {Array.from({ length: numPages }, (_, i) => i + 1).map((pageNum) => (

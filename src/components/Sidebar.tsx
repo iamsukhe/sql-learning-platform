@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Problem, chapters } from '../data/problems';
-import { Search, CheckCircle2, Circle, Sparkles, ChevronDown, ChevronRight } from 'lucide-react';
+import { Search, CheckCircle2, Circle, Sparkles, ChevronDown, ChevronRight, FolderMinus } from 'lucide-react';
 
 interface SidebarProps {
   problems: Problem[]; // flat array of all lessons for search/counting
@@ -109,6 +109,11 @@ export default function Sidebar({
     });
   };
 
+  const collapseAll = () => {
+    setExpandedChapters({});
+    localStorage.setItem('sqlquest-expanded-chapters', JSON.stringify({}));
+  };
+
   // Filter lessons inside chapters
   const filteredChapters = useMemo(() => {
     return chapters.map(ch => {
@@ -144,6 +149,14 @@ export default function Sidebar({
               {solvedCount} <span className="text-xs text-slate-400 font-normal">/ {totalCount} Solved</span>
             </div>
           </div>
+          <button 
+            onClick={collapseAll}
+            className="text-[9px] font-bold text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-colors bg-slate-950 border border-slate-800/80 hover:border-slate-700 px-2 py-1 rounded cursor-pointer flex items-center gap-1.5 shrink-0"
+            title="Collapse All Chapters"
+          >
+            <FolderMinus size={11} className="text-cyan-400" />
+            <span>Collapse All</span>
+          </button>
         </div>
 
         {/* Progress Bar */}
